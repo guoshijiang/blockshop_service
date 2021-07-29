@@ -1,0 +1,10 @@
+.idea/
+swagger/
+blockshop_service
+routers/commentsRouter_controllers_api.go
+blockshop_service.exe
+lastupdate.tmp
+upload
+conf/app.conf
+go.mod
+static/uploads
