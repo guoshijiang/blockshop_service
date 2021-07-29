@@ -1,8 +1,10 @@
 package main
 
 import (
-	_ "blockshop_service/routers"
-	"github.com/astaxie/beego"
+  _ "blockshop/common/template"
+  _ "blockshop/routers"
+  _ "blockshop/session"
+  "github.com/astaxie/beego"
 )
 
 func main() {

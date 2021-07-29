@@ -1,10 +1,9 @@
 package models
 
-
 import (
-	"github.com/astaxie/beego/orm"
-	"github.com/pkg/errors"
-	"blockshop_service/common"
+  "blockshop/common"
+  "github.com/astaxie/beego/orm"
+  "github.com/pkg/errors"
 )
 
 type User struct {

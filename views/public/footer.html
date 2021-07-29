@@ -1,0 +1,7 @@
+<!--页面底部-->
+{{if ne true .admin.pjax}}
+<footer class="main-footer">
+    <strong>Copyright &copy; 2020 <a href="{{if eq .admin.link ""}}#{{else}}{{.admin.link}}{{end}}"></a>.</strong> All rights
+    reserved.
+</footer>
+{{end}}

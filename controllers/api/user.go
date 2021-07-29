@@ -2,16 +2,14 @@ package api
 
 
 import (
-	"github.com/astaxie/beego"
-
-	"blockshop_service/models"
+  "blockshop/models"
+  "github.com/astaxie/beego"
 )
 
 
 type UserController struct {
 	beego.Controller
 }
-
 
 // @Title Register
 // @Description 注册手机号 Register
