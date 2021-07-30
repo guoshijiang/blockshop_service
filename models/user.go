@@ -10,7 +10,7 @@ import (
 
 type User struct {
 	BaseModel
-	Id             int64         `orm:"column(id)" description:"用户ID" json:"id"`
+	Id             int64         `orm:"pk;column(id);auto;size(11)" description:"用户ID" json:"id"`
 	UserName       string        `orm:"column(user_name);size(128)" description:"用户名称" json:"user_name"`
 	Avator         string        `orm:"column(avator);size(150);default(/static/upload/default/user-default-60x60.png)" description:"用户头像" json:"avator"`
 	Password       string        `orm:"column(password);size(128)" description:"密码" json:"password"`
