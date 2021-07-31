@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="259dd160-41f2-4c19-b6b4-553d78ed97e2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/app.conf" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastupdate.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/lastupdate.tmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/asset.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/asset.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/base.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_cat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum_reply.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_reply.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods_cat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/merchant.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/merchant_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant_data_stat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/news.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/news.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_data_stat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/admin_user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/admin_user_service.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1vylK3gEjUxFIdcBo6ZyrWAqESK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="run.code.analysis.last.selected.profile" value="aDefault" />
+    <property name="settings.editor.selected.configurable" value="go.vgo" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/conf" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+    <environment>
+      <map>
+        <entry key="GOPROXY" value="https://goproxy.cn" />
+      </map>
+    </environment>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="388" y="273" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1627715695517">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="388" y="273" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.1280.777@0.23.1280.777" timestamp="1627715695517" />
+    <state x="531" y="280" width="417" height="262" key="EnvironmentVariablesDialog" timestamp="1627542198529">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="531" y="280" width="417" height="262" key="EnvironmentVariablesDialog/0.23.1280.777@0.23.1280.777" timestamp="1627542198529" />
+    <state x="149" y="50" key="SettingsEditor" timestamp="1627542204205">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="149" y="50" key="SettingsEditor/0.23.1280.777@0.23.1280.777" timestamp="1627542204205" />
+    <state x="341" y="166" width="598" height="490" key="find.popup" timestamp="1627741436917">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="341" y="166" width="598" height="490" key="find.popup/0.23.1280.777@0.23.1280.777" timestamp="1627741436917" />
+  </component>
+</project>

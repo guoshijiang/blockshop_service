@@ -12,7 +12,7 @@ type UserDataStat struct {
 }
 
 func (this *UserDataStat) TableName() string {
-	return common.TableName("user")
+	return common.TableName("user_data_stat")
 }
 
 func (this *UserDataStat) SearchField() []string {

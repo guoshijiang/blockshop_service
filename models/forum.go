@@ -12,8 +12,8 @@ type Forum struct { // 论坛表
 	Title          string        `orm:"column(title);size(128)" description:"论坛标题" json:"title"`
 	Abstract       string        `orm:"column(abstract);type(text)" description:"论坛摘要" json:"abstract"`
 	Content        string        `orm:"column(content);type(text)" description:"论坛内容" json:"content"`
-	Views          int64         `orm:"column(abstract);default(0)" description:"论坛浏览次数" json:"views"`
-	Likes          int64         `orm:"column(abstract);(0)" description:"论坛点赞次数" json:"likes"`
+	Views          int64         `orm:"column(views);default(0)" description:"论坛浏览次数" json:"views"`
+	Likes          int64         `orm:"column(likes);(0)" description:"论坛点赞次数" json:"likes"`
 	Answers        int64         `orm:"column(answers);(0)" description:"论坛评论次数" json:"answers"`
 }
 

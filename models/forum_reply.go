@@ -13,8 +13,8 @@ type ForumReply struct {
 	UserId         int64         `orm:"column(user_id)" description:"用户ID" json:"user_id"`
 	Content        string        `orm:"column(content);type(text)" description:"回复内容" json:"content"`
 	Views          int64         `orm:"column(abstract);default(0)" description:"回复浏览次数" json:"views"`
-	Likes          int64         `orm:"column(abstract);(0)" description:"回复点赞次数" json:"likes"`
-	Answers        int64         `orm:"column(answers);(0)" description:"回复次数" json:"answers"`
+	Likes          int64         `orm:"column(likes);default(0)" description:"回复点赞次数" json:"likes"`
+	Answers        int64         `orm:"column(answers);default(0)" description:"回复次数" json:"answers"`
 }
 
 func (this *ForumReply) TableName() string {

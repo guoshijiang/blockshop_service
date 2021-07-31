@@ -17,7 +17,7 @@ type ForumCat struct {
 }
 
 func (this *ForumCat) TableName() string {
-	return common.TableName("forum_type")
+	return common.TableName("forum_cat")
 }
 
 func (this *ForumCat) Read(fields ...string) error {

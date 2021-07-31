@@ -12,9 +12,9 @@ type News struct {
 	Abstract  string    `orm:"column(abstract);type(text)" description:"公告摘要" json:"abstract"`
 	Content   string    `orm:"column(content);type(text)" description:"公告内容" json:"content"`
 	Image     string    `orm:"column(image);default(0)" description:"公告封面" json:"image"`
-	Author    string    `orm:"column(abstract);default(blockshop)" description:"公告作者" json:"author"`
-	Views     int64     `orm:"column(abstract);default(0)" description:"公告浏览次数" json:"views"`
-	Likes     int64     `orm:"column(abstract);(0)"  description:"公告点赞次数" json:"likes"`
+	Author    string    `orm:"column(author);default(blockshop)" description:"公告作者" json:"author"`
+	Views     int64     `orm:"column(views);default(0)" description:"公告浏览次数" json:"views"`
+	Likes     int64     `orm:"column(likes);default(0)"  description:"公告点赞次数" json:"likes"`
 }
 
 func (new *News) TableName() string {

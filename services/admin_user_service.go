@@ -8,6 +8,7 @@ import (
   "blockshop/models"
   "encoding/base64"
   "errors"
+  "fmt"
   "github.com/astaxie/beego/context"
   "github.com/astaxie/beego/orm"
   "net/url"
@@ -44,7 +45,11 @@ func (Self AdminUserService) CheckLogin(loginForm form_validate.LoginForm, ctx *
   var adminUser models.AdminUser
   o := orm.NewOrm()
   err := o.QueryTable(new(models.AdminUser)).Filter("username", loginForm.Username).Limit(1).One(&adminUser)
+
+  // al,_ := o.QueryTable(new(models.AdminUser)).Count()
+  // fmt.Println(al)
   if err != nil {
+    fmt.Println("err",err)
     return nil, errors.New("用户不存在")
   }
 
