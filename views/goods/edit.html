@@ -1,0 +1,440 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <!-- 表单头部 -->
+        <div class="box-header with-border">
+          <div class="btn-group">
+            <a class="btn flat btn-sm btn-default BackButton">
+              <i class="fa fa-arrow-left"></i>
+              返回
+            </a>
+          </div>
+        </div>
+        <form id="dataForm" class="form-horizontal dataForm" action="/admin/goods/update" method="post" enctype="multipart/form-data">
+          <div class="box-body">
+            <input type="hidden" name="id" value="{{.data.Id}}" >
+            <div class="form-group">
+              <label for="title" class="col-sm-2 control-label">商品标题</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="title" placeholder="请输入昵称" name="title" value="{{.data.Title}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="logo" class="col-sm-2 control-label">商品封面</label>
+              <div class="col-sm-10 col-md-4">
+                <input id="logo" name="logo" placeholder="请上传头像" type="file" class="form-control field-image" data-initial-preview="{{.data.Logo}}">
+              </div>
+            </div>
+            <script>
+              $('#logo').fileinput({
+                language: 'zh',
+                overwriteInitial: true,
+                browseLabel: '浏览',
+                initialPreviewAsData: true,
+                dropZoneEnabled: false,
+                showUpload: false,
+                showRemove: false,
+                allowedFileTypes: ['image'],
+                maxFileSize: 10240,
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="logo" class="col-sm-2 control-label">商品图片</label>
+              <div class="col-sm-10 col-md-4">
+                <input id="images" name="images" placeholder="请上传头像" type="file" class="form-control field-image" multiple>
+                {{/*                                {{range $key,$item := .imgs}}*/}}
+                {{/*                                */}}
+                {{/*                                {{end}}*/}}
+              </div>
+              <script>
+                showPhotos()
+                function showPhotos(){
+                  var preList = new Array();
+                  {{range $k,$v := .imgs}}
+                  preList[{{$k}}]= "<img width=120px src=\""+{{$v.Image}}+"\" class=\"file-preview-image\">";
+                  {{end}}
+                  var previewJson = preList;
+                  var preConfigList = new Array();
+                  {{range $k,$v := .imgs}}
+                  var tjson = {
+                    width: '120px',
+                  }
+                  preConfigList[{{$k}}] = tjson;
+                  {{end}}
+                  // 具体参数自行查询
+                  $('#images').fileinput({
+                    uploadAsync:false,
+                    showUpload: false,//是否显示上传按钮
+                    showRemove: false,//是否显示删除按钮
+                    showCaption: true,//是否显示输入框
+                    showPreview:true,
+                    showCancel:true,
+                    dropZoneEnabled: false,
+                    overwriteInitial: true,
+                    maxFileCount: 5,
+                    initialPreviewShowDelete:true,
+                    msgFilesTooMany: "选择上传的文件数量 超过允许的最大数值！",
+                    initialPreview: previewJson,
+                    previewFileIcon: '<i class="fa fa-file"></i>',
+                    allowedPreviewTypes: ['image'],
+                    initialPreviewConfig: preConfigList
+                  }).off('filepreupload').on('filepreupload', function() {
+                    alert(data.url);
+                  }).on("fileuploaded", function(event, outData) {
+                    //文件上传成功后返回的数据， 此处我只保存返回文件的id
+                    var result = outData.response.id;
+                    // 对应的input 赋值
+                    $('#htestlogo').val(result).change();
+                  });
+                }
+              </script>
+            </div>
+
+            {{if eq .merchant_id 0}}
+              <div class="form-group">
+                <label for="merchant_id" class="col-sm-2 control-label">所属商户</label>
+                <div class="col-sm-10 col-md-4">
+                  <select name="merchant_id" id="merchant_id" class="form-control field-select" data-placeholder="请选择商户">
+                    <option value=""></option>
+                    {{range $key,$item := .merchants}}
+                      <option value="{{$item.Id}}" {{if compare $.data.MerchantId $item.Id }} selected {{end}}>
+                        {{$item.MerchantName}}
+                      </option>
+                    {{end}}
+                  </select>
+                </div>
+                <script>
+                  $('#merchant_id').select2();
+                </script>
+              </div>
+            {{end}}
+
+            <div class="form-group">
+              <label for="total_amount" class="col-sm-2 control-label">商品总量</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="total_amount" placeholder="请输入昵称" name="total_amount" value="{{.data.TotalAmount}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="goods_price" class="col-sm-2 control-label">商品价格</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="goods_price" placeholder="请输入商品价格" name="goods_price" value="{{.data.GoodsPrice}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="goods_discount_price" class="col-sm-2 control-label">商品折扣价格</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="goods_discount_price" placeholder="请输入商品价格" name="goods_discount_price" value="{{.data.GoodsDisPrice}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="goods_mark" class="col-sm-2 control-label">商品备注</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="goods_mark" placeholder="请输入昵称" name="goods_mark" value="{{.data.GoodsMark}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="serveice" class="col-sm-2 control-label">服务说明</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="serveice" placeholder="请输入昵称" name="serveice" value="{{.data.Serveice}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="calc_way" class="col-sm-2 control-label">计量单位</label>
+              <div class="col-sm-10 col-md-4">
+                <select name="calc_way" id="calc_way" class="form-control field-select" data-placeholder="请选择计量单位">
+                  <option value=""></option>
+                  {{range $key,$item := .calcway}}
+                    <option value="{{$item.Id}}" {{if compare $.data.CalcWay $item.Id}}selected {{end}}>
+                      {{$item.Name}}
+                    </option>
+                  {{end}}
+                </select>
+              </div>
+            </div>
+            <script>
+              $('#calc_way').select2();
+            </script>
+
+            <div class="form-group">
+              <label for="goods_cat_id" class="col-sm-2 control-label">商品所属分类</label>
+              <div class="col-sm-10 col-md-4">
+                <select name="goods_cat_id" id="goods_cat_id" class="form-control field-select" data-placeholder="请选择商品所属分类">
+                  <option value=""></option>
+                  {{range $key,$item := .cats}}
+                    <option value="{{$item.Id}}" {{if compare $.data.GoodsCatId $item.Id }} selected {{end}}>
+                      {{$item.Name}}
+                    </option>
+                  {{end}}
+                </select>
+              </div>
+            </div>
+            <script>
+              $('#goods_cat_id').select2();
+            </script>
+
+
+            <div class="form-group">
+              <label for="goods_name" class="col-sm-2 control-label">产品名称</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="goods_name" placeholder="请输入产品名称" name="goods_name" value="{{.data.GoodsName}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="nickname" class="col-sm-2 control-label">产品参数</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="goods_params" placeholder="请输入产品参数" name="goods_params" value="{{.data.GoodsParams}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="nickname" class="col-sm-2 control-label">折扣</label>
+              <div class="col-sm-10 col-md-4">
+                <input maxlength="50" class="form-control" id="discount" placeholder="请输入折扣" name="discount" value="{{.data.Discount}}">
+              </div>
+            </div>
+
+
+
+
+            <script>
+              $('#is_ig_send').bootstrapSwitch({
+                onText: "赠送积分",
+                offText: "正常",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="sale" class="col-sm-2 control-label">上/下架</label>
+              <div class="col-sm-10 col-md-4">
+                <input class="input-switch" id="sale" value="1" {{if eq 1 .data.Sale}} checked {{end}} type="checkbox"/>
+                <input class="switch field-switch" placeholder="是否启用" name="sale"
+                       value="{{.data.Sale}}" hidden/>
+              </div>
+            </div>
+            <script>
+              $('#sale').bootstrapSwitch({
+                onText: "下架",
+                offText: "上架",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="is_display" class="col-sm-2 control-label">首页展示</label>
+              <div class="col-sm-10 col-md-4">
+                <input class="input-switch" id="is_display" value="1" {{if eq 1 .data.IsDisplay}}checked {{end}} type="checkbox"/>
+                <input class="switch field-switch" name="is_display" value="{{.data.Sale}}" hidden/>
+              </div>
+            </div>
+            <script>
+              $('#is_display').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+
+            <div class="form-group">
+              <label for="is_hot" class="col-sm-2 control-label">爆款产品</label>
+              <div class="col-sm-10 col-md-4">
+                <input class="input-switch" id="is_hot" value="1" {{if eq 1 .data.IsHot}} checked  {{end}} type="checkbox"/>
+                <input class="switch field-switch" name="is_hot" value="{{.data.IsHot}}" hidden/>
+              </div>
+            </div>
+            <script>
+              $('#is_hot').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="is_discount" class="col-sm-2 control-label">打折活动产品</label>
+              <div class="col-sm-10 col-md-4">
+                <input class="input-switch" id="is_discount" value="1" {{if eq 1 .data.IsDiscount }} checked {{end}} type="checkbox"/>
+                <input class="switch field-switch" name="is_discount" value="{{.data.IsDiscount }}" hidden/>
+              </div>
+            </div>
+            <script>
+              $('#is_discount').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            {{/*                        <div class="form-group">*/}}
+            {{/*                            <label for="is_ig_exchange" class="col-sm-2 control-label">积分兑换</label>*/}}
+            {{/*                            <div class="col-sm-10 col-md-4">*/}}
+            {{/*                                <input class="input-switch" id="is_ig_exchange" value="1" {{if compare 1 .data.IsIgExchange}}checked {{end}} type="checkbox"/>*/}}
+            {{/*                                <input class="switch field-switch" name="is_ig_exchange" value="{{.data.IsIgExchange}}" hidden/>*/}}
+            {{/*                            </div>*/}}
+            {{/*                        </div>*/}}
+            {{/*                        <script>*/}}
+            {{/*                            $('#is_ig_exchange').bootstrapSwitch({*/}}
+            {{/*                                onText: "是",*/}}
+            {{/*                                offText: "否",*/}}
+            {{/*                                onColor: "success",*/}}
+            {{/*                                offColor: "danger",*/}}
+            {{/*                                onSwitchChange: function (event, state) {*/}}
+            {{/*                                    $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();*/}}
+            {{/*                                }*/}}
+            {{/*                            });*/}}
+            {{/*                        </script>*/}}
+
+
+            <script>
+              $('#is_group').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+
+            <script>
+              $('#is_integral').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="is_limit_time" class="col-sm-2 control-label">限时产品</label>
+              <div class="col-sm-10 col-md-4">
+                <input class="input-switch" id="is_limit_time" value="1" {{if eq 1 .data.IsLimitTime}} checked  {{end}} type="checkbox"/>
+                <input class="switch field-switch" name="is_limit_time" value="{{.data.IsLimitTime}}" hidden/>
+              </div>
+            </div>
+            <script>
+              $('#is_limit_time').bootstrapSwitch({
+                onText: "是",
+                offText: "否",
+                onColor: "success",
+                offColor: "danger",
+                onSwitchChange: function (event, state) {
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                }
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="goods_detail" class="col-sm-2 control-label">产品详细介绍</label>
+              <div class="col-sm-10 col-md-10">
+                <script id="goods_detail" name="goods_detail" type="text/plain">
+                                    {{str2html .data.GoodsDetail}}
+                                </script>
+              </div>
+            </div>
+            <script>
+              UE.delEditor('goods_detail');
+              var description = UE.getEditor('goods_detail', {
+                serverUrl: UEServer
+              });
+            </script>
+
+          </div>
+
+          <!--表单底部-->
+          <div class="box-footer">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10 col-md-4">
+              <div class="btn-group pull-right">
+                <label class="createContinue">
+                  <input type="checkbox" value="1" id="_create" name="_create"
+                         title="继续添加数据">继续添加</label>
+              </div>
+              <div class="btn-group">
+                <button type="submit" class="btn flat btn-info dataFormSubmit">
+                  保存
+                </button>
+              </div>
+              <div class="btn-group">
+                <button type="reset" class="btn flat btn-default dataFormReset">
+                  重置
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  $("#dataForm").validate({
+    rules: {
+      merchant_name: {
+        required: true,
+        minlength: 2
+      },
+      merchant_intro: {
+        required: true,
+        minlength: 2
+      },
+      address: {
+        required: true,
+        minlength: 6
+      },
+    },
+    messages: {
+      merchant_name: {
+        required: "请输入商家名称",
+        minlength: "名称长度不能小于2"
+      },
+      merchant_intro: {
+        required: "请输入商家简介",
+        minlength: "用户名长度不能小于2"
+      },
+      address: {
+        required: "请输入店铺地址",
+        minlength: "店铺地址长度不能小于6"
+      },
+    },
+
+  });
+</script>

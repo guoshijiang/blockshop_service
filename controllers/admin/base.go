@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"blockshop/global"
-	"blockshop/global/response"
-	"blockshop/models"
-	"blockshop/services"
-	"github.com/astaxie/beego"
-	"net/url"
-	"strconv"
-	"strings"
+  "blockshop/global"
+  "blockshop/global/response"
+  "blockshop/models"
+  "blockshop/services"
+  "github.com/astaxie/beego"
+  "net/url"
+  "strconv"
+  "strings"
 )
 
 //定义子控制器初始化方法

@@ -5,6 +5,7 @@ import (
   "blockshop/form_validate"
   "blockshop/global"
   "blockshop/global/response"
+  "blockshop/models"
   "blockshop/services"
   "github.com/astaxie/beego"
   "github.com/astaxie/beego/validation"
@@ -21,6 +22,11 @@ type AuthController struct {
 
 //登录界面
 func (this *AuthController) Login() {
+  _, isOk := this.GetSession(global.LOGIN_USER).(models.AdminUser)
+  if isOk {
+    this.Redirect("/admin/index/index", http.StatusFound)
+    return
+  }
   //获取登录配置信息
   loginConfig := struct {
     Token      string
