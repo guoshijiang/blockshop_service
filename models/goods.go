@@ -2,6 +2,8 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
+	"blockshop/types/goods"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 )
@@ -11,6 +13,7 @@ type Goods struct {
 	Id             int64     `orm:"pk;column(id);auto;size(11)" description:"商家ID" json:"id"`
 	UserId         int64     `orm:"column(user_id)" description:"商家对应的用户ID" json:"user_id"`
 	GoodsCatId     int64     `orm:"column(goods_cat_id)" description:"商品分类ID" json:"goods_cat_id"`
+	GoodsTypeId    int64     `orm:"column(goods_type_id)" description:"商品大类ID" json:"goods_type_id"`
 	GoodsMark      string    `orm:"column(goods_cat_id);size(512);index" description:"商品备注" json:"goods_mark"`
 	Serveice       string    `orm:"column(serveice);size(512);index" description:"服务说明" json:"serveice"`
 	CalcWay        int8      `orm:"column(calc_way);default(0);index" description:"计量方式" json:"calc_way"` // 0:按件计量 1:按近计量
@@ -70,4 +73,42 @@ func (this *Goods) Insert() error {
 		return err
 	}
 	return nil
+}
+
+func GetGoodsList(req goods.GoodsListReq, page, pageSize int) ([]*Goods, int64, string) {
+	offset := (page - 1) * pageSize
+	goods_list := make([]*Goods, 0)
+	query_good := orm.NewOrm().QueryTable(Goods{}).Filter("IsRemoved", 0)
+	if req.GoodsName != "" {
+		query_good = query_good.Filter("GoodsName", req.GoodsName)
+	}
+	if req.TypeId >= 1 {
+		query_good = query_good.Filter("TypeId", req.TypeId)
+	}
+	if req.CatId >= 1 {
+		query_good = query_good.Filter("CatId", req.CatId)
+	}
+	if req.StartPrice >= 0 && req.EndPrice != 0 && req.EndPrice >= req.StartPrice {
+		query_good = query_good.Filter("CatId", req.CatId)
+	}
+	if req.OrderBy >= 0 {
+		query_good = query_good.Filter("CatId", req.CatId)
+	}
+	if req.OriginCountry != "" {
+		query_good = query_good.Filter("CatId", req.CatId)
+	}
+	total, _ := query_good.Count()
+	_, err := query_good.Limit(pageSize, offset).All(&goods_list)
+	if err != nil {
+		return nil, 0, "查询数据库失败"
+	}
+	return goods_list, total, "获取商品列表成功"
+}
+
+func GetGoodsDetail(id int64) (*Goods, int, string) {
+	var gds Goods
+	if err := orm.NewOrm().QueryTable(Goods{}).Filter("Id", id).RelatedSel().One(&gds); err != nil {
+		return nil, types.SystemDbErr,"数据库查询失败，请联系客服处理"
+	}
+	return &gds, types.ReturnSuccess, "获取商品详情成功"
 }
