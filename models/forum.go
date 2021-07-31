@@ -7,9 +7,14 @@ import (
 
 type Forum struct { // 论坛表
 	BaseModel
-	Id             int64         `orm:"column(id)" description:"论坛ID" json:"id"`
+	Id             int64         `orm:"pk;column(id);auto;size(11)" description:"论坛ID" json:"id"`
 	UserId         int64         `orm:"column(user_id)" description:"用户ID" json:"user_id"`
-	Tilte          string        `orm:"column(tilte);size(128)" description:"论坛标题" json:"tilte"`
+	Title          string        `orm:"column(title);size(128)" description:"论坛标题" json:"title"`
+	Abstract       string        `orm:"column(abstract);type(text)" description:"论坛摘要" json:"abstract"`
+	Content        string        `orm:"column(content);type(text)" description:"论坛内容" json:"content"`
+	Views          int64         `orm:"column(abstract);default(0)" description:"论坛浏览次数" json:"views"`
+	Likes          int64         `orm:"column(abstract);(0)" description:"论坛点赞次数" json:"likes"`
+	Answers        int64         `orm:"column(answers);(0)" description:"论坛评论次数" json:"answers"`
 }
 
 func (this *Forum) TableName() string {
