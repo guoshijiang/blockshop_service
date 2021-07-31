@@ -21,9 +21,10 @@ type User struct {
 	IsMerchant     int8          `orm:"column(is_merchant);default(0);index" description:"是否开通商户" json:"is_merchant"` // ：0 不是，1: 是
 	MemberLevel    int8          `orm:"column(member_level);default(1);index" description:"会员级别" json:"member_level"`  // 0:v0:普通会员 1:V1:白银会员，2:V2:白金会员，3:V3:黄金会员; 4:V4:砖石会有; 5:V5:皇冠会员
 	UserPrivateKey string		 `orm:"column(user_private_key);size(512)" description:"用户的私钥" json:"user_private_key"`
-	UserPulicKey   string        `orm:"column(user_private_key);size(512)" description:"用户的公钥" json:"user_pulic_key"`
-	Factor         string        `orm:"column(user_private_key);size(512)" description:"用户因子" json:"factor"`
+	UserPublicKey   string        `orm:"column(user_public_key);size(512)" description:"用户的公钥" json:"user_public_key"`
+	Factor         string        `orm:"column(factor);size(512)" description:"用户因子" json:"factor"`
 	IsOpen         int8          `orm:"column(is_open);default(0);index" description:"是否开因子认证" json:"is_open"` // ：0 不是，1: 是
+	ActiveTime     int64         `orm:"column(active_time);default(0);index" description:"用户活跃时间" json:"active_time"`
 }
 
 func (this *User) TableName() string {

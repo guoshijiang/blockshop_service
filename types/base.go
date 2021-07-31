@@ -14,6 +14,11 @@ const (
 	PasswordNotEqual              = 4002  // 两次输入的密码不一样
 	UserExist                     = 4003  // 用户已经存在
 	UserNoExist                   = 4004  // 没有这个用户
+	GetImagesFileFail             = 4005  // 获取文件失败
+	FileFormatError               = 4006  // 文件格式不符合规范
+	FileIsBig                     = 4007  // 文件太大了
+	CreateFilePathError           = 4008  // 创建文件路径失败
+	FileAlreadUpload              = 4009  // 该图片已经上传过了
 )
 
 type PageSizeData struct {
