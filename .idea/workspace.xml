@@ -3,16 +3,22 @@
   <component name="ChangeListManager">
     <list default="true" id="259dd160-41f2-4c19-b6b4-553d78ed97e2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/admin/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/admin/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/api/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/app.conf" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lastupdate.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/lastupdate.tmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/asset.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/asset.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_cat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forum_reply.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_reply.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods_cat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/merchant.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/merchant_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant_data_stat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/news.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/news.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_data_stat.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/admin_user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/admin_user_service.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,9 +86,9 @@
       <screen x="0" y="23" width="1280" height="777" />
     </state>
     <state x="149" y="50" key="SettingsEditor/0.23.1280.777@0.23.1280.777" timestamp="1627542204205" />
-    <state x="341" y="166" width="598" height="490" key="find.popup" timestamp="1627725664485">
+    <state x="341" y="166" width="598" height="490" key="find.popup" timestamp="1627741436917">
       <screen x="0" y="23" width="1280" height="777" />
     </state>
-    <state x="341" y="166" width="598" height="490" key="find.popup/0.23.1280.777@0.23.1280.777" timestamp="1627725664485" />
+    <state x="341" y="166" width="598" height="490" key="find.popup/0.23.1280.777@0.23.1280.777" timestamp="1627741436917" />
   </component>
 </project>

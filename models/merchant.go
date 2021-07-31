@@ -16,8 +16,8 @@ type Merchant struct {
 	WeChat         string    `orm:"column(we_chat);size(64);index" description:"商家联系微信" json:"we_chat"`
 	Address        string    `orm:"column(address);size(512);index" description:"店铺地址" json:"address"`
 	GoodsNum       int64     `orm:"column(goods_num)" description:"商品总数" json:"goods_num"`
-	MerchantWay    int8      `orm:"column(merchant_way)default(0);index" description:"商家类别" json:"merchant_way"`   // 0:自营商家； 1:认证商家  2:普通商家
-	SettlePercent  float64   `orm:"column(settle_percent)default(0);digits(22);decimals(8)" description:"结算比例"  json:"settle_percent"`
+	MerchantWay    int8      `orm:"column(merchant_way);default(0);index" description:"商家类别" json:"merchant_way"`   // 0:自营商家； 1:认证商家  2:普通商家
+	SettlePercent  float64   `orm:"column(settle_percent);default(0);digits(22);decimals(8)" description:"结算比例"  json:"settle_percent"`
 	ShopLevel      int8      `orm:"column(shop_level)" description:"店铺等级" json:"shop_level"`
 	ShopServer     int8      `orm:"column(shop_server)" description:"店铺服务" json:"shop_server"`
 }
@@ -26,3 +26,6 @@ func (this *Merchant) TableName() string {
 	return common.TableName("merchant")
 }
 
+func (*Merchant) SearchField() []string {
+  return []string{"merchant_name"}
+}

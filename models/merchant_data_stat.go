@@ -12,7 +12,7 @@ type MerchantDataStat struct {
 }
 
 func (this *MerchantDataStat) TableName() string {
-	return common.TableName("user")
+	return common.TableName("merchant_data_stat")
 }
 
 func (this *MerchantDataStat) SearchField() []string {

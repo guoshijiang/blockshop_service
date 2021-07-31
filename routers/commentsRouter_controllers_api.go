@@ -7,6 +7,15 @@ import (
 
 func init() {
 
+    beego.GlobalControllerRouter["blockshop/controllers/api:ImageController"] = append(beego.GlobalControllerRouter["blockshop/controllers/api:ImageController"],
+        beego.ControllerComments{
+            Method: "UploadFiles",
+            Router: "/upload_file",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["blockshop/controllers/api:UserController"] = append(beego.GlobalControllerRouter["blockshop/controllers/api:UserController"],
         beego.ControllerComments{
             Method: "Login",

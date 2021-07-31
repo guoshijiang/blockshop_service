@@ -11,7 +11,7 @@ type Goods struct {
 	Id             int64     `orm:"pk;column(id);auto;size(11)" description:"商家ID" json:"id"`
 	UserId         int64     `orm:"column(user_id)" description:"商家对应的用户ID" json:"user_id"`
 	GoodsCatId     int64     `orm:"column(goods_cat_id)" description:"商品分类ID" json:"goods_cat_id"`
-	GoodsMark      string    `orm:"column(goods_cat_id);size(512);index" description:"商品备注" json:"goods_mark"`
+	GoodsMark      string    `orm:"column(goods_mark);size(512);index" description:"商品备注" json:"goods_mark"`
 	Serveice       string    `orm:"column(serveice);size(512);index" description:"服务说明" json:"serveice"`
 	CalcWay        int8      `orm:"column(calc_way);default(0);index" description:"计量方式" json:"calc_way"` // 0:按件计量 1:按近计量
 	MerchantId     int64     `orm:"column(merchant_id);default(0);index" description:"商品所属商家ID" json:"merchant_id"`
@@ -32,6 +32,11 @@ type Goods struct {
 	IsDiscount     int8      `orm:"column(is_discount);default(0);index" description:"打折活动" json:"is_discount"`      // 0:不打折，1:打折活动产品
 	LeftTime       int64     `orm:"column(left_time);default(0);index" description:"限时产品剩余时间" json:"left_time"`   // 限时产品剩余时间
 	IsLimitTime    int8      `orm:"column(is_limit_time);default(0);index" description:"限时产品" json:"is_limit_time"`  // 0:不是限时产品 1:是限时
+}
+
+type Select struct {
+  Id			int					`json:"id"`
+  Name		string				`json:"name"`
 }
 
 func (this *Goods) TableName() string {

@@ -9,7 +9,7 @@ type Asset struct {
 	BaseModel
 	Id        int64    `orm:"pk;column(id);auto;size(11)" description:"币种ID" json:"id"`
 	Name      string   `orm:"column(name);unique;size(11);index" description:"币种名称" json:"name"`
-	Unit      int64    `orm:"column(name);default(8)" description:"币种精度" json:"unit"`
+	Unit      int64    `orm:"column(unit);default(8)" description:"币种精度" json:"unit"`
 }
 
 func (this *Asset) TableName() string {
