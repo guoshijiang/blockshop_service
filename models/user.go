@@ -64,16 +64,45 @@ func (this *User) ExistByName (user_name string) bool {
 	return orm.NewOrm().QueryTable(this).Filter("user_name", user_name).Exist()
 }
 
+func UpdateFactor(user_id int64, factor string)(code int, msg string){
+	var fa2_user User
+	err := fa2_user.Query().Filter("id", user_id).One(fa2_user)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	fa2_user.Factor = factor
+	err = fa2_user.Update()
+	if err != nil {
+		return types.UserNoExist, "更新factor失败"
+	}
+	return types.ReturnSuccess, "更新factor成功"
+}
+
+func GetUserInfo(user_name string) (user *User) {
+	var login_user User
+	err := login_user.Query().Filter("user_name", user_name).OrderBy("-id").Limit(1).One(&login_user)
+	if err != nil {
+		return nil
+	}
+	return &login_user
+}
+
 func UserRegister(register user.Register) (code int, msg string) {
 	u := User{}
 	if u.ExistByName(register.UserName) {
 		return types.UserExist, "该用户名已经被注册"
+	}
+	is_open := int8(0)
+	if register.PublicKey != "" {
+		is_open = 1
 	}
 	user_data := User {
 		UserName: register.UserName,
 		Password: common.ShaOne(register.Password),
 		Token: uuid.NewV4().String(),
 		PinCode: register.PinCode,
+		UserPublicKey: register.PublicKey,
+		IsOpen: is_open,
 	}
 	err, _ := user_data.Insert()
 	if err != nil {
@@ -88,10 +117,64 @@ func UserLogin(login user.Login) (login_rep *user.LoginRep, code int, msg string
 	if err != nil {
 		return nil, types.UserNoExist, "你还没有注册，请去注册"
 	}
+	if login_user.IsOpen == 1 {
+		if login.Factor != login_user.Factor {
+			return nil, types.FactorIsNotSame, "验证因子出错"
+		}
+	}
 	return &user.LoginRep{
 		Id:       login_user.Id,
 		UserName: login_user.UserName,
 		Token:    login_user.Token,
 	}, types.ReturnSuccess, "登录成功"
+}
+
+func OpenCloseFactor(is_open int8, user_id int64, public_key string)(code int, msg string) {
+	var fa2_user User
+	err := fa2_user.Query().Filter("id", user_id).One(fa2_user)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	fa2_user.UserPublicKey = public_key
+	fa2_user.IsOpen = is_open
+	err = fa2_user.Update()
+	if err != nil {
+		return types.UserNoExist, "开通或者关闭双因子认证失败"
+	}
+	return types.ReturnSuccess, "开通或者关闭双因子认证成功"
+}
+
+func UpdatePassword(upd_pwd user.UpdatePasswordReq) (code int, msg string) {
+	var upd_user User
+	err := upd_user.Query().Filter("id", upd_pwd.UserId).One(upd_user)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	if upd_user.Password != common.ShaOne(upd_pwd.OldPassword) {
+		return types.PasswordError, "输入的原密码错误"
+	}
+	upd_user.Password = upd_pwd.NewPassword
+	err = upd_user.Update()
+	if err != nil {
+		return types.UserNoExist, "修改密码失败"
+	}
+	return types.ReturnSuccess, "修改密码成功"
+}
+
+func ForgetPassword(fpt_pwd user.ForgetPasswordReq) (code int, msg string) {
+	var fpt_user User
+	err := fpt_user.Query().Filter("id", fpt_pwd.UserId).One(fpt_user)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	if fpt_user.PinCode != fpt_pwd.PinCode {
+		return types.PasswordError, "输入的Pin码错误"
+	}
+	fpt_user.Password = fpt_pwd.NewPassword
+	err = fpt_user.Update()
+	if err != nil {
+		return types.UserNoExist, "修改密码失败"
+	}
+	return types.ReturnSuccess, "修改密码成功"
 }
 

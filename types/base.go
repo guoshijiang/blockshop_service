@@ -20,6 +20,9 @@ const (
 	CreateFilePathError           = 4008  // 创建文件路径失败
 	FileAlreadUpload              = 4009  // 该图片已经上传过了
 	QueryNewsFail                 = 4010  // 查询新闻失败
+	NoOpenTwoFactor               = 4011  // 没有开启双因子验证
+	FactorIsNotSame               = 4012  // 双因子不正确
+	PasswordError                 = 4013  // 两次输入的密码不一样
 )
 
 type PageSizeData struct {
