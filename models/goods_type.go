@@ -15,7 +15,7 @@ type GoodsType struct {
 }
 
 func (this *GoodsType) TableName() string {
-	return common.TableName("goods_cat")
+	return common.TableName("goods_type")
 }
 
 func (this *GoodsType) Read(fields ...string) error {

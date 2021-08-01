@@ -13,13 +13,12 @@ type GoodsTypeService struct {
 }
 
 
-func (self *GoodsTypeService) GetPaginateData(listRows int, params url.Values) ([]*models.GoodsType, beego_pagination.Pagination) {
+func (self *GoodsTypeService) GetPaginateData(listRows int, params url.Values) ([]*models.GoodsAttr, beego_pagination.Pagination) {
   //搜索、查询字段赋值
-  self.SearchField = append(self.SearchField, new(models.GoodsType).SearchField()...)
-
+  self.SearchField = append(self.SearchField, new(models.GoodsAttr).SearchField()...)
   self.WhereField = append(self.WhereField,[]string{"goods_id"}...)
-  var cate []*models.GoodsType
-  o := orm.NewOrm().QueryTable(new(models.GoodsType))
+  var cate []*models.GoodsAttr
+  o := orm.NewOrm().QueryTable(new(models.GoodsAttr))
   _, err := self.PaginateAndScopeWhere(o, listRows, params).All(&cate)
   if err != nil {
     return nil, self.Pagination
@@ -29,7 +28,7 @@ func (self *GoodsTypeService) GetPaginateData(listRows int, params url.Values) (
 }
 
 func (*GoodsTypeService) Create(form *form_validate.GoodsTypeForm) int {
-  cate := models.GoodsType{
+  cate := models.GoodsAttr{
     GoodsId: form.GoodsId,
     TypeKey: form.TypeKey,
     TypeVale: form.TypeVale,
@@ -43,9 +42,9 @@ func (*GoodsTypeService) Create(form *form_validate.GoodsTypeForm) int {
   }
 }
 
-func (*GoodsTypeService) GetById(id int64) *models.GoodsType {
+func (*GoodsTypeService) GetById(id int64) *models.GoodsAttr {
   o := orm.NewOrm()
-  data := models.GoodsType{Id: id}
+  data := models.GoodsAttr{Id: id}
   err := o.Read(&data)
   if err != nil {
     return nil
@@ -56,7 +55,7 @@ func (*GoodsTypeService) GetById(id int64) *models.GoodsType {
 
 func (*GoodsTypeService) Update(form *form_validate.GoodsTypeForm) int{
   o := orm.NewOrm()
-  data := models.GoodsType{Id: form.Id}
+  data := models.GoodsAttr{Id: form.Id}
   if o.Read(&data) == nil {
     data.TypeVale = form.TypeVale
     data.TypeKey = form.TypeKey
@@ -73,7 +72,7 @@ func (*GoodsTypeService) Update(form *form_validate.GoodsTypeForm) int{
 }
 
 func (*GoodsTypeService) Del(ids []int) int{
-  count, err := orm.NewOrm().QueryTable(new(models.GoodsType)).Filter("id__in", ids).Delete()
+  count, err := orm.NewOrm().QueryTable(new(models.GoodsAttr)).Filter("id__in", ids).Delete()
   if err == nil {
     return int(count)
   } else {

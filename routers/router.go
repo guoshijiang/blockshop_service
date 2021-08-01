@@ -148,13 +148,20 @@ func init() {
 
     )
   beego.AddNamespace(admin)
-  //api
+
   api_path := beego.NewNamespace("/v1",
       beego.NSNamespace("/image",
         beego.NSInclude(
           &api.ImageController{},
         ),
       ),
+
+      beego.NSNamespace("/news",
+        beego.NSInclude(
+          &api.NewsController{},
+        ),
+      ),
+
       beego.NSNamespace("/user",
           beego.NSInclude(
               &api.UserController{},
