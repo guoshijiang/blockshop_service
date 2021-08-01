@@ -8,3 +8,13 @@ type GoodsListRep struct {
 	GoodsDisPrice  float64 `json:"goods_discount_price"`
 	IsDiscount     int8    `json:"is_discount"`
 }
+
+type GoodsImagesRet struct {
+	GoodsImgId  int64  `json:"goods_img_id"`
+	ImageUrl    string `json:"image_url"`
+}
+
+type GoodsAttrRet struct {
+	GdsAttrKey   string   `json:"gds_attr_key"`
+	GdsAttrValue []string `json:"gds_attr_value"`
+}

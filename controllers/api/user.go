@@ -7,6 +7,7 @@ import (
 	"blockshop/types/user"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"strings"
 )
 
 
@@ -172,3 +173,25 @@ func (this *UserController) ForgetPassword() {
 	}
 }
 
+// GetUserInfo @Title GetUserInfo
+// @Description 获取用户信息 GetUserInfo
+// @Success 200 status bool, data interface{}, msg string
+// @router /get_user_info [post]
+func (this *UserController) GetUserInfo() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取用户信息成功")
+	this.ServeJSON()
+	return
+}

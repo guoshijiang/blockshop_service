@@ -2,6 +2,8 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
+	"errors"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 )
@@ -54,3 +56,10 @@ func (this *GoodsAttr) Insert() error {
 	return nil
 }
 
+func GetGoodsAttrList(goods_id int64) ([]*GoodsAttr, int64, error) {
+	var type_list []*GoodsAttr
+	if _, err := orm.NewOrm().QueryTable(GoodsAttr{}).Filter("GoodsId", goods_id).All(&type_list); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return type_list, types.ReturnSuccess, nil
+}

@@ -5,6 +5,7 @@ import (
 	"blockshop/types"
 	"blockshop/types/user"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -58,6 +59,14 @@ func (this *User) Insert() (err error, id int64) {
 		return err, 0
 	}
 	return nil, id
+}
+
+func GetUserByToken(token string) (*User, error) {
+	u := User{}
+	if err := orm.NewOrm().QueryTable(u.TableName()).RelatedSel().Filter("token", token).One(&u); err != nil {
+		return nil, errors.Wrap(err, "error in GetUserByToken")
+	}
+	return &u, nil
 }
 
 func (this *User) ExistByName (user_name string) bool {

@@ -2,8 +2,10 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type GoodsImage struct {
@@ -50,5 +52,13 @@ func (this *GoodsImage) Insert() error {
 		return err
 	}
 	return nil
+}
+
+func GetGoodsImgList(goods_id int64) ([]*GoodsImage, int, error) {
+	var goods_img_list []*GoodsImage
+	if _, err := orm.NewOrm().QueryTable(GoodsImage{}).Filter("GoodsId", goods_id).All(&goods_img_list); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return goods_img_list, types.ReturnSuccess, nil
 }
 

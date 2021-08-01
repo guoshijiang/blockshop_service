@@ -23,6 +23,8 @@ const (
 	NoOpenTwoFactor               = 4011  // 没有开启双因子验证
 	FactorIsNotSame               = 4012  // 双因子不正确
 	PasswordError                 = 4013  // 两次输入的密码不一样
+	GetGoodsListFail              = 4014  // 获取商品列表失败
+	GetMerchantListFail           = 4015  // 获取商家列表失败
 )
 
 type PageSizeData struct {
@@ -30,7 +32,7 @@ type PageSizeData struct {
 	PageSize int `json:"page_size"`
 }
 
-func (this PageSizeData) PageSizeDataParamValidate() (int, error) {
+func (this PageSizeData) ParamCheck() (int, error) {
 	if this.Page == 0 {
 		return PageIsZero, errors.New("page 不能为 0")
 	}

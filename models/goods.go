@@ -6,6 +6,7 @@ import (
 	"blockshop/types/goods"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type Goods struct {
@@ -81,12 +82,12 @@ func (this *Goods) Insert() error {
 	return nil
 }
 
-func GetGoodsList(req goods.GoodsListReq, page, pageSize int) ([]*Goods, int64, string) {
-	offset := (page - 1) * pageSize
+func GetGoodsList(req goods.GoodsListReq) ([]*Goods, int64, error) {
+	offset := (req.Page - 1) * req.PageSize
 	goods_list := make([]*Goods, 0)
 	query_good := orm.NewOrm().QueryTable(Goods{}).Filter("IsRemoved", 0)
 	if req.GoodsName != "" {
-		query_good = query_good.Filter("GoodsName", req.GoodsName)
+		query_good = query_good.Filter("goods_name__contains", req.GoodsName)
 	}
 	if req.TypeId >= 1 {
 		query_good = query_good.Filter("TypeId", req.TypeId)
@@ -95,26 +96,43 @@ func GetGoodsList(req goods.GoodsListReq, page, pageSize int) ([]*Goods, int64, 
 		query_good = query_good.Filter("CatId", req.CatId)
 	}
 	if req.StartPrice >= 0 && req.EndPrice != 0 && req.EndPrice >= req.StartPrice {
-		query_good = query_good.Filter("CatId", req.CatId)
+		query_good = query_good.Filter("goods_price__gt", req.StartPrice).Filter("goods_price__lt", req.EndPrice)
 	}
+	// 0:时间，1:销量；2:价格; 3:商家
 	if req.OrderBy >= 0 {
-		query_good = query_good.Filter("CatId", req.CatId)
+		if req.OrderBy == 0{
+			query_good = query_good.OrderBy("-created_at")
+		}else if req.OrderBy == 1{
+			query_good = query_good.OrderBy("-sell_nums")
+		}else if req.OrderBy == 2{
+			query_good = query_good.OrderBy("-goods_price")
+		} else {
+			query_good = query_good.OrderBy("-merchant_id")
+		}
 	}
 	if req.OriginCountry != "" {
-		query_good = query_good.Filter("CatId", req.CatId)
+		query_good = query_good.Filter("origin_country__contains", req.OriginCountry)
 	}
 	total, _ := query_good.Count()
-	_, err := query_good.Limit(pageSize, offset).All(&goods_list)
+	_, err := query_good.Limit(req.PageSize, offset).All(&goods_list)
 	if err != nil {
-		return nil, 0, "查询数据库失败"
+		return nil, 0, errors.New("查询数据库失败")
 	}
-	return goods_list, total, "获取商品列表成功"
+	return goods_list, total, nil
 }
 
-func GetGoodsDetail(id int64) (*Goods, int, string) {
+func GetGoodsDetail(id int64) (*Goods, int, error) {
 	var gds Goods
 	if err := orm.NewOrm().QueryTable(Goods{}).Filter("Id", id).RelatedSel().One(&gds); err != nil {
-		return nil, types.SystemDbErr,"数据库查询失败，请联系客服处理"
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
-	return &gds, types.ReturnSuccess, "获取商品详情成功"
+	return &gds, types.ReturnSuccess, nil
+}
+
+func GetMerchantGoodsNums(metchant_id int64) int64 {
+	total, err := orm.NewOrm().QueryTable(Goods{}).Filter("MerchantId", metchant_id).Count()
+	if err != nil {
+		return 0
+	}
+	return total
 }
