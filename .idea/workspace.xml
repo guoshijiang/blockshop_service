@@ -2,21 +2,39 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="259dd160-41f2-4c19-b6b4-553d78ed97e2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/common/rsa.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/rsa_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/api/merchant.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/api/order.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cron/base.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/goods_attr.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/user_address.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/private.pem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public.pem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/goods/goods_rep.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/goods/goods_req.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/merchant/merchant_rep.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/merchant/merchant_req.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/news/news_rep.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/news/news_req.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/template/template.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/template/template.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conf/app.conf" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/admin/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/form_validate/user_form_validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/form_validate/user_form_validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/asset.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/asset.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/api/forum.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/forum.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/api/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/index.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/api/news.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/news.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/api/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/api/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods_image.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods_image.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/goods_type.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods_type.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/merchant.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/news.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/news.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user_wallet.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_wallet.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/wallet_record.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/wallet_record.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/base_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/base_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/admin/js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/admin/js/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/goods_type_services.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/goods_type_services.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/base.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/user/user_rep.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/user/user_rep.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/types/user/user_req.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/user/user_req.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

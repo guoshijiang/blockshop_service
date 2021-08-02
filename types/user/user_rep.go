@@ -5,3 +5,9 @@ type LoginRep struct {
 	UserName string `json:"user_name"`   // 用户名
 	Token    string `json:"token"`       // token
 }
+
+type TwoFactorRep struct {
+	Id          int64  `json:"id"`
+	UserName    string `json:"user_name"`    // 用户名
+	CipherText  string `json:"cipher_text"`  // cipher_text
+}

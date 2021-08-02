@@ -2,6 +2,9 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
+	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type Merchant struct {
@@ -28,4 +31,29 @@ func (this *Merchant) TableName() string {
 
 func (*Merchant) SearchField() []string {
   return []string{"merchant_name"}
+}
+
+func GetMerchantList(page, pageSize int, merct_name string, address string) ([]*Merchant, int64, error) {
+	offset := (page - 1) * pageSize
+	merchant_list := make([]*Merchant, 0)
+	cond := orm.NewCondition()
+	query := orm.NewOrm().QueryTable(Merchant{})
+	if merct_name != "" || address != "" {
+		cond_merct := cond.And("MerchantName__contains", merct_name).Or("Address__contains", address)
+		query =  query.SetCond(cond_merct)
+	}
+	total, _ := query.Count()
+	_, err := query.OrderBy("-GoodsNum").Limit(pageSize, offset).All(&merchant_list)
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("查询数据库失败")
+	}
+	return merchant_list, total, nil
+}
+
+func GetMerchantDetail(id int64) (*Merchant, int, error) {
+	var merchant Merchant
+	if err := orm.NewOrm().QueryTable(Merchant{}).Filter("Id", id).RelatedSel().One(&merchant); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &merchant, types.ReturnSuccess, nil
 }
