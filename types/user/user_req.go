@@ -35,3 +35,9 @@ func (this Login) ParamCheck() (int, error) {
 	}
 	return types.ReturnSuccess, nil
 }
+
+type ReqUserRegister struct {
+  UserName string   `json:"user_name"`
+  Password1  string `json:"password1"`
+  Password2  string `json:"password2"`
+}

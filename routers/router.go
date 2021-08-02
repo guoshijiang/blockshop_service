@@ -18,7 +18,7 @@ func init() {
   })
 
   admin := beego.NewNamespace("/admin",
-      beego.NSRouter("/index/index",&controllers.IndexController{}, "get:Index"),
+    beego.NSRouter("/index/index",&controllers.IndexController{}, "get:Index"),
     beego.NSRouter("/admin_log/index", &controllers.AdminLogController{}, "get:Index"),
     //登录页
     beego.NSRouter("/auth/login", &controllers.AuthController{}, "get:Login"),
@@ -30,6 +30,9 @@ func init() {
     beego.NSRouter("/auth/check_login", &controllers.AuthController{}, "post:CheckLogin"),
     //刷新验证码
     beego.NSRouter("/auth/refresh_captcha", &controllers.AuthController{}, "post:RefreshCaptcha"),
+
+    //上传图片
+    beego.NSRouter("/setting/upload", &controllers.IndexController{}, "post:Upload"),
 
     //首页
     beego.NSRouter("/index/index", &controllers.IndexController{}, "get:Index"),
@@ -144,9 +147,72 @@ func init() {
     //商品属性管理-删除
     beego.NSRouter("/goods/type/del", &controllers.GoodsTypeController{}, "post:Del"),
 
+    //币种管理-商品属性管理
+    beego.NSRouter("/asset/index", &controllers.AssetController{}, "get:Index"),
+    //币种管理-添加界面
+    beego.NSRouter("/asset/add", &controllers.AssetController{}, "get:Add"),
+    //币种管理-添加
+    beego.NSRouter("/asset/create", &controllers.AssetController{}, "post:Create"),
+    //币种管理-修改界面
+    beego.NSRouter("/asset/edit", &controllers.AssetController{}, "get:Edit"),
+    //币种管理-修改
+    beego.NSRouter("/asset/update", &controllers.AssetController{}, "post:Update"),
+    //币种管理-删除
+    beego.NSRouter("/asset/del", &controllers.AssetController{}, "post:Del"),
+
+    //公告管理-商品属性管理
+    beego.NSRouter("/news/index", &controllers.NewsController{}, "get:Index"),
+    //公告管理-添加界面
+    beego.NSRouter("/news/add", &controllers.NewsController{}, "get:Add"),
+    //公告管理-添加
+    beego.NSRouter("/news/create", &controllers.NewsController{}, "post:Create"),
+    //公告管理-修改界面
+    beego.NSRouter("/news/edit", &controllers.NewsController{}, "get:Edit"),
+    //公告管理-修改
+    beego.NSRouter("/news/update", &controllers.NewsController{}, "post:Update"),
+    //公告管理-删除
+    beego.NSRouter("/news/del", &controllers.NewsController{}, "post:Del"),
 
 
-    )
+    //论坛分类管理-商品属性管理
+    beego.NSRouter("/forum/category/index", &controllers.ForumCateController{}, "get:Index"),
+    //论坛分类管理-添加界面
+    beego.NSRouter("/forum/category/add", &controllers.ForumCateController{}, "get:Add"),
+    //论坛分类管理-添加
+    beego.NSRouter("/forum/category/create", &controllers.ForumCateController{}, "post:Create"),
+    //论坛分类管理-修改界面
+    beego.NSRouter("/forum/category/edit", &controllers.ForumCateController{}, "get:Edit"),
+    //论坛分类管理-修改
+    beego.NSRouter("/forum/category/update", &controllers.ForumCateController{}, "post:Update"),
+    //论坛分类管理-删除
+    beego.NSRouter("/forum/category/del", &controllers.ForumCateController{}, "post:Del"),
+
+    //区块链-用户钱包管理
+    beego.NSRouter("/wallet/user/index", &controllers.WalletController{}, "get:User"),
+    //区块链-钱包记录管理
+    beego.NSRouter("/wallet/record/index", &controllers.WalletController{}, "get:Record"),
+
+    //工单管理-工单列表
+    beego.NSRouter("/message/index", &controllers.MessageController{}, "get:Index"),
+    beego.NSRouter("/message/history", &controllers.MessageController{}, "get:History"),
+    beego.NSRouter("/message/send", &controllers.MessageController{}, "post:Send"),
+
+    //用户管理
+    beego.NSRouter("/user/index", &controllers.UserController{}, "get:Index"),
+    //用户管理-添加界面
+    beego.NSRouter("/user/add", &controllers.UserController{}, "get:Add"),
+    //用户管理-账户资金
+    //beego.NSRouter("/user/account", &controllers.UserController{}, "get:Account"),
+    //用户管理-添加
+    beego.NSRouter("/user/create", &controllers.UserController{}, "post:Create"),
+    //用户管理-修改界面
+    beego.NSRouter("/user/edit", &controllers.UserController{}, "get:Edit"),
+    //用户管理-修改
+    beego.NSRouter("/user/update", &controllers.UserController{}, "post:Update"),
+    //用户管理-删除
+    beego.NSRouter("/user/del", &controllers.UserController{}, "post:Del"),
+
+  )
   beego.AddNamespace(admin)
   //api
   api_path := beego.NewNamespace("/v1",

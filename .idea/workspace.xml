@@ -3,22 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="259dd160-41f2-4c19-b6b4-553d78ed97e2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/template/template.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/template/template.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conf/app.conf" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lastupdate.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/lastupdate.tmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/admin/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin/base.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/form_validate/user_form_validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/form_validate/user_form_validate.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/asset.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/asset.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/forum.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/forum_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_cat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/forum_reply.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/forum_reply.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/goods.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/goods_cat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/goods_cat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/merchant.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/merchant_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/merchant_data_stat.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/message.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/news.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/news.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user_data_stat.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_data_stat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/commentsRouter_controllers_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/admin_user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/admin_user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user_wallet.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_wallet.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/wallet_record.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/wallet_record.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/base_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/base_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/admin/js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/admin/js/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/user/user_req.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/user/user_req.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -8,6 +8,7 @@ import (
 
 func init() {
 	beego.AddFuncMap("TimeForFormat", TimeForFormat)
+  beego.AddFuncMap("TimeForFormatDate", TimeForFormatDate)
 	beego.AddFuncMap("DateForFormat", DateForFormat)
 	beego.AddFuncMap("WalletRecordType", WalletRecordType)
 	beego.AddFuncMap("WalletRecordIsHandle", WalletRecordIsHandle)
@@ -21,8 +22,17 @@ func init() {
 	beego.AddFuncMap("CancelStatus", CancelStatus)
 	beego.AddFuncMap("PayWay", PayWay)
 	beego.AddFuncMap("IntegralType", IntegralType)
-	beego.AddFuncMap("IntegralRecord", IntegralRecord)
+	beego.AddFuncMap("WalletRecord", WalletRecord)
 	beego.AddFuncMap("SettleStatus", SettleStatus)
+  beego.AddFuncMap("MsgState", MsgState)
+}
+
+func TimeForFormatDate(t interface{}) string {
+  timeLayout := "2006-01-02"
+  if _,ok := t.(*time.Time);ok {
+    return t.(*time.Time).Format(timeLayout)
+  }
+  return ""
 }
 
 //时间轴转时间字符串
@@ -62,15 +72,36 @@ func DateForFormat(t interface{}) string {
 	return  ""
 }
 
-//状态  0:交易中；1: 交易成功 2: 交易失败
-func IntegralRecord(t int8) string {
+func MsgState(t int8) string {
+  switch t {
+  case 0:
+    return "文字消息"
+  case 1:
+    return "图片消息"
+  default:
+    return "未知"
+  }
+}
+
+//状态 0:审核中(未锁定)；1:交易中 2:已发出 3:成功 4:失败 5:锁定未审核 6:审核通过 7:审核拒绝
+func WalletRecord(t int8) string {
 	switch t {
 	case 0:
-		return "交易中"
+		return "审核中(未锁定)"
 	case 1:
-		return "交易成功"
+		return "交易中"
 	case 2:
-		return "交易失败"
+		return "已发出"
+  case 3:
+    return "成功"
+  case 4:
+    return "失败"
+  case 5:
+    return "锁定未审核"
+  case 6:
+    return "审核通过"
+  case 7:
+    return "审核拒绝"
 	default:
 		return "未知"
 	}

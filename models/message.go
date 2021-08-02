@@ -16,7 +16,7 @@ type Message struct {
 
 
 func (this *Message) SearchField() []string {
-	return []string{"msg_tilte"}
+	return []string{}
 }
 
 func (this *Message) TableName() string {

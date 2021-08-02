@@ -1,0 +1,220 @@
+<!--数据列表页面-->
+<section class="content">
+  <!--顶部搜索筛选-->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          <form class="form-inline searchForm" id="searchForm" action="/admin/message/index" method="GET">
+
+            <div class="form-group">
+              <input value="{{._keywords}}"
+                     name="_keywords" id="_keywords" class="form-control input-sm"
+                     placeholder="标题">
+            </div>
+            {{/*                        <div class="form-group">*/}}
+            {{/*                            <select name="_by" id="_by" class="form-control input-sm index-order">*/}}
+            {{/*                                <option value="">排序方式</option>*/}}
+            {{/*                                <option value="desc" {{if compare ._by "desc"}}selected {{end}}>倒序</option>*/}}
+            {{/*                                <option value="asc" {{if compare ._by "asc"}}selected {{end}}>正序</option>*/}}
+            {{/*                            </select>*/}}
+            {{/*                        </div>*/}}
+            {{/*                        <script>*/}}
+            {{/*                            $('#_by').select2();*/}}
+            {{/*                        </script>*/}}
+
+            <div class="form-group">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> 查询
+              </button>
+            </div>
+            <div class="form-group">
+              <button onclick="clearSearchForm()" class="btn btn-sm btn-default" type="button"><i
+                        class="fa  fa-eraser"></i> 清空查询
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+
+        <!--数据列表顶部-->
+        <div class="box-header">
+          <div>
+            <a class="btn btn-success btn-sm ReloadButton" data-toggle="tooltip" title="刷新">
+              <i class="fa fa-refresh"></i> 刷新
+            </a>
+          </div>
+        </div>
+
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>
+                <input id="dataCheckAll" type="checkbox" onclick="checkAll(this)" class="checkbox"
+                       placeholder="全选/取消">
+              </th>
+              <th>ID</th>
+              <th>发送人</th>
+              <th>类型</th>
+{{/*              <th>标题</th>*/}}
+              <th>内容</th>
+              <th>发送时间</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key,$item := .data}}
+              <tr>
+                <td>
+                  <input type="checkbox" onclick="checkThis(this)" name="data-checkbox"
+                         data-id="{{$item.Id}}" class="checkbox data-list-check" value="{{$item.Id}}"
+                         placeholder="选择/取消">
+                </td>
+                <td>{{$item.Id}}</td>
+                <td>{{$item.UserName}}</td>
+                <td>{{$item.MsgType | MsgState}}</td>
+{{/*                <td>{{$item.MsgTilte}}</td>*/}}
+                <td>{{$item.MsgContent}}</td>
+                <td>{{$item.CreatedAt | TimeForFormat}}</td>
+                <td class="td-do">
+                  <a href="/admin/message/history?send_user_id={{$item.SendUserId}}"
+                     class="btn btn-primary btn-xs" title="查看历史" data-toggle="tooltip">
+                    <i class="fa fa-commenting-o"></i>
+                  </a>
+                  <a class="btn btn-danger btn-xs" data-toggle="modal" data-target="#reply" title="回复" data-id="{{$item.SendUserId}}">
+                    <i class="fa fa-mail-reply-all"></i>
+                  </a>
+                </td>
+              </tr>
+            {{end}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal fade" id="reply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <form id="dataForm" class="form-horizontal dataForm">
+                  <input type="hidden" name="target_user_id" value="">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="msg_title" class="col-sm-2 control-label">标题</label>
+                      <div class="col-sm-10 col-md-4">
+                        <input id="msg_title" name="msg_title" value=""
+                               placeholder="请输入标题" type="text" class="form-control field-text">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="msg_type" class="col-sm-2 control-label">类型</label>
+                      <div class="col-sm-10 col-md-6">
+                        <input class="input-switch" id="msg_type" value="1" checked type="checkbox"/>
+                        <input class="switch field-switch" name="msg_type" value="1" hidden/>
+                      </div>
+                    </div>
+                    <script>
+                      $('#msg_type').bootstrapSwitch({
+                        onText: "文字信息",
+                        offText: "图片消息",
+                        onColor: "success",
+                        offColor: "danger",
+                        onSwitchChange: function (event, state) {
+                          $(event.target).closest('.bootstrap-switch').next().val(state ? '0' : '1').change();
+                          if( !state) {
+                            $(".reply_type2").addClass("hidden")
+                            $(".reply_type1").removeClass("hidden")
+                          } else {
+                            $(".reply_type1").addClass("hidden")
+                            $(".reply_type2").removeClass("hidden")
+                          }
+                        }
+                      });
+                    </script>
+
+                    <div class="form-group">
+                      <label for="msg" class="col-sm-2 control-label">内容</label>
+                      <div class="col-sm-10 col-md-6 reply_type1 hidden">
+                        <input id="msg_img" name="msg_img" placeholder="请上传头像" type="file" class="form-control field-image" >
+                        <input type="hidden" name="img" />
+                        <script>
+                          $('#msg_img').fileinput({
+                            language: 'zh',
+                            overwriteInitial: true,
+                            uploadAsync:false,
+                            uploadUrl:"/admin/setting/upload",
+                            browseLabel: '浏览',
+                            initialPreviewAsData: true,
+                            dropZoneEnabled: false,
+                            showUpload: false,
+                            showRemove: false,
+                            allowedFileTypes: ['image'],
+                            maxFileSize: 10240,
+
+                          }).on("filebatchselected", function(event, files) {
+                            $(this).fileinput("upload");
+                          }).on('filebatchuploadsuccess', function(event, data, previewId, index) {
+                            if(data.response.code == 1) {
+                              $("[name='img']").val(data.response.data)
+                            } else {
+                              layer.msg('上传失败', {icon: 0});//弹框提示
+                            }
+                          });
+                        </script>
+                      </div>
+                      <div class="col-sm-10 col-md-6 reply_type2">
+                        <textarea class="col-md-12" rows="3" cols="100" name="msg_text"></textarea>
+
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary AjaxModelButtonReply" data-url="/admin/message/send" data-label="reply">回复</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          $(function(){
+                    $("#reply").on("show.bs.modal",function (event) {
+                      let bt = $(event.relatedTarget)
+                      let recipient = bt.data('id')
+                      $("[name='target_user_id']").val(recipient)
+                    })
+                  }
+          )
+        </script>
+
+
+        <!-- 数据列表底部 -->
+        {{if ne "" .paginate.BootStrapRenderLink}}
+          <div class="box-footer">
+            {{ str2html .paginate.BootStrapRenderLink}}
+            <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
+              <small>共{{.paginate.Total}}条记录</small>&nbsp;
+              <small>每页显示</small>
+              &nbsp;
+              <select class="input-sm" onchange="changePerPage(this)">
+                {{range $index, $val := $.admin.per_page_config}}
+                  <option value="{{$val}}" {{if eq $val $.admin.per_page}} selected {{end}}>{{$val}}</option>
+                {{end}}
+              </select>
+              &nbsp;
+              <small>条记录</small>
+            </label>
+          </div>
+        {{end}}
+
+      </div>
+    </div>
+  </div>
+</section>

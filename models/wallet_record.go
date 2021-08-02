@@ -39,3 +39,7 @@ func (this *WalletRecord) Update(fields ...string) error {
 	}
 	return nil
 }
+
+func (this *WalletRecord) SearchField() []string {
+  return []string{"chain_name"}
+}

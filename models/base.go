@@ -75,3 +75,24 @@ func loadMenu() {
   }
   fmt.Println(string(out))
 }
+
+type WalletExtra struct {
+  UserName				string					`json:"user_name"`
+  AssetName       string          `json:"asset_name"`
+}
+
+type UserWalletList struct {
+  UserWallet
+  WalletExtra
+}
+
+type WalletRecordList struct {
+  WalletRecord
+  WalletExtra
+  AdminName       string          `json:"admin_name"`
+}
+
+type MessageData struct {
+  Message
+  UserName					string					`json:"user_name"`
+}

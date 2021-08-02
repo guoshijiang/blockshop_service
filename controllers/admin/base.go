@@ -145,3 +145,17 @@ func (this *baseController) UploadImage(file string) {
 	//}
 }
 
+func (Self *baseController) Upload() {
+  //处理图片上传
+  _, _, err := Self.GetFile("msg_img")
+  if err == nil {
+    var attachmentService services.AttachmentService
+    attachmentInfo, err := attachmentService.Upload(Self.Ctx, "msg_img", loginUser.Id, 0)
+    if (err != nil && err.Error() != "" ) || attachmentInfo == nil {
+      response.ErrorWithMessage(err.Error(), Self.Ctx)
+    } else {
+      var h map[string]string
+      response.SuccessWithDetailed("","",strconv.Itoa(attachmentInfo.Id),0,h,Self.Ctx)
+    }
+  }
+}

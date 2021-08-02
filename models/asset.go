@@ -26,3 +26,7 @@ func (this *Asset) Insert() error {
 func (this *Asset) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
+
+func (this *Asset) SearchField() []string {
+  return []string{"name"}
+}

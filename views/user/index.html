@@ -1,0 +1,164 @@
+<!--数据列表页面-->
+<section class="content">
+
+  <!--顶部搜索筛选-->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          <form class="form-inline searchForm" id="searchForm" action="/admin/user/index" method="GET">
+
+            <div class="form-group">
+              <input value="{{._keywords}}"
+                     name="_keywords" id="_keywords" class="form-control input-sm"
+                     placeholder="用户名/手机号/昵称">
+            </div>
+
+            {{/*                        <div class="form-group">*/}}
+            {{/*                            <select name="_by" id="_by" class="form-control input-sm index-order">*/}}
+            {{/*                                <option value="">排序方式</option>*/}}
+            {{/*                                <option value="desc" {{if compare ._by "desc"}}selected {{end}}>倒序</option>*/}}
+            {{/*                                <option value="asc" {{if compare ._by "asc"}}selected {{end}}>正序</option>*/}}
+            {{/*                            </select>*/}}
+            {{/*                        </div>*/}}
+            {{/*                        <script>*/}}
+            {{/*                            $('#_by').select2();*/}}
+            {{/*                        </script>*/}}
+
+            <div class="form-group">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> 查询
+              </button>
+            </div>
+            <div class="form-group">
+              <button onclick="clearSearchForm()" class="btn btn-sm btn-default" type="button"><i
+                        class="fa  fa-eraser"></i> 清空查询
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+
+        <!--数据列表顶部-->
+        <div class="box-header">
+          <div>
+            <a title="添加" data-toggle="tooltip" class="btn btn-primary btn-sm " href="/admin/user/add">
+              <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-danger btn-sm AjaxButton" data-toggle="tooltip" title="删除选中数据"
+               data-confirm-title="删除确认" data-confirm-content="您确定要删除选中的数据吗？" data-id="checked"
+               data-url="/admin/user/del">
+              <i class="fa fa-trash"></i> 删除
+            </a>
+
+            <a class="btn btn-success btn-sm ReloadButton" data-toggle="tooltip" title="刷新">
+              <i class="fa fa-refresh"></i> 刷新
+            </a>
+          </div>
+        </div>
+
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>
+                <input id="dataCheckAll" type="checkbox" onclick="checkAll(this)" class="checkbox"
+                       placeholder="全选/取消">
+              </th>
+              <th>ID</th>
+              {{/*                            <th>用户等级</th>*/}}
+              <th>用户名</th>
+{{/*              <th>手机号</th>*/}}
+{{/*              <th>昵称</th>*/}}
+              <th>登陆次数</th>
+{{/*              <th>是否在线</th>*/}}
+{{/*              <th>邀请码</th>*/}}
+              <th>创建时间</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key,$item := .data}}
+              <tr>
+                <td>
+                  <input type="checkbox" onclick="checkThis(this)" name="data-checkbox"
+                         data-id="{{$item.Id}}" class="checkbox data-list-check" value="{{$item.Id}}"
+                         placeholder="选择/取消">
+                </td>
+                <td>{{$item.Id}}</td>
+                {{/*                            <td>{{ map_get $.user_level_map $item.UserLevelId }}</td>*/}}
+                <td>{{$item.UserName}}</td>
+{{/*                <td>{{$item.Phone}}</td>*/}}
+{{/*                <td>{{$item.RealName}}</td>*/}}
+                <td>{{$item.LoginCount}}</td>
+{{/*                <td>*/}}
+{{/*                  {{if eq $item.IsOnline 1}} <span class="label label-success">在线</span> {{else}} <span class="label label-warning">不在线</span> {{end}}*/}}
+{{/*                </td>*/}}
+{{/*                <td>{{$item.MyInviteCode}}</td>*/}}
+                <td>{{$item.CreatedAt | TimeForFormat}}</td>
+
+                <td class="td-do">
+                  <a href="/admin/user/edit?id={{$item.Id}}"
+                     class="btn btn-primary btn-xs" title="修改" data-toggle="tooltip">
+                    <i class="fa fa-pencil"></i>
+                  </a>
+{{/*                  <a href="/admin/user/wallet?id={{$item.Id}}"*/}}
+{{/*                     class="btn btn-primary btn-xs" title="钱包" data-toggle="tooltip">*/}}
+{{/*                    <i class="fa fa-google-wallet"></i>*/}}
+{{/*                  </a>*/}}
+{{/*                  <a href="/admin/user/wallet_address?id={{$item.Id}}"*/}}
+{{/*                     class="btn btn-primary btn-xs" title="钱包地址" data-toggle="tooltip"><i class="fa fa-road"></i>*/}}
+{{/*                  </a>*/}}
+{{/*                  <a href="/admin/agent/index?id={{$item.Id}}"*/}}
+{{/*                     class="btn btn-primary btn-xs" title="代理" data-toggle="tooltip">*/}}
+{{/*                    <i class="fa fa-anchor"></i>*/}}
+{{/*                  </a>*/}}
+{{/*                  <a href="/admin/agent/deposit?id={{$item.Id}}"*/}}
+{{/*                     class="btn btn-primary btn-xs" title="代理充值" data-toggle="tooltip">*/}}
+{{/*                    <i class="fa fa-cc"></i>*/}}
+{{/*                  </a>*/}}
+{{/*                  <a href="/admin/user/position?id={{$item.Id}}"*/}}
+{{/*                     class="btn btn-primary btn-xs" title="仓位" data-toggle="tooltip">*/}}
+{{/*                    <i class="fa fa-xing-square"></i>*/}}
+{{/*                  </a>*/}}
+                  <a class="btn btn-danger btn-xs AjaxButton" data-toggle="tooltip" title="删除"
+                     data-id="{{$item.Id}}" data-confirm-title="删除确认"
+                     data-confirm-content='您确定要删除ID为 <span class="text-red">{{$item.Id}}</span> 的数据吗'
+                     data-url="/admin/user/del">
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            {{end}}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 数据列表底部 -->
+        {{if ne "" .paginate.BootStrapRenderLink}}
+          <div class="box-footer">
+            {{ str2html .paginate.BootStrapRenderLink}}
+            <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
+              <small>共{{.paginate.Total}}条记录</small>&nbsp;
+              <small>每页显示</small>
+              &nbsp;
+              <select class="input-sm" onchange="changePerPage(this)">
+                {{range $index, $val := $.admin.per_page_config}}
+                  <option value="{{$val}}" {{if eq $val $.admin.per_page}} selected {{end}}>{{$val}}</option>
+                {{end}}
+              </select>
+              &nbsp;
+              <small>条记录</small>
+            </label>
+          </div>
+        {{end}}
+
+      </div>
+    </div>
+  </div>
+</section>

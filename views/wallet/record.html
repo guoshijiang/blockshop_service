@@ -1,0 +1,100 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-body">
+          <form class="form-inline searchForm" id="searchForm" action="/admin/wallet/record/index" method="GET">
+
+            <div class="form-group">
+              <input value="{{._keywords}}"
+                     name="_keywords" id="_keywords" class="form-control input-sm" placeholder="标题">
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> 查询
+              </button>
+            </div>
+            <div class="form-group">
+              <button onclick="clearSearchForm()" class="btn btn-sm btn-default" type="button"><i
+                        class="fa  fa-eraser"></i> 清空查询
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <!--数据列表顶部-->
+        <div class="box-header">
+          <div>
+            <a class="btn btn-success btn-sm ReloadButton" data-toggle="tooltip" title="刷新">
+              <i class="fa fa-refresh"></i> 刷新
+            </a>
+          </div>
+        </div>
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>用户</th>
+              <th>币种</th>
+              <th>链的名称</th>
+              <th>转出地址</th>
+              <th>转入地址</th>
+              <th>金额</th>
+              <th>交易哈希</th>
+              <th>手续费</th>
+              <th>充提备注</th>
+              <th>处理员</th>
+              <th>类型</th>
+              <th>状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key, $item := .data}}
+              <tr>
+                <td>{{$item.Id}}</td>
+                <td>{{$item.UserName}}</td>
+                <td>{{$item.AssetName}}</td>
+                <td>{{$item.ChainName}}</td>
+                <td>{{$item.FromAddress}}</td>
+                <td>{{$item.ToAddress}}</td>
+                <td>{{$item.Amount}}</td>
+                <td>{{$item.TxHash}}</td>
+                <td>{{$item.TxFee}}</td>
+                <td>{{$item.Comment}}</td>
+                <td>{{$item.AdminName}}</td>
+                <td>{{if eq $item.WOrD 1}} <span class="label label-success">提现</span> {{else}} <span class="label label-warning">充值</span> {{end}}</td>
+                <td>{{$item.Status | WalletRecord}}</td>
+              </tr>
+            {{end}}
+            </tbody>
+          </table>
+        </div>
+        <!-- 数据列表底部 -->
+        {{if ne "" .paginate.BootStrapRenderLink}}
+          <div class="box-footer">
+            {{ str2html .paginate.BootStrapRenderLink}}
+            <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
+              <small>共{{.paginate.Total}}条记录</small>&nbsp;
+              <small>每页显示</small>
+              &nbsp;
+              <select class="input-sm" onchange="changePerPage(this)">
+                {{range $index, $val := $.admin.per_page_config}}
+                  <option value="{{$val}}" {{if eq $val $.admin.per_page}} selected {{end}}>{{$val}}</option>
+                {{end}}
+              </select>
+              &nbsp;
+              <small>条记录</small>
+            </label>
+          </div>
+        {{end}}
+      </div>
+    </div>
+  </div>
+</section>

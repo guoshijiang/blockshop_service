@@ -31,3 +31,7 @@ func (new *News) Insert() error {
 func (new *News) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(new)
 }
+
+func (new *News) SearchField() []string {
+  return []string{"title"}
+}

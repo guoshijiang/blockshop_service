@@ -27,6 +27,11 @@ type User struct {
 	ActiveTime     int64         `orm:"column(active_time);default(0);index" description:"用户活跃时间" json:"active_time"`
 }
 
+type OptionList struct {
+  Id							int						`json:"id"`
+  Name						string					`json:"name"`
+}
+
 func (this *User) TableName() string {
 	return common.TableName("user")
 }
