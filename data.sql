@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 80014
  Source Host           : localhost:3356
- Source Schema         : ganji
+ Source Schema         : blockshop
 
  Target Server Type    : MySQL
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 27/01/2021 00:19:30
+ Date: 04/08/2021 21:53:31
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `admin_menu` (
   `log_method` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '不记录',
   PRIMARY KEY (`id`),
   KEY `admin_menu_url` (`url`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Records of admin_menu
@@ -72,6 +72,64 @@ INSERT INTO `admin_menu` VALUES (65, 7, '禁用角色', 'admin/admin_role/disabl
 INSERT INTO `admin_menu` VALUES (66, 7, '角色授权', 'admin/admin_role/access_operate', 'fa-list', 0, 1000, 'POST');
 INSERT INTO `admin_menu` VALUES (67, 12, '创建菜单', 'admin/admin_menu/create', 'fa-list', 0, 1000, 'POST');
 INSERT INTO `admin_menu` VALUES (68, 12, '修改菜单', 'admin/admin_menu/update', 'fa-list', 0, 1000, 'POST');
+INSERT INTO `admin_menu` VALUES (148, 0, '商品管理', 'admin/goods/mange', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (149, 148, '商品列表', 'admin/goods/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (150, 148, '商品分类', 'admin/goods/category/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (151, 149, '添加商品', 'admin/goods/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (152, 149, '编辑商品', 'admin/goods/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (153, 149, '更新商品', 'admin/goods/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (154, 149, '删除商品', 'admin/goods/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (155, 150, '添加商品分类', 'admin/goods/category/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (156, 150, '编辑商品分类', 'admin/goods/category/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (157, 150, '更新商品分类', 'admin/goods/category/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (158, 150, '删除商品分类', 'admin/goods/category/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (159, 0, '区块链', 'admin/block/manage', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (160, 159, '币种管理', 'admin/asset/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (161, 160, '币种-创建', 'admin/asset/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (162, 160, '币种-更新', 'admin/asset/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (163, 160, '币种-编辑', 'admin/asset/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (164, 160, '币种-删除', 'admin/asset/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (165, 0, '商户管理', 'admin/merchant/manage', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (166, 165, '商户列表', 'admin/merchant/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (167, 166, '商户-创建', 'admin/merchant/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (168, 166, '商户-编辑', 'admin/merchant/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (169, 166, '商户-更新', 'admin/merchant/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (170, 166, '商户-删除', 'admin/merchant/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (171, 0, '用户管理', 'admin/user/manage', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (172, 171, '用户列表', 'admin/user/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (173, 172, '用户-添加', 'admin/user/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (174, 172, '用户-编辑', 'admin/user/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (175, 172, '用户-更新', 'admin/user/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (176, 172, '用户-删除', 'admin/user/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (177, 159, '用户钱包', 'admin/wallet/user/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (178, 159, '资产记录', 'admin/wallet/record/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (179, 149, '商品-添加界面', 'admin/goods/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (180, 166, '添加商户-界面', 'admin/merchant/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (181, 150, '添加商品分类-界面', 'admin/goods/category/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (182, 148, '商品属性', 'admin/goods/type/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (183, 182, '商品属性-添加界面', 'admin/goods/type/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (184, 182, '商品属性-创建', 'admin/goods/type/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (185, 182, '商品属性-编辑界面', 'admin/goods/type/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (186, 182, '商品属性-更新', 'admin/goods/type/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (187, 182, '商品属性-删除', 'admin/goods/type/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (188, 0, '其他', 'admin/news/manage', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (189, 188, '公告管理', 'admin/news/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (190, 189, '添加公告-界面', 'admin/news/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (191, 189, '添加公告-创建', 'admin/news/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (192, 189, '编辑公告-界面', 'admin/news/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (193, 189, '编辑公告-更新', 'admin/news/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (194, 189, '删除公告-删除', 'admin/news/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (195, 0, '论坛', 'admin/forum/manage', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (196, 195, '论坛管理', 'admin/forum/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (197, 195, '论坛分类', 'admin/forum/category/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (198, 197, '添加论坛分类-界面', 'admin/forum/category/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (199, 197, '添加论坛分类-创建', 'admin/forum/category/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (200, 197, '编辑论坛分类-界面', 'admin/forum/category/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (201, 197, '编辑论坛分类-更新', 'admin/forum/category/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (202, 197, '论坛分类-删除', 'admin/forum/category/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (203, 188, '工单列表', 'admin/message/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (204, 203, '查看工单', 'admin/message/history', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (205, 203, '回复工单', 'history/message/send', 'fa-list', 0, 1000, '不记录');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
