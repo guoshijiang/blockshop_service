@@ -9,6 +9,7 @@ const (
 	InvalidFormatError            = 3001  // 无效的参数格式
 	ParamEmptyError               = 3002  // 传入参数为空
 	UserToKenCheckError           = 3003  // 用户 Token 校验失败
+	ParamLessZero                 = 3004  // 参数小于 0
 	PageIsZero                    = 4000  // 页码 0
 	PageSizeIsZero                = 4001  // 每页数量 0
 	PasswordNotEqual              = 4002  // 两次输入的密码不一样
@@ -25,6 +26,10 @@ const (
 	PasswordError                 = 4013  // 两次输入的密码不一样
 	GetGoodsListFail              = 4014  // 获取商品列表失败
 	GetMerchantListFail           = 4015  // 获取商家列表失败
+	InvalidVerifyWay              = 4016  // 无效的付款方式
+	InvalidGoodsPirce             = 4017  // 无效的商品价格
+	UserIsNotExist                = 4018  // 用户不存在
+	AlreadyCancleOrder            = 4019  // 订单已经取消
 )
 
 type PageSizeData struct {

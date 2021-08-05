@@ -94,7 +94,7 @@ func UpdateFactor(user_id int64, factor string)(code int, msg string){
 
 func GetUserInfo(user_name string) (user *User) {
 	var login_user User
-	err := login_user.Query().Filter("user_name", user_name).OrderBy("-id").Limit(1).One(&login_user)
+	err := login_user.Query().Filter("user_name", user_name).OrderBy("-id").One(&login_user)
 	if err != nil {
 		return nil
 	}
@@ -145,7 +145,7 @@ func UserLogin(login user.Login) (login_rep *user.LoginRep, code int, msg string
 
 func OpenCloseFactor(is_open int8, user_id int64, public_key string)(code int, msg string) {
 	var fa2_user User
-	err := fa2_user.Query().Filter("id", user_id).One(fa2_user)
+	err := fa2_user.Query().Filter("id", user_id).OrderBy("-id").One(&fa2_user)
 	if err != nil {
 		return types.UserNoExist, "没有这个用户"
 	}
@@ -160,7 +160,7 @@ func OpenCloseFactor(is_open int8, user_id int64, public_key string)(code int, m
 
 func UpdatePassword(upd_pwd user.UpdatePasswordReq) (code int, msg string) {
 	var upd_user User
-	err := upd_user.Query().Filter("id", upd_pwd.UserId).One(upd_user)
+	err := upd_user.Query().Filter("id", upd_pwd.UserId).One(&upd_user)
 	if err != nil {
 		return types.UserNoExist, "没有这个用户"
 	}
@@ -177,7 +177,7 @@ func UpdatePassword(upd_pwd user.UpdatePasswordReq) (code int, msg string) {
 
 func ForgetPassword(fpt_pwd user.ForgetPasswordReq) (code int, msg string) {
 	var fpt_user User
-	err := fpt_user.Query().Filter("id", fpt_pwd.UserId).One(fpt_user)
+	err := fpt_user.Query().Filter("id", fpt_pwd.UserId).One(&fpt_user)
 	if err != nil {
 		return types.UserNoExist, "没有这个用户"
 	}

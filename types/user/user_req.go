@@ -32,8 +32,8 @@ type Login struct {
 }
 
 func (this Login) ParamCheck() (int, error) {
-	if this.UserName == "" || this.Password == "" || this.LoginTime == 0 || this.TimeUnit == 0 {
-		return types.ParamEmptyError, errors.New("注册请求参数为空，请检查之后再注册")
+	if this.UserName == "" || this.Password == "" || this.LoginTime == 0 {
+		return types.ParamEmptyError, errors.New("登陆请求参数为空，请检查之后再注册")
 	}
 	return types.ReturnSuccess, nil
 }

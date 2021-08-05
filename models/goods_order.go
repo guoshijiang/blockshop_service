@@ -2,8 +2,11 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
+	"blockshop/types/order"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 	"time"
 )
 
@@ -72,3 +75,69 @@ func (this *GoodsOrder) Insert() (error, int64) {
 func (this *GoodsOrder) SearchField() []string {
 	return []string{"order_num"}
 }
+
+
+func GetGoodsOrderList(page, pageSize int, user_id int64, status int8) ([]*GoodsOrder, int64, error) {
+	offset := (page - 1) * pageSize
+	gds_order_list := make([]*GoodsOrder, 0)
+	query := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("UserId", user_id).OrderBy("-id")
+	if status >= 0  && status <= 5 {
+		query = query.Filter("OrderStatus", status)
+	}
+	total, _ := query.Count()
+	_, err := query.Limit(pageSize, offset).All(&gds_order_list)
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("查询数据库失败")
+	}
+	return gds_order_list, total, nil
+}
+
+
+func GetGoodsOrderDetail(id int64) (*GoodsOrder, int, error) {
+	var order_dtl GoodsOrder
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("Id", id).RelatedSel().One(&order_dtl); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &order_dtl, types.ReturnSuccess, nil
+}
+
+
+// 1.退货,资金返回钱包账号; 2:退货,资金原路返回; 3:换货
+func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) {
+	var order_dtl GoodsOrder
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("Id", oret.OrderId).RelatedSel().One(&order_dtl); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	if oret.FundRet == 1 || oret.FundRet == 2 {
+		order_dtl.IsCancle = 1
+	}
+	if oret.FundRet == 3 {
+		order_dtl.IsCancle = 2
+	}
+	err := order_dtl.Update()
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	order_p := OrderProcess{
+		OrderId: order_dtl.Id,
+		MerchantId: order_dtl.MerchantId,
+		UserId: order_dtl.UserId,
+		AddressId: order_dtl.AddressId,
+		GoodsId: order_dtl.GoodsId,
+		RetGoodsRs: oret.RetGoodsRs,
+		QsDescribe: oret.QsDescribe,
+		QsImgOne: oret.QsImgOne,
+		QsImgTwo: oret.QsImgTwo,
+		QsImgThree: oret.QsImgThree,
+		Process: 0,
+		LeftTime: 604800,
+		IsRecvGoods: oret.IsRecvGoods,    // 0:未收到货物，1:已经收到货物
+		FundRet: oret.FundRet,
+	}
+	err, _ = order_p.Insert()
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &order_dtl, types.ReturnSuccess, nil
+}
+

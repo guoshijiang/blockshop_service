@@ -185,13 +185,32 @@ func (this *UserController) GetUserInfo() {
 		return
 	}
 	token := strings.TrimPrefix(bearerToken, "Bearer ")
-	_, err := models.GetUserByToken(token)
+	user_if, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取用户信息成功")
+	data := user.UserInfoRep{
+		UserId:user_if.Id,
+		Photo: user_if.Avator,
+		UserName: user_if.UserName,
+		IsMerchant: 1,
+		JoinTime: user_if.CreatedAt.String(),
+		TrustLevel: user_if.MemberLevel,
+		BtcOrderAmount: "",
+		UsdtOrderAmount: "",
+		AdjustVictor: 1,
+		AdjustFail: 1,
+		BtcBalance: "1000",
+		UsdtBalance: "1000",
+		BtcSpend: "1",
+		UsdtSpend: "1",
+		BtdAddress: "1",
+		UsdtAddress: "1",
+		PublicKey: user_if.UserPublicKey,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取用户信息成功")
 	this.ServeJSON()
 	return
 }
