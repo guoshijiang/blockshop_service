@@ -192,3 +192,13 @@ func ForgetPassword(fpt_pwd user.ForgetPasswordReq) (code int, msg string) {
 	return types.ReturnSuccess, "修改密码成功"
 }
 
+
+func GetUserById(id int64) (User, error) {
+	var query_user User
+	err := query_user.Query().Filter("Id", id).Limit(1).One(&query_user)
+	if err != nil {
+		return query_user, errors.New("user is not exist")
+	}
+	return query_user, nil
+}
+

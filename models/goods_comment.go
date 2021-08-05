@@ -2,7 +2,9 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type GoodsComment struct {
@@ -51,3 +53,14 @@ func (this *GoodsComment) Insert() (error, int64) {
 	return nil, id
 }
 
+func GetGoodsCommentList(page, pageSize int, goods_id int64) ([]*GoodsComment, int64, error) {
+	offset := (page - 1) * pageSize
+	gct_list := make([]*GoodsComment, 0)
+	query := orm.NewOrm().QueryTable(GoodsComment{}).Filter("GoodsId", goods_id)
+	total, _ := query.Count()
+	_, err := query.Limit(pageSize, offset).All(&gct_list)
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("查询数据库失败")
+	}
+	return gct_list, total, nil
+}

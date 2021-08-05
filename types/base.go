@@ -30,6 +30,7 @@ const (
 	InvalidGoodsPirce             = 4017  // 无效的商品价格
 	UserIsNotExist                = 4018  // 用户不存在
 	AlreadyCancleOrder            = 4019  // 订单已经取消
+	AddressIsEmpty                = 4020  // 地址为空
 )
 
 type PageSizeData struct {
