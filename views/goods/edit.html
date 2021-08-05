@@ -163,6 +163,24 @@
               $('#calc_way').select2();
             </script>
 
+
+            <div class="form-group">
+              <label for="goods_type_id" class="col-sm-2 control-label">商品大类</label>
+              <div class="col-sm-10 col-md-4">
+                <select name="goods_type_id" id="goods_type_id" class="form-control field-select" data-placeholder="请选择商品所属大类">
+                  <option value=""></option>
+                  {{range $key,$item := .types}}
+                    <option value="{{$item.Id}}" {{if compare $.data.GoodsCatId $item.Id }} selected {{end}}>
+                      {{$item.Name}}
+                    </option>
+                  {{end}}
+                </select>
+              </div>
+            </div>
+            <script>
+              $('#goods_type_id').select2();
+            </script>
+
             <div class="form-group">
               <label for="goods_cat_id" class="col-sm-2 control-label">商品所属分类</label>
               <div class="col-sm-10 col-md-4">
@@ -202,19 +220,6 @@
             </div>
 
 
-
-
-            <script>
-              $('#is_ig_send').bootstrapSwitch({
-                onText: "赠送积分",
-                offText: "正常",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
 
             <div class="form-group">
               <label for="sale" class="col-sm-2 control-label">上/下架</label>
@@ -314,30 +319,10 @@
             {{/*                        </script>*/}}
 
 
-            <script>
-              $('#is_group').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
 
 
-            <script>
-              $('#is_integral').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
+
+
 
             <div class="form-group">
               <label for="is_limit_time" class="col-sm-2 control-label">限时产品</label>

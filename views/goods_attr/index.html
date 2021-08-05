@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="box">
         <div class="box-body">
-          <form class="form-inline searchForm" id="searchForm" action="/admin/goods/type/index" method="GET">
+          <form class="form-inline searchForm" id="searchForm" action="/admin/goods/attr/index" method="GET">
 
             <div class="form-group">
               <input value="{{._keywords}}"
@@ -31,10 +31,10 @@
         <!--数据列表顶部-->
         <div class="box-header">
           <div>
-            <a title="添加" data-toggle="tooltip" class="btn btn-primary btn-sm"  href="/admin/goods/type/add?goods_id={{.goods_id}}">
+            <a title="添加" data-toggle="tooltip" class="btn btn-primary btn-sm"  href="/admin/goods/attr/add?goods_id={{.goods_id}}">
               <i class="fa fa-plus"></i> 添加
             </a>
-            <a class="btn btn-danger btn-sm AjaxButton" data-toggle="tooltip" title="删除选中数据" data-confirm-title="删除确认" data-confirm-content="您确定要删除选中的数据吗？" data-id="checked" data-url="/admin/goods/type/del">
+            <a class="btn btn-danger btn-sm AjaxButton" data-toggle="tooltip" title="删除选中数据" data-confirm-title="删除确认" data-confirm-content="您确定要删除选中的数据吗？" data-id="checked" data-url="/admin/goods/attr/del">
               <i class="fa fa-trash"></i> 删除
             </a>
             <a class="btn btn-success btn-sm ReloadButton" data-toggle="tooltip" title="刷新">
@@ -50,7 +50,8 @@
                 <input id="dataCheckAll" type="checkbox" onclick="checkAll(this)" class="checkbox" placeholder="全选/取消">
               </th>
               <th>ID</th>
-              <th>分类名</th>
+              <th>属性名</th>
+              <th>属性值</th>
               <th>是否显示</th>
               <th>操作</th>
             </tr>
@@ -63,16 +64,17 @@
                          data-id="{{$item.Id}}" class="checkbox data-list-check" value="{{$item.Id}}" placeholder="选择/取消">
                 </td>
                 <td>{{$item.Id}}</td>
-                <td>{{$item.Name}}</td>
+                <td>{{$item.TypeKey}}</td>
+                <td>{{$item.TypeVale}}</td>
                 <td>
-                  {{if compare 0 $item.IsShow}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}
+                  {{if compare 1 $item.IsShow}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}
                 </td>
                 <td class="td-do">
-                  <a href="/admin/goods/type/edit?id={{$item.Id}}&goods_id={{$.goods_id}}"
+                  <a href="/admin/goods/attr/edit?id={{$item.Id}}&goods_id={{$.goods_id}}"
                      class="btn btn-primary btn-xs" title="修改" data-toggle="tooltip">
                     <i class="fa fa-pencil"></i>
                   </a>
-                  <a class="btn btn-danger btn-xs AjaxButton" data-toggle="tooltip" title="删除" data-csrf-token="" data-id="{{$item.Id}}" data-confirm-title="删除确认" data-confirm-content='您确定要删除ID为 <span class="text-red">{{$item.Id}}</span> 的数据吗' data-url="/admin/goods/type/del">
+                  <a class="btn btn-danger btn-xs AjaxButton" data-toggle="tooltip" title="删除" data-csrf-token="" data-id="{{$item.Id}}" data-confirm-title="删除确认" data-confirm-content='您确定要删除ID为 <span class="text-red">{{$item.Id}}</span> 的数据吗' data-url="/admin/goods/attr/del">
                     <i class="fa fa-trash"></i>
                   </a>
                 </td>

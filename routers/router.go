@@ -134,18 +134,31 @@ func init() {
     //商品分类管理-删除
     beego.NSRouter("/goods/category/del", &controllers.GoodsCateController{}, "post:Del"),
 
-    //商品分类管理-商品属性管理
+    //商品大类管理-商品大类管理
     beego.NSRouter("/goods/type/index", &controllers.GoodsTypeController{}, "get:Index"),
-    //商品属性管理-添加界面
+    //商品大类管理-添加界面
     beego.NSRouter("/goods/type/add", &controllers.GoodsTypeController{}, "get:Add"),
-    //商品属性管理-添加
+    //商品大类管理-添加
     beego.NSRouter("/goods/type/create", &controllers.GoodsTypeController{}, "post:Create"),
-    //商品属性管理-修改界面
+    //商品大类管理-修改界面
     beego.NSRouter("/goods/type/edit", &controllers.GoodsTypeController{}, "get:Edit"),
-    //商品属性管理-修改
+    //商品大类管理-修改
     beego.NSRouter("/goods/type/update", &controllers.GoodsTypeController{}, "post:Update"),
-    //商品属性管理-删除
+    //商品大类管理-删除
     beego.NSRouter("/goods/type/del", &controllers.GoodsTypeController{}, "post:Del"),
+
+    //商品属性管理-商品属性管理
+    beego.NSRouter("/goods/attr/index", &controllers.GoodsAttrController{}, "get:Index"),
+    //商品属性管理-添加界面
+    beego.NSRouter("/goods/attr/add", &controllers.GoodsAttrController{}, "get:Add"),
+    //商品属性管理-添加
+    beego.NSRouter("/goods/attr/create", &controllers.GoodsAttrController{}, "post:Create"),
+    //商品属性管理-修改界面
+    beego.NSRouter("/goods/attr/edit", &controllers.GoodsAttrController{}, "get:Edit"),
+    //商品属性管理-修改
+    beego.NSRouter("/goods/attr/update", &controllers.GoodsAttrController{}, "post:Update"),
+    //商品属性管理-删除
+    beego.NSRouter("/goods/attr/del", &controllers.GoodsAttrController{}, "post:Del"),
 
     //币种管理-商品属性管理
     beego.NSRouter("/asset/index", &controllers.AssetController{}, "get:Index"),

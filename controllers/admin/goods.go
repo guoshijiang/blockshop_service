@@ -29,6 +29,7 @@ func (Self *GoodsController) Index() {
 func (Self *GoodsController) Add() {
   Self.Data["calcway"] = []models.Select{{Id: 0,Name: "件"},{Id: 1,Name: "斤"}}
   Self.Data["cats"] = (&services.GoodsCateService{}).GetGoodsCats()
+  Self.Data["types"] = (&services.GoodsTypeService{}).GetGoodsTypes()
   adminUser := admin["user"].(*models.AdminUser)
   Self.Data["merchant_id"] = adminUser.MerchantId
   Self.Data["merchants"] = (&services.MerchantService{}).GetMerchants()

@@ -130,6 +130,24 @@
               $('#calc_way').select2();
             </script>
 
+
+            <div class="form-group">
+              <label for="goods_type_id" class="col-sm-2 control-label">商品大类</label>
+              <div class="col-sm-10 col-md-4">
+                <select name="goods_type_id" id="goods_type_id" class="form-control field-select" data-placeholder="请选择商品所属大类">
+                  <option value=""></option>
+                  {{range $key,$item := .types}}
+                    <option value="{{$item.Id}}">
+                      {{$item.Name}}
+                    </option>
+                  {{end}}
+                </select>
+              </div>
+            </div>
+            <script>
+              $('#goods_type_id').select2();
+            </script>
+
             <div class="form-group">
               <label for="goods_cat_id" class="col-sm-2 control-label">商品所属分类</label>
               <div class="col-sm-10 col-md-4">
@@ -157,7 +175,7 @@
             <div class="form-group">
               <label for="nickname" class="col-sm-2 control-label">产品参数</label>
               <div class="col-sm-10 col-md-4">
-                <input maxlength="50" class="form-control" id="goods_params" placeholder="请输入昵称" name="goods_params" value="">
+                <input maxlength="50" class="form-control" id="goods_params" placeholder="请输入产品参数" name="goods_params" value="">
               </div>
             </div>
 
@@ -167,44 +185,6 @@
                 <input maxlength="50" class="form-control" id="discount" placeholder="请输入折扣" name="discount" value="">
               </div>
             </div>
-
-            <div class="form-group">
-              <label for="send_integral" class="col-sm-2 control-label">购买赠送积分</label>
-              <div class="col-sm-10 col-md-4">
-                <input maxlength="50" class="form-control" id="send_integral" placeholder="请输入购买赠送积分" name="send_integral" value="">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="goods_integral" class="col-sm-2 control-label">购买需要积分</label>
-              <div class="col-sm-10 col-md-4">
-                <input maxlength="50" class="form-control" id="goods_integral" placeholder="请输入购买需要积分" name="goods_integral" value="">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="group_number" class="col-sm-2 control-label">主力人数</label>
-              <div class="col-sm-10 col-md-4">
-                <input maxlength="50" class="form-control" id="group_number" placeholder="请输入主力人数" name="group_number" value="">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="is_ig_send" class="col-sm-2 control-label">是否赠送积分</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_ig_send" value="1" checked type="checkbox"/>
-                <input class="switch field-switch" name="is_ig_send" value="1" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_ig_send').bootstrapSwitch({
-                onText: "赠送积分",
-                offText: "正常",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
 
             <div class="form-group">
               <label for="sale" class="col-sm-2 control-label">上/下架</label>
@@ -283,43 +263,6 @@
               });
             </script>
 
-            <div class="form-group">
-              <label for="is_group" class="col-sm-2 control-label">拼购产品</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_group" value="1" checked type="checkbox"/>
-                <input class="switch field-switch" name="is_group" value="1" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_group').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
-
-            <div class="form-group">
-              <label for="is_integral" class="col-sm-2 control-label">积分兑换产品</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_integral" value="1" checked type="checkbox"/>
-                <input class="switch field-switch" name="is_integral" value="1" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_integral').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
 
             <div class="form-group">
               <label for="is_limit_time" class="col-sm-2 control-label">限时产品</label>

@@ -6,17 +6,16 @@ import (
   "blockshop/global/response"
   "blockshop/services"
   "github.com/gookit/validate"
-  "log"
   "strconv"
 )
 
-type GoodsTypeController struct {
+type GoodsAttrController struct {
   baseController
 }
 
-func (Self *GoodsTypeController) Index() {
+func (Self *GoodsAttrController) Index() {
   goods_id,_ := Self.GetInt64("id")
-  var srv services.GoodsTypeService
+  var srv services.GoodsAttrService
   gQueryParams.Add("goods_id",strconv.Itoa(int(goods_id)))
   data, pagination := srv.GetPaginateData(admin["per_page"].(int), gQueryParams)
   Self.Data["goods_id"] = goods_id
@@ -24,38 +23,26 @@ func (Self *GoodsTypeController) Index() {
   Self.Data["paginate"] = pagination
 
   Self.Layout = "public/base.html"
-  Self.TplName = "goods_type/index.html"
+  Self.TplName = "goods_attr/index.html"
 }
 
-func (Self *GoodsTypeController) Add() {
+func (Self *GoodsAttrController) Add() {
   goods_id,_ := Self.GetInt64("goods_id")
   Self.Data["goods_id"] = goods_id
   Self.Layout = "public/base.html"
-  Self.TplName = "goods_type/add.html"
+  Self.TplName = "goods_attr/add.html"
 }
 
 
-func (Self *GoodsTypeController) Create() {
-  var frm form_validate.GoodsTypeForm
-  var srv services.GoodsTypeService
+func (Self *GoodsAttrController) Create() {
+  var frm form_validate.GoodsAttrForm
+  var srv services.GoodsAttrService
   if err := Self.ParseForm(&frm); err != nil {
     response.ErrorWithMessage(err.Error(), Self.Ctx)
   }
-
   v := validate.Struct(frm)
   if !v.Validate() {
     response.ErrorWithMessage(v.Errors.One(), Self.Ctx)
-  }
-
-  //默认头像
-  frm.Icon = "/static/admin/images/avatar.png"
-  //上传LOGO
-  imgPath, err := new(services.UploadService).Upload(Self.Ctx, "icon")
-  if err != nil {
-    log.Println("upload--err",err)
-  }
-  if len(imgPath) > 0 {
-    frm.Icon = imgPath
   }
 
   insertId := srv.Create(&frm)
@@ -71,14 +58,14 @@ func (Self *GoodsTypeController) Create() {
   }
 }
 
-func (Self *GoodsTypeController) Edit() {
+func (Self *GoodsAttrController) Edit() {
   id, _ := Self.GetInt64("id", -1)
   goods_id,_ := Self.GetInt64("goods_id")
   Self.Data["goods_id"] = goods_id
   if id <= 0 {
     response.ErrorWithMessage("Param is error.", Self.Ctx)
   }
-  var srv services.GoodsTypeService
+  var srv services.GoodsAttrService
 
   data := srv.GetById(id)
   if data == nil {
@@ -87,28 +74,17 @@ func (Self *GoodsTypeController) Edit() {
 
   Self.Data["data"] = data
   Self.Layout = "public/base.html"
-  Self.TplName = "goods_type/edit.html"
+  Self.TplName = "goods_attr/edit.html"
 }
 
-func (Self *GoodsTypeController) Update(){
-  var frm form_validate.GoodsTypeForm
+func (Self *GoodsAttrController) Update(){
+  var frm form_validate.GoodsAttrForm
   if err := Self.ParseForm(&frm); err != nil {
     response.ErrorWithMessage(err.Error(), Self.Ctx)
   }
 
   if frm.Id <= 0 {
     response.ErrorWithMessage("Params is Error.", Self.Ctx)
-  }
-
-  //默认头像
-  frm.Icon = "/static/admin/images/avatar.png"
-  //上传LOGO
-  imgPath, err := new(services.UploadService).Upload(Self.Ctx, "icon")
-  if err != nil {
-    log.Println("upload--err",err)
-  }
-  if len(imgPath) > 0 {
-    frm.Icon = imgPath
   }
 
   v := validate.Struct(frm)
@@ -118,7 +94,7 @@ func (Self *GoodsTypeController) Update(){
   }
 
   //商家验重
-  var srv services.GoodsTypeService
+  var srv services.GoodsAttrService
 
   if srv.Update(&frm) > 0 {
     response.Success(Self.Ctx)
@@ -127,7 +103,7 @@ func (Self *GoodsTypeController) Update(){
   }
 }
 
-func (Self *GoodsTypeController) Del() {
+func (Self *GoodsAttrController) Del() {
   idStr := Self.GetString("id")
   ids := make([]int, 0)
   var idArr []int
@@ -145,7 +121,7 @@ func (Self *GoodsTypeController) Del() {
   if len(idArr) == 0 {
     response.ErrorWithMessage("参数id错误.", Self.Ctx)
   }
-  var srv services.GoodsTypeService
+  var srv services.GoodsAttrService
   if srv.Del(idArr) > 0 {
     response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, Self.Ctx)
   } else {
