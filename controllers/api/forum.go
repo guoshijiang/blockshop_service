@@ -12,11 +12,11 @@ type ForumController struct {
 	beego.Controller
 }
 
-// ForumList @Title ForumList
-// @Description 论坛分类列表 ForumList
+// ForumMainTopicList @Title ForumMainTopicList
+// @Description 论坛分类列表 ForumMainTopicList
 // @Success 200 status bool, data interface{}, msg string
-// @router /forum_list [post]
-func (this *ForumController) ForumList() {
+// @router /forum_main_topic_list [post]
+func (this *ForumController) ForumMainTopicList() {
 	forum_req := forum.ForumListReq{}
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_req); err != nil {
 		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
@@ -60,6 +60,67 @@ func (this *ForumController) ForumList() {
 		"form_lst": f_level_one_list,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取论坛父板块成功")
+	this.ServeJSON()
+	return
+}
+
+// ForumChildTopicList @Title ForumChildTopicList
+// @Description 论坛子模块接口 ForumChildTopicList
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_child_topic_list [post]
+func (this *ForumController) ForumChildTopicList() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取论坛子模块成功")
+	this.ServeJSON()
+	return
+}
+
+// ForumCTopicList @Title ForumCTopicList
+// @Description 论坛帖子列表 ForumCTopicList
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_topic_list [post]
+func (this *ForumController) ForumCTopicList() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取论坛帖子列表成功")
+	this.ServeJSON()
+	return
+}
+
+// ForumCTopicDetail @Title ForumCTopicDetail
+// @Description 论坛帖子 ForumCTopicDetail
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_topic_detail [post]
+func (this *ForumController) ForumCTopicDetail() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取论坛子板块成功")
+	this.ServeJSON()
+	return
+}
+
+// ForumTopicCommentList @Title ForumTopicCommentList
+// @Description 论坛帖子评论 ForumTopicCommentList
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_topic_comment_list [post]
+func (this *ForumController) ForumTopicCommentList() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取帖子评论成功")
+	this.ServeJSON()
+	return
+}
+
+// ForumTopicCommentReply @Title ForumTopicCommentReply
+// @Description 论坛帖子评论和回复 ForumTopicCommentReply
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_topic_comment_reply [post]
+func (this *ForumController) ForumTopicCommentReply() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发表评论回复成功")
+	this.ServeJSON()
+	return
+}
+
+
+// CreateForumTopic @Title CreateForumTopic
+// @Description 发论坛帖子 CreateForumTopic
+// @Success 200 status bool, data interface{}, msg string
+// @router /create_forum_topic [post]
+func (this *ForumController) CreateForumTopic() {
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发布帖子成功")
 	this.ServeJSON()
 	return
 }
