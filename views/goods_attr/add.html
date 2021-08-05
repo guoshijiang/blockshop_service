@@ -30,8 +30,8 @@
             <div class="form-group">
               <label for="is_show" class="col-sm-2 control-label">是否显示</label>
               <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_show" value="1" checked type="checkbox"/>
-                <input class="switch field-switch" name="is_show" value="1" hidden/>
+                <input class="input-switch" id="is_show" value="0" checked type="checkbox"/>
+                <input class="switch field-switch" name="is_show" value="0" hidden/>
               </div>
             </div>
             <script>
@@ -41,7 +41,7 @@
                 onColor: "success",
                 offColor: "danger",
                 onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
+                  $(event.target).closest('.bootstrap-switch').next().val(state ? '0' : '1').change();
                 }
               });
             </script>

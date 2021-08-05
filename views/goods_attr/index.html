@@ -67,7 +67,7 @@
                 <td>{{$item.TypeKey}}</td>
                 <td>{{$item.TypeVale}}</td>
                 <td>
-                  {{if compare 1 $item.IsShow}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}
+                  {{if compare 0 $item.IsShow}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}
                 </td>
                 <td class="td-do">
                   <a href="/admin/goods/attr/edit?id={{$item.Id}}&goods_id={{$.goods_id}}"

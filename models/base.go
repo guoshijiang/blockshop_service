@@ -27,9 +27,9 @@ func init() {
 	if err != nil {
 		logs.Error(err.Error())
 	}
-	insertRole()
-	insertAdmin()
-	loadMenu()
+	//insertRole()
+	//insertAdmin()
+	//loadMenu()
 }
 
 
