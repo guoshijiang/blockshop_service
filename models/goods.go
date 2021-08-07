@@ -90,10 +90,10 @@ func GetGoodsList(req goods.GoodsListReq) ([]*Goods, int64, error) {
 		query_good = query_good.Filter("goods_name__contains", req.GoodsName)
 	}
 	if req.TypeId >= 1 {
-		query_good = query_good.Filter("TypeId", req.TypeId)
+		query_good = query_good.Filter("goods_type_id", req.TypeId)
 	}
 	if req.CatId >= 1 {
-		query_good = query_good.Filter("CatId", req.CatId)
+		query_good = query_good.Filter("goods_cat_id", req.CatId)
 	}
 	if req.StartPrice >= 0 && req.EndPrice != 0 && req.EndPrice >= req.StartPrice {
 		query_good = query_good.Filter("goods_price__gt", req.StartPrice).Filter("goods_price__lt", req.EndPrice)

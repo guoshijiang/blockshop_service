@@ -64,7 +64,7 @@ func (this *OrderController) CreateOrder() {
 		Logo: gds.Logo,
 		UserId: create_order.UserId,
 		BuyNums: create_order.BuyNums,
-		PayWay: 4,
+		PayWay: create_order.PayWay,
 		PayAmount: create_order.PayAmount,
 		OrderNumber: order_nmb.String(),
 		OrderStatus: 0,
@@ -117,16 +117,28 @@ func (this *OrderController) PayOrder () {
 		this.ServeJSON()
 		return
 	}
-	ordr.PayAmount = pay_order.PayAmount
-	ordr.PayWay = pay_order.PayWay
-	ordr.OrderStatus = 1
-	if pay_order.PayWay == 0 { // BTC 支付
-		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "支付成功")
+	if ordr.PayAmount != pay_order.PayAmount {
+		this.Data["json"] = RetResource(false, types.VerifyPayAmount, nil, "支付金额不对")
 		this.ServeJSON()
 		return
 	}
-	if pay_order.PayWay == 1 { // USDT 支付
+	if ordr.PayWay != pay_order.PayWay {
+		this.Data["json"] = RetResource(false, types.PayOrderError, nil, "支付方式不对")
+		this.ServeJSON()
+		return
+	}
+	ok, err, code := models.PayOrder(pay_order.OrderId)
+	if err == nil && ok == true {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "支付成功")
+		this.ServeJSON()
+		return
+	} else {
+		if err != nil {
+			this.Data["json"] = RetResource(false, code, nil, err.Error())
+			this.ServeJSON()
+			return
+		}
+		this.Data["json"] = RetResource(false, types.PayOrderError, nil, "支付发生错误")
 		this.ServeJSON()
 		return
 	}

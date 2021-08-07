@@ -41,7 +41,7 @@ type OrderListReq struct {
 }
 
 func (this OrderListReq) ParamCheck() (int, error) {
-	code, err := this.ParamCheck()
+	code, err := this.SizeParamCheck()
 	if err != nil {
 		return code, err
 	}

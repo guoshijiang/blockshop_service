@@ -10,6 +10,22 @@ import (
 	"time"
 )
 
+
+const (
+	OrderStatusNoPay       = 0
+	OrderStatusPaying      = 1
+	OrderStatusPaySuccess  = 2
+	OrderStatusPayFailure  = 3
+	OrderStatusPayCancel   = 4
+	PayWayUSDT             = 1
+	PayWayBTC              = 2
+	OrderRewardStageUSDT   = 1
+	OrderRewardStageBTC    = 2
+	OrderRewardStageFinish = 3
+	StatusOK               = 0
+	StatusDelete           = 1
+)
+
 type GoodsOrder struct {
 	BaseModel
 	Id            int64      `orm:"pk;column(id);auto;size(11)" description:"订单ID" json:"id"`
@@ -74,6 +90,109 @@ func (this *GoodsOrder) Insert() (error, int64) {
 
 func (this *GoodsOrder) SearchField() []string {
 	return []string{"order_num"}
+}
+
+
+func PayOrder(order_id int64) (success bool, err error, code int) {
+	db := orm.NewOrm()
+	if err := db.Begin(); err != nil {
+		err := errors.Wrap(err, "开启支付事物失败")
+		return false, err, types.OrderPayException
+	}
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(db.Rollback(), "回滚事物失败")
+		} else {
+			err = errors.Wrap(db.Commit(), "提交事物失败")
+		}
+	}()
+	goods_order := GoodsOrder{}
+	if err = db.QueryTable(goods_order.TableName()).Filter("id", order_id).One(&goods_order); err != nil {
+		err := errors.New("查询订单失败")
+		return false, err, types.OrderPayException
+	}
+	if goods_order.OrderStatus == OrderStatusPaySuccess {
+		err := errors.New("订单已经支付")
+		return false, err, types.OrderAlreadyPay
+	}
+	if goods_order.OrderStatus != 0 {
+		goods_order.OrderStatus = 0
+		goods_order.FailureReason = ""
+	}
+	goods := Goods{}
+	if err = db.QueryTable(goods.TableName()).Filter("id", goods_order.GoodsId).One(&goods); err != nil {
+		err = errors.New("查询商品信息失败")
+		return false, err, types.OrderPayException
+	}
+	user := User{}
+	if err = db.QueryTable(user).RelatedSel().Filter("id", goods_order.UserId).One(&user); err != nil {
+		err = errors.New("查询购买商品的用户失败")
+		return false, err, types.OrderPayException
+	}
+	var pay_asset *Asset
+	if goods_order.PayWay == PayWayUSDT {
+		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
+		if supportedPayPrice != float64(goods_order.PayAmount) {
+			err = errors.New("支付方式错误")
+			return false, err, types.VerifyPayAmount
+		}
+		var ast Asset
+		ast.Name = "USDT"
+		asst, _ := ast.GetAsset()
+		pay_asset = asst
+		total, code, err := GetUserWalletBalance(asst.Id, goods_order.UserId)
+		if err != nil {
+			return false, err, code
+		}
+		if total < supportedPayPrice {
+			err = errors.New("账户没有足够的资金，请去充值")
+			return false, err, types.AccountAmountNotEnough
+		}
+	} else {
+		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
+		if supportedPayPrice != float64(goods_order.PayAmount) {
+			err = errors.New("支付方式错误")
+			return false, err, types.VerifyPayAmount
+		}
+		var ast Asset
+		ast.Name = "BTC"
+		asst, _ := ast.GetAsset()
+		pay_asset = asst
+		total, code, err := GetUserWalletBalance(asst.Id, goods_order.UserId)
+		if err != nil {
+			return false, err, code
+		}
+		if total < supportedPayPrice {
+			err = errors.New("账户没有足够的资金，请去充值")
+			return false, err, types.AccountAmountNotEnough
+		}
+	}
+	if len(goods_order.FailureReason) > 0 {
+		goods_order.OrderStatus = OrderStatusPayFailure
+		if _, err = db.Update(&goods_order, "OrderStatus", "FailureReason"); err != nil {
+			err = errors.New("更新订单的状态失败")
+			return false, err, types.OrderPayException
+		}
+		return false, nil, types.PayOrderError
+	}
+	success, code, err = UpdateWalletBalance(db, pay_asset.Id, goods_order.UserId, float64(goods_order.PayAmount))
+	if err != nil {
+		return success, err, code
+	}
+	goods.LeftAmount -= goods_order.BuyNums
+	if _, err := db.Update(&Goods{}, "LeftAmount"); err != nil {
+		err = errors.New("更新剩余商品个数失败")
+		return false, err, types.OrderPayException
+	}
+	now := time.Now()
+	goods_order.OrderStatus = OrderStatusPaySuccess
+	goods_order.FailureReason = ""
+	goods_order.PayAt = &now
+	if _, err = db.Update(&goods_order, "OrderStatus", "FailureReason", "PayAt"); err != nil {
+		err = errors.New("更新订单状态失败")
+		return false, err, types.OrderPayException
+	}
+	return true, nil, types.ReturnSuccess
 }
 
 

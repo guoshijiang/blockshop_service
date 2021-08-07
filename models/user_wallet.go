@@ -2,6 +2,13 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/http"
+	"blockshop/types"
+	"blockshop/types/wallet"
+	"encoding/json"
+	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -39,4 +46,159 @@ func (this *UserWallet) Update(fields ...string) error {
 
 func (this *UserWallet) SearchField() []string {
   return []string{"chain"}
+}
+
+
+func (w *UserWallet) GetUserWalletListByUserId() ([]*UserWallet, int, error) {
+	var u_wallet []*UserWallet
+	_, err := orm.NewOrm().QueryTable(w.TableName()).Filter("user_id", w.UserId).RelatedSel().All(&u_wallet)
+	if err != nil {
+		return nil, types.NothisWallet, err
+	}
+	return u_wallet, types.ReturnSuccess, nil
+}
+
+func (w *UserWallet) GetUserWalletByUser() (*UserWallet, int, error) {
+	err := w.Query().Filter("user_id", w.UserId).Filter("asset_id", w.AssetId).One(w)
+	if err != nil {
+		return nil, types.UserIdEmptyError, err
+	}
+	return w, types.ReturnSuccess, nil
+}
+
+func (w *UserWallet) GetUserWalletByUserId() error {
+	err := w.Query().Filter("user_id", w.UserId).One(w)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetUserWalletBalance(asset_id, user_id int64) (float64, int, error) {
+	var user_wallet UserWallet
+	err := orm.NewOrm().QueryTable(&UserWallet{}).Filter("asset_id", asset_id).Filter("user_id", user_id).RelatedSel().One(&user_wallet)
+	if err != nil {
+		return 0, types.NothisWallet, err
+	}
+	return float64(user_wallet.Balance), types.ReturnSuccess, nil
+}
+
+
+func UpdateWalletBalance(db orm.Ormer, asset_id, user_id int64, pay_amount float64) (bool, int, error) {
+	var user_wallet UserWallet
+	err := db.QueryTable(&UserWallet{}).Filter("asset_id", asset_id).Filter("user_id", user_id).RelatedSel().One(&user_wallet)
+	if err != nil {
+		return false, types.NothisWallet, err
+	}
+	sql := fmt.Sprintf(`
+	UPDATE
+		%s
+	SET
+		balance = balance - %f
+	WHERE
+		user_id = '%d' AND asset_id = %d`, user_wallet.TableName(), pay_amount, user_id, asset_id)
+	if _, err := db.Raw(sql).Exec(); err != nil {
+		return false, types.NothisWallet, err
+	}
+	return true, types.ReturnSuccess, nil
+}
+
+
+func CreateWalletAddress(user_id, wallet_id int64) error {
+	wallet_url := beego.AppConfig.String("wallet_url")
+	request_url := wallet_url + "create_address"
+	data := wallet.AddressReq{
+		UserId:   user_id,
+		WalletId: wallet_id,
+	}
+	response := http.HttpPost(request_url, data, "application/json")
+	var addres_rep wallet.WalletAddressRep
+	if err := json.Unmarshal([]byte(response), &addres_rep); err != nil {
+		logs.Error("decode json fail")
+		return err
+	}
+	if addres_rep.Status == false {
+		request_url := wallet_url + "get_address"
+		response := http.HttpPost(request_url, data, "application/json")
+		if err := json.Unmarshal([]byte(response), &addres_rep); err != nil {
+			logs.Error("decode json fail")
+			return err
+		}
+	}
+	for _, value := range addres_rep.Data {
+		var asset Asset
+		var user_w UserWallet
+		asset.Name = value.AssetName
+		assts, err := asset.GetAssetByName()
+		if err != nil {
+			logs.Error("get asset by name fail")
+			return err
+		}
+		err = orm.NewOrm().QueryTable(UserWallet{}).Filter("user_id", user_id).Filter("asset_id", assts.Id).One(&user_w)
+		if err != nil {
+			logs.Error("get wallet id fail")
+			return err
+		}
+		var chain_name string
+		if value.ChainName == "Ethereum" && value.AssetName == "USDT" {
+			chain_name = "Erc20"
+		}
+		if value.ChainName == "TRX" && value.AssetName == "USDT" {
+			chain_name = "Trc20"
+		}
+		if value.ChainName == "Bitcoin" && value.AssetName == "BTC" {
+			chain_name = "Bitcoin"
+		}
+		wallet_address := UserWallet{
+			UserId:  user_id,
+			ChainName: chain_name,
+			AssetId: assts.Id,
+			Address: value.Address,
+		}
+		err1 := wallet_address.Insert()
+		if err1 != nil {
+			logs.Error("insert wallet fail")
+			return err
+		}
+	}
+	return nil
+}
+
+func GeneratedUserWallet(user_id int64) int {
+	var asset Asset
+	asset_list, _ := asset.GetAssetList()
+	for _, v := range asset_list {
+		uw := new(UserWallet)
+		uw.AssetId = v.Id
+		uw.UserId = user_id
+		err := uw.Insert()
+		if err != nil {
+			return types.CreateWalletFail
+		}
+	}
+	err := CreateWalletAddress(user_id, 100)
+	if err != nil {
+		return types.CreateWalletFail
+	}
+	return types.ReturnSuccess
+}
+
+//获得钱包信息
+func (w *UserWallet) GetUserWalletAsset() (*UserWallet, error) {
+	var user_wallet UserWallet
+	err := orm.NewOrm().QueryTable(&UserWallet{}).Filter("asset_id", w.AssetId).Filter("user_id", w.UserId).RelatedSel().One(&user_wallet)
+	if err != nil {
+		return nil, err
+	}
+	return &user_wallet, nil
+}
+
+//获得特定钱包的信息
+func (w *UserWallet) GetUserWallet(condition *orm.Condition) (float64, error) {
+	var user_wallet UserWallet
+	err := orm.NewOrm().QueryTable(&UserWallet{}).SetCond(condition).One(&user_wallet)
+	if err != nil {
+		return 0, err
+	}
+	return user_wallet.Balance, nil
 }

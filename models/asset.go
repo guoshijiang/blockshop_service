@@ -30,3 +30,66 @@ func (this *Asset) Query() orm.QuerySeter {
 func (this *Asset) SearchField() []string {
   return []string{"name"}
 }
+
+
+func (a *Asset) GetAsset() (*Asset, error) {
+	var asset Asset
+	err := asset.Query().Filter("name", a.Name).One(&asset)
+	if err != nil {
+		return nil, err
+	}
+	return &asset, nil
+}
+
+func (a *Asset) GetAssetById() (*Asset, error) {
+	var asset Asset
+	err := asset.Query().Filter("id", a.Id).One(&asset)
+	if err != nil {
+		return nil, err
+	}
+	return &asset, nil
+}
+
+func (a *Asset) GetAssetList() ([]*Asset, error) {
+	var asset_list []*Asset
+	_, err := orm.NewOrm().QueryTable(a.TableName()).RelatedSel().All(&asset_list)
+	return asset_list, err
+}
+
+func (a *Asset) GetAssetByName() (*Asset, error) {
+	var asset Asset
+	err := asset.Query().Filter("name", a.Name).One(&asset)
+	if err != nil {
+		return nil, err
+	}
+	return &asset, nil
+}
+
+
+func (a *Asset) PageList(page,pageSize int,condition *orm.Condition) ([]*Asset,int64) {
+	offset := (page - 1) * pageSize
+	list := make([]*Asset, 0)
+	query := orm.NewOrm().QueryTable(a.TableName())
+	query = query.SetCond(condition)
+	total, _ := query.Count()
+	query.OrderBy("-id").Limit(pageSize,offset).RelatedSel().All(&list)
+	return list, total
+}
+
+func (a *Asset) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(a, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
+type AssetValues struct {
+	Total int
+	Found int
+}
+
+func (a *Asset) AssetList() (orm.Params,error) {
+	var data  orm.Params
+	_,err := orm.NewOrm().Raw("select name,id from asset").RowsToMap(&data,"name","id")
+	return data,err
+}

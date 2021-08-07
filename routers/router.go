@@ -247,6 +247,12 @@ func init() {
         ),
       ),
 
+    beego.NSNamespace("/order",
+      beego.NSInclude(
+        &api.OrderController{},
+      ),
+    ),
+
       beego.NSNamespace("/user",
           beego.NSInclude(
               &api.UserController{},

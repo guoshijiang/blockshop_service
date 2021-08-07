@@ -31,6 +31,22 @@ const (
 	UserIsNotExist                = 4018  // 用户不存在
 	AlreadyCancleOrder            = 4019  // 订单已经取消
 	AddressIsEmpty                = 4020  // 地址为空
+	AssetNameIsEmpty              = 4021  // 资产名称为空
+	ChainNameIsEmpty              = 4022  // 链的名称为空
+	NothisWallet                  = 4023  // 没有这个钱包
+	UserIdEmptyError              = 4024  // 用户ID为空
+	CreateWalletFail              = 4025  // 创建钱包失败
+	OrderPayException             = 4026  // 订单支付异常
+	OrderAlreadyPay               = 4027  // 订单已经支付
+	VerifyPayAmount               = 4028  // 验证支付金额失败
+	AccountAmountNotEnough        = 4029  // 账户余额不足
+	PayOrderError                 = 4030  // 订单支付错误
+
+	// 5000
+	InvalidWOrD                   = 5000  // 无效的充值或者提现
+	AmountLessZero                = 5001  // 充值或提现小于 0
+	TxHashEmpty                   = 5002  // 交易 Hash 为空
+	TxFeeLessZero                 = 5003  // 交易手续小于 0
 )
 
 type PageSizeData struct {
@@ -38,7 +54,7 @@ type PageSizeData struct {
 	PageSize int `json:"page_size"`
 }
 
-func (this PageSizeData) ParamCheck() (int, error) {
+func (this PageSizeData) SizeParamCheck() (int, error) {
 	if this.Page == 0 {
 		return PageIsZero, errors.New("page 不能为 0")
 	}

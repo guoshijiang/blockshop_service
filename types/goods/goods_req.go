@@ -17,7 +17,7 @@ type GoodsListReq struct {
 }
 
 func (this GoodsListReq) ParamCheck() (int, error) {
-	code, err := this.ParamCheck()
+	code, err := this.SizeParamCheck()
 	if err != nil {
 		return code, err
 	}

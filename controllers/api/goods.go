@@ -28,6 +28,7 @@ func (this *GoodsController) GoodsList() {
 		this.ServeJSON()
 		return
 	}
+
 	good_list, total, err := models.GetGoodsList(goods_lst_req)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.GetGoodsListFail, nil, err.Error())
@@ -157,4 +158,3 @@ func (this *GoodsController) GoodsDetail() {
 	this.ServeJSON()
 	return
 }
-
