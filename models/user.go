@@ -175,6 +175,23 @@ func UpdatePassword(upd_pwd user.UpdatePasswordReq) (code int, msg string) {
 	return types.ReturnSuccess, "修改密码成功"
 }
 
+func UpdatePinCode(pin_code user.UpdatePinCodeReq) (code int, msg string) {
+	var upd_user User
+	err := upd_user.Query().Filter("id", pin_code.UserId).One(&upd_user)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	if upd_user.PinCode != pin_code.OldPinCode {
+		return types.PasswordError, "输入老Pin码错误"
+	}
+	upd_user.PinCode = pin_code.NewPinCode
+	err = upd_user.Update()
+	if err != nil {
+		return types.UserNoExist, "修改Pin码失败"
+	}
+	return types.ReturnSuccess, "修改Pin码成功"
+}
+
 func ForgetPassword(fpt_pwd user.ForgetPasswordReq) (code int, msg string) {
 	var fpt_user User
 	err := fpt_user.Query().Filter("id", fpt_pwd.UserId).One(&fpt_user)
@@ -202,3 +219,24 @@ func GetUserById(id int64) (*User, error) {
 	return &query_user, nil
 }
 
+func UpdateUser(user_info_req user.UpdateUserInfoReq) (code int, msg string) {
+	var user_info User
+	err := user_info.Query().Filter("id", user_info_req.UserId).One(&user_info)
+	if err != nil {
+		return types.UserNoExist, "没有这个用户"
+	}
+	if user_info_req.UserName != "" {
+		user_info.UserName = user_info_req.UserName
+	}
+	if user_info_req.UserPhoto != "" {
+		user_info.Avator = user_info_req.UserPhoto
+	}
+	if user_info_req.UserPublicKey != "" {
+		user_info.UserPublicKey = user_info_req.UserPublicKey
+	}
+	err = user_info.Update()
+	if err != nil {
+		return types.UserNoExist, "修改用户信息失败"
+	}
+	return types.ReturnSuccess, "修改用户信息成功"
+}

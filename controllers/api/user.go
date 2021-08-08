@@ -150,6 +150,31 @@ func (this *UserController)UpdatePassword() {
 	}
 }
 
+
+// UpdatePinCode @Title UpdatePinCode
+// @Description 修改Pin码接口 UpdatePinCode
+// @Success 200 status bool, data interface{}, msg string
+// @router /update_pin_code [post]
+func (this *UserController)UpdatePinCode() {
+	upd_pin_code := user.UpdatePinCodeReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &upd_pin_code); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	code, msg := models.UpdatePinCode(upd_pin_code)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "修改Pin码成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, code, nil, msg)
+		this.ServeJSON()
+		return
+	}
+}
+
+
 // ForgetPassword @Title ForgetPassword
 // @Description 忘记密码 ForgetPassword
 // @Success 200 status bool, data interface{}, msg string
@@ -172,6 +197,49 @@ func (this *UserController) ForgetPassword() {
 		return
 	}
 }
+
+
+// UpdateUserInfo @Title UpdateUserInfo
+// @Description 修改用户信息 UpdateUserInfo
+// @Success 200 status bool, data interface{}, msg string
+// @router /update_user_info [post]
+func (this *UserController) UpdateUserInfo() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	user_info := user.UpdateUserInfoReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &user_info); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := user_info.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, nil, err.Error())
+		this.ServeJSON()
+		return
+	}
+	code, msg := models.UpdateUser(user_info)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "修改用户信息成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, code, nil, msg)
+		this.ServeJSON()
+		return
+	}
+}
+
 
 // GetUserInfo @Title GetUserInfo
 // @Description 获取用户信息 GetUserInfo

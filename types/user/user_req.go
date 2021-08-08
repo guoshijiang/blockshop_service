@@ -43,6 +43,7 @@ type ReqUserRegister struct {
   Password1 string `json:"password1"`
   Password2 string `json:"password2"`
 }
+
 type TwoFaReq struct {
 	UserName  string `json:"user_name"`
 }
@@ -84,6 +85,23 @@ func (this UpdatePasswordReq) ParamCheck() (int, error) {
 	return types.ReturnSuccess, nil
 }
 
+type UpdatePinCodeReq struct {
+	UserId       int64  `json:"user_id"`
+	OldPinCode   string `json:"old_pin_code"`
+	NewPinCode   string `json:"new_pin_code"`
+	CNewPinCode  string `json:"c_new_pin_code"`
+}
+
+func (this UpdatePinCodeReq) ParamCheck() (int, error) {
+	if this.UserId <= 0 {
+		return types.ParamEmptyError, errors.New("无效的用户ID")
+	}
+	if this.NewPinCode != this.CNewPinCode {
+		return types.PasswordError, errors.New("两次输入的Pin码不一样")
+	}
+	return types.ReturnSuccess, nil
+}
+
 type ForgetPasswordReq struct {
 	UserId       int64  `json:"user_id"`
 	PinCode      string `json:"pin_code"`
@@ -97,6 +115,20 @@ func (this ForgetPasswordReq) ParamCheck() (int, error) {
 	}
 	if this.NewPassword != this.CNewPassword {
 		return types.PasswordError, errors.New("两次输入的密码不一样")
+	}
+	return types.ReturnSuccess, nil
+}
+
+type UpdateUserInfoReq struct {
+	UserId        int64   `json:"user_id"`
+	UserName      string  `json:"user_name"`
+	UserPhoto     string  `json:"user_photo"`
+	UserPublicKey string  `json:"user_public_key"`
+}
+
+func (this UpdateUserInfoReq) ParamCheck() (int, error) {
+	if this.UserId <= 0 {
+		return types.ParamEmptyError, errors.New("无效的用户ID")
 	}
 	return types.ReturnSuccess, nil
 }
