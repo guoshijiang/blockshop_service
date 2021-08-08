@@ -6,7 +6,7 @@ import (
 )
 
 func TestRsaEncrypt(t *testing.T) {
-	sk, pk := GenerateRSAKey(2048)
+	sk, pk := GenerateRSAKey(1024)
 	fmt.Println(string(sk), string(pk))
 	a := RsaEncrypt([]byte("123456"), pk)
 	fmt.Println(string(a))

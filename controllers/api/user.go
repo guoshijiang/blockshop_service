@@ -10,7 +10,6 @@ import (
 	"strings"
 )
 
-
 type UserController struct {
 	beego.Controller
 }
@@ -150,7 +149,6 @@ func (this *UserController)UpdatePassword() {
 	}
 }
 
-
 // UpdatePinCode @Title UpdatePinCode
 // @Description 修改Pin码接口 UpdatePinCode
 // @Success 200 status bool, data interface{}, msg string
@@ -174,7 +172,6 @@ func (this *UserController)UpdatePinCode() {
 	}
 }
 
-
 // ForgetPassword @Title ForgetPassword
 // @Description 忘记密码 ForgetPassword
 // @Success 200 status bool, data interface{}, msg string
@@ -197,7 +194,6 @@ func (this *UserController) ForgetPassword() {
 		return
 	}
 }
-
 
 // UpdateUserInfo @Title UpdateUserInfo
 // @Description 修改用户信息 UpdateUserInfo
@@ -239,7 +235,6 @@ func (this *UserController) UpdateUserInfo() {
 		return
 	}
 }
-
 
 // GetUserInfo @Title GetUserInfo
 // @Description 获取用户信息 GetUserInfo
