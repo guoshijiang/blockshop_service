@@ -2,7 +2,9 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type ForumReply struct {
@@ -15,6 +17,7 @@ type ForumReply struct {
 	Views          int64         `orm:"column(abstract);default(0)" description:"回复浏览次数" json:"views"`
 	Likes          int64         `orm:"column(likes);default(0)" description:"回复点赞次数" json:"likes"`
 	Answers        int64         `orm:"column(answers);default(0)" description:"回复次数" json:"answers"`
+	IsCheck        int8          `orm:"column(is_check);default(0);index" description:"是否审核" json:"is_check"`  // 0:未审核 1:已审核
 }
 
 func (this *ForumReply) TableName() string {
@@ -48,4 +51,17 @@ func (this *ForumReply) Insert() (err error, id int64) {
 		return err, 0
 	}
 	return nil, id
+}
+
+func GetFormLastestConment(form_id int64) (*ForumReply, int, error) {
+	var form_reply_dtl ForumReply
+	if err := orm.NewOrm().QueryTable(ForumReply{}).Filter("forum_id", form_id).OrderBy("-created_at").One(&form_reply_dtl); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &form_reply_dtl, types.ReturnSuccess, nil
+}
+
+func GetTotalReplyNum(form_id int64) int64 {
+	total, _  := orm.NewOrm().QueryTable(&ForumReply{}).Filter("forum_id", form_id).Count()
+	return total
 }

@@ -253,11 +253,17 @@ func init() {
       ),
     ),
 
-      beego.NSNamespace("/user",
-          beego.NSInclude(
-              &api.UserController{},
-          ),
+    beego.NSNamespace("/user",
+        beego.NSInclude(
+            &api.UserController{},
+        ),
+    ),
+
+    beego.NSNamespace("/forum",
+      beego.NSInclude(
+        &api.ForumController{},
       ),
+    ),
   )
   beego.AddNamespace(api_path)
 }

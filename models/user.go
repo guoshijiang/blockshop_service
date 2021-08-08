@@ -193,12 +193,12 @@ func ForgetPassword(fpt_pwd user.ForgetPasswordReq) (code int, msg string) {
 }
 
 
-func GetUserById(id int64) (User, error) {
+func GetUserById(id int64) (*User, error) {
 	var query_user User
-	err := query_user.Query().Filter("Id", id).Limit(1).One(&query_user)
+	err := orm.NewOrm().QueryTable(User{}).Filter("Id", id).Limit(1).One(&query_user)
 	if err != nil {
-		return query_user, errors.New("user is not exist")
+		return nil, errors.New("user is not exist")
 	}
-	return query_user, nil
+	return &query_user, nil
 }
 

@@ -2,7 +2,6 @@ package models
 
 import (
 	"blockshop/common"
-	"blockshop/types/forum"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
@@ -50,23 +49,29 @@ func (this *ForumCat) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *ForumCat) GetCatFirstLevel(req forum.ForumListReq) ([]*ForumCat, int64, error) {
-	offset := (req.Page - 1) * req.PageSize
+func (this *ForumCat) GetCatLevel(page int, page_size int, cat_id int64, forum_cat_level int8) ([]*ForumCat, int64, error) {
+	offset := (page - 1) * page_size
 	forum_cat_list := make([]*ForumCat, 0)
-	query_good := orm.NewOrm().QueryTable(ForumCat{}).Filter("forum_cat_level", 1)
+	query_good := orm.NewOrm().QueryTable(ForumCat{}).Filter("forum_cat_level", forum_cat_level)
+	if cat_id >= 1 {
+		query_good = query_good.Filter("father_cat_id", cat_id)
+	}
 	total, _ := query_good.Count()
-	_, err := query_good.Limit(req.PageSize, offset).All(&forum_cat_list)
+	_, err := query_good.Limit(page_size, offset).All(&forum_cat_list)
 	if err != nil {
 		return nil, 0, errors.New("查询数据库失败")
 	}
 	return forum_cat_list, total, nil
 }
 
-func (this *ForumCat) GetCatByFatherId(father_id int64) ([]*ForumCat, error) {
+func (this *ForumCat) GetCatByFatherId(father_id int64) ([]*ForumCat, int64, error) {
 	forum_cat_list := make([]*ForumCat, 0)
-	_, err := orm.NewOrm().QueryTable(ForumCat{}).Filter("id", father_id).All(&forum_cat_list)
+	var forum_cat ForumCat
+	query := orm.NewOrm().QueryTable(ForumCat{}).Filter("father_cat_id", father_id).OrderBy("-id")
+	_, err := query.All(&forum_cat_list)
+	err = query.One(&forum_cat)
 	if err != nil {
-		return nil, errors.New("查询数据库失败")
+		return nil, 0, errors.New("查询数据库失败")
 	}
-	return forum_cat_list, nil
+	return forum_cat_list, forum_cat.Id, nil
 }
