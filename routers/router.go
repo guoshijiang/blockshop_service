@@ -227,25 +227,30 @@ func init() {
 
   )
   beego.AddNamespace(admin)
-
   api_path := beego.NewNamespace("/v1",
-      beego.NSNamespace("/image",
-        beego.NSInclude(
-          &api.ImageController{},
-        ),
+    beego.NSNamespace("/image",
+      beego.NSInclude(
+        &api.ImageController{},
       ),
+    ),
 
-      beego.NSNamespace("/news",
-        beego.NSInclude(
-          &api.NewsController{},
-        ),
+    beego.NSNamespace("/news",
+      beego.NSInclude(
+        &api.NewsController{},
       ),
+    ),
 
-      beego.NSNamespace("/goods",
-        beego.NSInclude(
-          &api.GoodsController{},
-        ),
+    beego.NSNamespace("/goods",
+      beego.NSInclude(
+        &api.GoodsController{},
       ),
+    ),
+
+    beego.NSNamespace("/marchant",
+      beego.NSInclude(
+        &api.MerchantController{},
+      ),
+    ),
 
     beego.NSNamespace("/order",
       beego.NSInclude(

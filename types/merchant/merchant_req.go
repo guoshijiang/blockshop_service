@@ -7,12 +7,11 @@ import (
 
 type MerchantListReq struct {
 	types.PageSizeData
-	MerchantName    string `json:"merchant_name"`
-	MerchantAddress string `json:"merchant_address"`
+	IsShow  int8 `json:"is_show"`
 }
 
 func (this MerchantListReq) ParamCheck() (int, error) {
-	code, err := this.ParamCheck()
+	code, err := this.SizeParamCheck()
 	if err != nil {
 		return code, err
 	}

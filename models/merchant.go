@@ -23,6 +23,7 @@ type Merchant struct {
 	SettlePercent  float64   `orm:"column(settle_percent);default(0);digits(22);decimals(8)" description:"结算比例"  json:"settle_percent"`
 	ShopLevel      int8      `orm:"column(shop_level)" description:"店铺等级" json:"shop_level"`
 	ShopServer     int8      `orm:"column(shop_server)" description:"店铺服务" json:"shop_server"`
+	IsShow         int8      `orm:"column(is_show);default(0)" description:"是否在首页展示" json:"is_show"` // 0:不展示，1:展示
 }
 
 func (this *Merchant) TableName() string {
@@ -33,14 +34,12 @@ func (*Merchant) SearchField() []string {
   return []string{"merchant_name"}
 }
 
-func GetMerchantList(page, pageSize int, merct_name string, address string) ([]*Merchant, int64, error) {
+func GetMerchantList(page, pageSize int, is_show int8) ([]*Merchant, int64, error) {
 	offset := (page - 1) * pageSize
 	merchant_list := make([]*Merchant, 0)
-	cond := orm.NewCondition()
 	query := orm.NewOrm().QueryTable(Merchant{})
-	if merct_name != "" || address != "" {
-		cond_merct := cond.And("MerchantName__contains", merct_name).Or("Address__contains", address)
-		query =  query.SetCond(cond_merct)
+	if is_show == 1 {
+		query = query.Filter("is_show", is_show)
 	}
 	total, _ := query.Count()
 	_, err := query.OrderBy("-GoodsNum").Limit(pageSize, offset).All(&merchant_list)

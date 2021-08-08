@@ -259,24 +259,46 @@ func (this *UserController) GetUserInfo() {
 		this.ServeJSON()
 		return
 	}
+	usy := user.UserSecrity {
+		AccountPct: "65%",
+		IsSetKey: false,
+		IsOpen2Fa: false,
+	}
+	uws := user.UserWalletStat {
+		OutAmount: 11000,
+		InAmount: 11000,
+		Balance: 11000,
+		Address: "T000000000eesasQeeee",
+	}
+	btc_c_price := user.CoinPrice {
+		Asset: "BTC",
+		ChainName: "Bitcoin",
+		UsdPrice: "40000",
+		CnyPrice: "280000",
+	}
+	usdt_price := user.CoinPrice {
+		Asset: "BTC",
+		ChainName: "Bitcoin",
+		UsdPrice: "6.5",
+		CnyPrice: "55",
+	}
 	data := user.UserInfoRep{
-		UserId:user_if.Id,
+		UserId: user_if.Id,
 		Photo: user_if.Avator,
 		UserName: user_if.UserName,
 		IsMerchant: 1,
 		JoinTime: user_if.CreatedAt.String(),
 		TrustLevel: user_if.MemberLevel,
-		BtcOrderAmount: "",
-		UsdtOrderAmount: "",
-		AdjustVictor: 1,
-		AdjustFail: 1,
-		BtcBalance: "1000",
-		UsdtBalance: "1000",
-		BtcSpend: "1",
-		UsdtSpend: "1",
-		BtdAddress: "1",
-		UsdtAddress: "1",
 		PublicKey: user_if.UserPublicKey,
+		BtcOrderAmount: "100",
+		UsdtOrderAmount: "10000",
+		AdjustVictor: 10,
+		AdjustFail: 5,
+		UserSecrity: usy,
+		BtcWtStat: uws,
+		UsdtWtStat: uws,
+		BtcPrice: btc_c_price,
+		UsdtPrice: usdt_price,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取用户信息成功")
 	this.ServeJSON()

@@ -23,12 +23,7 @@ func (nc *NewsController) GetNewsList() {
 		nc.ServeJSON()
 		return
 	}
-	news_list, code, msg := models.GetNewsList(int64(pageP.Page), int64(pageP.PageSize))
-	if code != types.ReturnSuccess {
-		nc.Data["json"] = RetResource(false, code, nil, msg)
-		nc.ServeJSON()
-		return
-	}
+	news_list, total, msg := models.GetNewsList(int64(pageP.Page), int64(pageP.PageSize))
 	news_img_url := beego.AppConfig.String("news_img_path")
 	var news_lists []news2.News
 	for _, value := range news_list {
@@ -44,7 +39,11 @@ func (nc *NewsController) GetNewsList() {
 		}
 		news_lists = append(news_lists, news_r)
 	}
-	nc.Data["json"] = RetResource(true, types.ReturnSuccess, news_lists, msg)
+	data := map[string]interface{}{
+		"total":     total,
+		"gds_lst":   news_lists,
+	}
+	nc.Data["json"] = RetResource(true, types.ReturnSuccess, data, msg)
 	nc.ServeJSON()
 	return
 }

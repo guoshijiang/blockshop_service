@@ -28,7 +28,7 @@ func (this *MerchantController) MerchantList() {
 		this.ServeJSON()
 		return
 	}
-	merchant_list, total, err := models.GetMerchantList(gds_merchant.Page, gds_merchant.PageSize, gds_merchant.MerchantName, gds_merchant.MerchantAddress)
+	merchant_list, total, err := models.GetMerchantList(gds_merchant.Page, gds_merchant.PageSize, gds_merchant.IsShow)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.GetMerchantListFail, nil, "获取商家列表失败")
 		this.ServeJSON()
@@ -41,6 +41,7 @@ func (this *MerchantController) MerchantList() {
 			MctId: mct.Id,
 			MctName: mct.MerchantName,
 			MctIntroduce: mct.MerchantIntro,
+			MerchantDetail: mct.MerchantDetail,
 			MctLogo: image_path + mct.Logo,
 			MctWay: mct.MerchantWay,
 			ShopLevel: mct.ShopLevel,

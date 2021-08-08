@@ -9,6 +9,8 @@ type Asset struct {
 	BaseModel
 	Id        int64    `orm:"pk;column(id);auto;size(11)" description:"币种ID" json:"id"`
 	Name      string   `orm:"column(name);unique;size(11);index" description:"币种名称" json:"name"`
+	ChainName string   `orm:"column(chain_name);unique;size(11);index" description:"链名称" json:"chain_name"`
+	UsdPrice  string   `orm:"column(usd_price)" description:"链名称" json:"usd_price"`
 	Unit      int64    `orm:"column(unit);default(8)" description:"币种精度" json:"unit"`
 }
 
