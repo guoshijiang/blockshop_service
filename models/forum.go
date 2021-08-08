@@ -78,3 +78,38 @@ func GetLastestForumByCatId(cat_id int64) (*Forum, int, error) {
 	}
 	return &forum_dtl, types.ReturnSuccess, nil
 }
+
+func GetForumList(page int64, page_size int64, cat_id int64) ([]*Forum, int, error) {
+	offset := (page - 1) * page_size
+	forum_list := make([]*Forum, 0)
+	query_forum := orm.NewOrm().QueryTable(Forum{}).Filter("cat_id", cat_id)
+	total, _ := query_forum.Count()
+	_, err := query_forum.Limit(page_size, offset).All(&forum_list)
+	if err != nil {
+		return nil, 0, errors.New("查询数据库失败")
+	}
+	return forum_list, int(total), nil
+}
+
+func GetForumDetail(id int64) (*Forum, int, error) {
+	var forum Forum
+	if err := orm.NewOrm().QueryTable(Forum{}).Filter("Id", id).RelatedSel().One(&forum); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &forum, types.ReturnSuccess, nil
+}
+
+func CreateForum(user_id int64, cat_id int64, title string, abstract string, content string) (code int, msg string) {
+	create_forum := Forum {
+		UserId: user_id,
+		CatId: cat_id,
+		Title: title,
+		Abstract: abstract,
+		Content: content,
+	}
+	err, _ := create_forum.Insert()
+	if err != nil {
+		return types.SystemDbErr, "创建论坛失败"
+	}
+	return types.ReturnSuccess,  "创建论坛成功"
+}

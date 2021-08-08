@@ -175,7 +175,39 @@ func (this *ForumController) ForumChildTopicList() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /forum_topic_list [post]
 func (this *ForumController) ForumCTopicList() {
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取论坛帖子列表成功")
+	forum_topic_req := forum.ForumTopicListReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_topic_req); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	ft_list, total, err := models.GetForumList(int64(forum_topic_req.Page), int64(forum_topic_req.PageSize), forum_topic_req.LevelCatId)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "获取论坛帖子数据失败")
+		this.ServeJSON()
+		return
+	}
+	var ft_list_rep []*forum.ForumTopicListRep
+	for _, value := range ft_list {
+		user, _ := models.GetUserById(value.UserId)
+		ft := &forum.ForumTopicListRep{
+			UserId: value.UserId,
+			FormId: value.Id,
+			UserName: user.UserName,
+			UserPhoto: user.Avator,
+			Title: value.Title,
+			DataTime: value.CreatedAt.String(),
+			Views: value.Views,
+			Likes: value.Likes,
+			Answers: value.Answers,
+		}
+		ft_list_rep = append(ft_list_rep, ft)
+	}
+	data := map[string]interface{}{
+		"total": total,
+		"form_lst": ft_list_rep,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取论坛帖子列表成功")
 	this.ServeJSON()
 	return
 }
@@ -185,26 +217,96 @@ func (this *ForumController) ForumCTopicList() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /forum_topic_detail [post]
 func (this *ForumController) ForumCTopicDetail() {
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取论坛子板块成功")
+	forum_detail_req := forum.ForumTopicDetailReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_detail_req); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	forum_, code, err := models.GetForumDetail(forum_detail_req.ForumId)
+	if err != nil {
+		this.Data["json"] = RetResource(false, code, nil, "获取论坛帖子数据失败")
+		this.ServeJSON()
+		return
+	}
+	user, _ := models.GetUserById(forum_.UserId)
+	data := map[string]interface{}{
+		"id": forum_.Id,
+		"title": forum_.Title,
+		"content": forum_.Content,
+		"datetime": forum_.CreatedAt.String(),
+		"user_id": forum_.UserId,
+		"user_name": user.UserName,
+		"photo": user.Avator,
+		"views": forum_.Views,
+		"likes": forum_.Likes,
+		"answers": forum_.Answers,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取论坛子详情成功")
 	this.ServeJSON()
 	return
 }
+
 
 // ForumTopicCommentList @Title ForumTopicCommentList
 // @Description 论坛帖子评论 ForumTopicCommentList
 // @Success 200 status bool, data interface{}, msg string
 // @router /forum_topic_comment_list [post]
 func (this *ForumController) ForumTopicCommentList() {
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "获取帖子评论成功")
+	forum_reply_req := forum.ForumTopicDetailReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_reply_req); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	cmt_list, total, err := models.GetForumCommentList(int64(forum_reply_req.Page), int64(forum_reply_req.PageSize), forum_reply_req.ForumId)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "获取论坛评论数据失败")
+		this.ServeJSON()
+		return
+	}
+	var comment_reply_list []*forum.ForumCommentListRep
+	for _, cmt := range cmt_list {
+		user, _ := models.GetUserById(cmt.UserId)
+		var reply_list []forum.ForumReply
+		reply_list_dt, _, err := models.GetForumReplyList(cmt.Id)
+		if err != nil {
+			reply_list = nil
+		} else {
+			for _, reply := range reply_list_dt {
+				user, _ := models.GetUserById(reply.UserId)
+				f_rly := forum.ForumReply{
+					UserName: user.UserName,
+					UserPhoto: user.Avator,
+					Reply: reply.Content,
+					Datetime: reply.CreatedAt.String(),
+				}
+				reply_list = append(reply_list, f_rly)
+			}
+		}
+		comment_reply := &forum.ForumCommentListRep {
+			UserName: user.UserName,
+			UserPhoto: user.Avator,
+			Comment: cmt.Content,
+			Datetime: cmt.CreatedAt.String(),
+			Reply: reply_list,
+		}
+		comment_reply_list = append(comment_reply_list, comment_reply)
+	}
+	data := map[string]interface{}{
+		"total": total,
+		"form_lst": comment_reply_list,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取帖子评论成功")
 	this.ServeJSON()
 	return
 }
 
-// ForumTopicCommentReply @Title ForumTopicCommentReply
-// @Description 论坛帖子评论和回复 ForumTopicCommentReply
+// GetForumCatTopic @Title GetForumCatTopic
+// @Description 获取分类和主题 CreateForumTopic
 // @Success 200 status bool, data interface{}, msg string
-// @router /forum_topic_comment_reply [post]
-func (this *ForumController) ForumTopicCommentReply() {
+// @router /get_ftc_list [post]
+func (this *ForumController) GetForumCatTopic() {
 	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
 	if len(bearerToken) == 0 {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
@@ -218,14 +320,29 @@ func (this *ForumController) ForumTopicCommentReply() {
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发表评论回复成功")
+	tc_req := forum.ForumTopicCatReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &tc_req); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	fct_list, _, err := models.GetTopicCatList(tc_req.TcName, tc_req.IsTc)
+	var tc_list []*forum.FmTopicCatListRep
+	for _, value := range fct_list {
+		tcl := &forum.FmTopicCatListRep{
+			TcId:value.Id,
+			TcName: value.Name,
+		}
+		tc_list = append(tc_list, tcl)
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, tc_list, "获取类别成功")
 	this.ServeJSON()
 	return
 }
 
 
 // CreateForumTopic @Title CreateForumTopic
-// @Description 发论坛帖子 CreateForumTopic
+// @Description 发布帖子 CreateForumTopic
 // @Success 200 status bool, data interface{}, msg string
 // @router /create_forum_topic [post]
 func (this *ForumController) CreateForumTopic() {
@@ -236,15 +353,64 @@ func (this *ForumController) CreateForumTopic() {
 		return
 	}
 	token := strings.TrimPrefix(bearerToken, "Bearer ")
-	_, err := models.GetUserByToken(token)
+	user_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发布帖子成功")
-	this.ServeJSON()
-	return
+	create_frm := forum.CreateForumReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &create_frm); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	cat_id, _ := models.CreateOrGetFcat(create_frm.CatName, 0, 1)
+	topic_id, _ := models.CreateOrGetFcat(create_frm.TopName, cat_id, 2)
+	code, msg  := models.CreateForum(user_.Id, topic_id, create_frm.Title, create_frm.Abstract, create_frm.Content)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发布帖子成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
 }
 
-
+// ForumTopicCommentReply @Title ForumTopicCommentReply
+// @Description 论坛帖子评论和回复 ForumTopicCommentReply
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_comment_reply [post]
+func (this *ForumController) ForumTopicCommentReply() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	user_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	create_cmt_reply := forum.CreateCmtReplyReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &create_cmt_reply); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	code, msg  := models.CreateForumCmtReply(user_.Id, create_cmt_reply.ForumId, create_cmt_reply.FatherCmtId, create_cmt_reply.CtmReply)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "评论成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
+}

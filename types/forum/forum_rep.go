@@ -32,3 +32,36 @@ type ForumLevelChildRep struct {
 	ReplyNum    int64           `json:"reply_num"`
 	LastestForm *LastestForumRep `json:"lastest_form"`
 }
+
+type ForumTopicListRep struct {
+	UserId      int64   `json:"user_id"`
+	FormId      int64   `json:"form_id"`
+	UserName    string  `json:"user_name"`
+	UserPhoto   string  `json:"user_photo"`
+	Title       string  `json:"title"`
+	DataTime    string  `json:"data_time"`
+	Views       int64   `json:"views"`
+	Likes       int64   `json:"likes"`
+	Answers     int64   `json:"answers"`
+}
+
+type ForumReply struct {
+	UserName    string  `json:"user_name"`
+	UserPhoto   string  `json:"user_photo"`
+	Reply       string  `json:"reply"`
+	Datetime    string  `json:"datetime"`
+}
+
+type ForumCommentListRep struct {
+	UserName    string       `json:"user_name"`
+	UserPhoto   string       `json:"user_photo"`
+	Comment     string       `json:"comment"`
+	Datetime    string       `json:"datetime"`
+	Reply       []ForumReply `json:"reply"`
+}
+
+
+type FmTopicCatListRep struct {
+	TcId  int64 `json:"tc_id"`
+	TcName string `json:"tc_name"`
+}

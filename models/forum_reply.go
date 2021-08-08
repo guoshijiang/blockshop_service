@@ -65,3 +65,40 @@ func GetTotalReplyNum(form_id int64) int64 {
 	total, _  := orm.NewOrm().QueryTable(&ForumReply{}).Filter("forum_id", form_id).Count()
 	return total
 }
+
+func GetForumCommentList(page int64, page_size int64, forum_id int64) ([]*ForumReply, int, error) {
+	offset := (page - 1) * page_size
+	forum_reply_list := make([]*ForumReply, 0)
+	forum_reply := orm.NewOrm().QueryTable(ForumReply{}).Filter("forum_id", forum_id)
+	total, _ := forum_reply.Count()
+	_, err := forum_reply.Limit(page_size, offset).All(&forum_reply_list)
+	if err != nil {
+		return nil, 0, errors.New("查询数据库失败")
+	}
+	return forum_reply_list, int(total), nil
+}
+
+func GetForumReplyList(forum_id int64) ([]*ForumReply, int, error) {
+	forum_reply_list := make([]*ForumReply, 0)
+	forum_reply := orm.NewOrm().QueryTable(ForumReply{}).Filter("father_reply_id", forum_id)
+	total, _ := forum_reply.Count()
+	_, err := forum_reply.All(&forum_reply_list)
+	if err != nil {
+		return nil, 0, errors.New("查询数据库失败")
+	}
+	return forum_reply_list, int(total), nil
+}
+
+func CreateForumCmtReply(user_id int64, forumt_id int64, father_reply_id int64, content string) (code int, msg string) {
+	create_cmt_replu := ForumReply {
+		ForumId:forumt_id,
+		FatherReplyId: father_reply_id,
+		UserId: user_id,
+		Content: content,
+	}
+	err, _ := create_cmt_replu.Insert()
+	if err != nil {
+		return types.SystemDbErr, "创建评论失败"
+	}
+	return types.ReturnSuccess,  "创建评论成功"
+}

@@ -22,6 +22,14 @@ func (this *ForumCat) TableName() string {
 	return common.TableName("forum_cat")
 }
 
+
+func (this *ForumCat) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
+	}
+	return nil, id
+}
+
 func (this *ForumCat) Read(fields ...string) error {
 	logs.Info(fields)
 	return nil
@@ -74,4 +82,39 @@ func (this *ForumCat) GetCatByFatherId(father_id int64) ([]*ForumCat, int64, err
 		return nil, 0, errors.New("查询数据库失败")
 	}
 	return forum_cat_list, forum_cat.Id, nil
+}
+
+func GetTopicCatList(tc_name string, is_tc int) ([]*ForumCat, int64, error) {
+	tc_list := make([]*ForumCat, 0)
+	if is_tc == 1 {  // 类别
+		_, err := orm.NewOrm().QueryTable(ForumCat{}).Filter("forum_cat_level", 1).Filter("name__contains", tc_name).OrderBy("-id").All(&tc_list)
+		if err != nil {
+			return nil, 0, errors.New("查询数据库失败")
+		}
+	} else if is_tc == 2 {
+		_, err := orm.NewOrm().QueryTable(ForumCat{}).Filter("forum_cat_level", 2).Filter("name__contains", tc_name).OrderBy("-id").All(&tc_list)
+		if err != nil {
+			return nil, 0, errors.New("查询数据库失败")
+		}
+	}
+	return tc_list, 0, nil
+}
+
+func CreateOrGetFcat(tc_name string, father_cat_id int64, forum_cat_level int8) (int64,  error) {
+	var forum_cat ForumCat
+	if err := orm.NewOrm().QueryTable(ForumCat{}).Filter("name", tc_name).Filter("forum_cat_level", forum_cat_level).RelatedSel().One(&forum_cat); err != nil {
+		create_forum_cat := ForumCat {
+			FatherCatId: father_cat_id,
+			ForumCatLevel: forum_cat_level,
+			Name: tc_name,
+			Introduce: "",
+			Icon: "",
+		}
+		err, id := create_forum_cat.Insert()
+		if err != nil {
+			return 0, errors.New("创建论坛失败")
+		}
+		return  id, nil
+	}
+	return forum_cat.Id, nil
 }
