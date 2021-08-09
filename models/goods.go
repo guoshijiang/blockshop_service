@@ -110,8 +110,8 @@ func GetGoodsList(req goods.GoodsListReq) ([]*Goods, int64, error) {
 			query_good = query_good.OrderBy("-merchant_id")
 		}
 	}
-	if req.OriginCountry != "" {
-		query_good = query_good.Filter("origin_country__contains", req.OriginCountry)
+	if req.OriginStateId >= 1 {
+		query_good = query_good.Filter("origin_state_id", req.OriginStateId)
 	}
 	total, _ := query_good.Count()
 	_, err := query_good.Limit(req.PageSize, offset).All(&goods_list)
