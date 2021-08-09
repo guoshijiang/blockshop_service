@@ -287,6 +287,7 @@ func (this *UserController) GetUserInfo() {
 		PublicKey: user_if.UserPublicKey,
 		BtcOrderAmount: "100",
 		UsdtOrderAmount: "10000",
+		TotalBuy: 1000,
 		AdjustVictor: 10,
 		AdjustFail: 5,
 		UserSecrity: usy,

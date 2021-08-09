@@ -42,6 +42,7 @@ type UserInfoRep struct {
 	PublicKey       string  `json:"public_key"`
 	BtcOrderAmount  string  `json:"btc_order_amount"`
 	UsdtOrderAmount string  `json:"usdt_order_amount"`
+	TotalBuy        int64   `json:"total_buy"`
 	AdjustVictor    int64   `json:"adjust_victor"`
 	AdjustFail      int64   `json:"adjust_fail"`
 	UserSecrity     UserSecrity    `json:"user_secrity"`  // 账号的安全形
