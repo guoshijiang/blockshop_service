@@ -41,6 +41,8 @@ const (
 	VerifyPayAmount               = 4028  // 验证支付金额失败
 	AccountAmountNotEnough        = 4029  // 账户余额不足
 	PayOrderError                 = 4030  // 订单支付错误
+	QueryMessageFail              = 4031  // 查询消息失败
+	MessageEmpty                  = 4032  // 消息是空的
 
 	// 5000
 	InvalidWOrD                   = 5000  // 无效的充值或者提现

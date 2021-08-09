@@ -2,7 +2,9 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type Message struct {
@@ -41,3 +43,18 @@ func (this *Message) Update(fields ...string) error {
 	return nil
 }
 
+func GetMassageList(user_id int64, page, page_size int) ([]*Message, int, error) {
+	var msg_list []*Message
+	cond := orm.NewCondition()
+	cond = cond.And("SendUserId", user_id).Or("TargetUserId", user_id)
+	filter := orm.NewOrm().QueryTable(&Message{}).SetCond(cond)
+	total, err := filter.Count()
+	if err != nil {
+		return nil, types.QueryMessageFail, errors.Wrap(err, "总的消息条数失败")
+	}
+	_, err = filter.Limit(page_size, page_size*(page-1)).OrderBy("id").All(&msg_list)
+	if err != nil {
+		return nil, types.QueryMessageFail, errors.Wrap(err, "获取消息失败")
+	}
+	return msg_list, int(total), nil
+}
