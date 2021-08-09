@@ -1,14 +1,15 @@
 package services
 
 import (
-	"blockshop/common/utils"
-	beego_pagination "blockshop/common/utils/beego-pagination"
-	"blockshop/models"
-	"github.com/astaxie/beego/orm"
-	"net/url"
-	"strconv"
-	"strings"
-	"time"
+  "blockshop/common/utils"
+  beego_pagination "blockshop/common/utils/beego-pagination"
+  "blockshop/models"
+  "fmt"
+  "github.com/astaxie/beego/orm"
+  "net/url"
+  "strconv"
+  "strings"
+  "time"
 )
 
  var AdminUserVal	*models.AdminUser
@@ -234,8 +235,11 @@ func (this *BaseService) ScopeWhereRaw(parameters url.Values) (string,[]interfac
           conditionRaw += left
           condition = append(condition,strings.Split(v[0],","))
         } else {
+          fmt.Println("kkkk000---")
           if parameters.Get("relation") =="or" {
             conditionRaw += " or " + k + " = ? "
+          } else if strings.Contains(k,"t0") {
+            conditionRaw += " and " + k + " = ? "
           } else {
             conditionRaw += " and " + k + " like ? "
           }

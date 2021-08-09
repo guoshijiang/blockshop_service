@@ -98,3 +98,14 @@ type MessageData struct {
   Message
   UserName					string					`json:"user_name"`
 }
+
+type ForumList struct {
+  Forum
+  UserName        string            `json:"user_name"`
+  CatName         string            `json:"cat_name"`
+}
+
+type ForumReplyList struct {
+  ForumReply
+  UserName        string            `json:"user_name"`
+}

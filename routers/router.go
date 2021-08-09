@@ -199,6 +199,15 @@ func init() {
     beego.NSRouter("/forum/category/update", &controllers.ForumCateController{}, "post:Update"),
     //论坛分类管理-删除
     beego.NSRouter("/forum/category/del", &controllers.ForumCateController{}, "post:Del"),
+    //论坛管理-论坛列表
+    beego.NSRouter("/forum/index", &controllers.ForumController{}, "get:List"),
+    //论坛分类管理-添加界面
+    beego.NSRouter("/forum/check", &controllers.ForumController{}, "post:CheckForum"),
+
+    //论坛回复管理-论坛列表
+    beego.NSRouter("/forum/reply/index", &controllers.ForumController{}, "get:Reply"),
+    //论坛回复管理-审核
+    beego.NSRouter("/forum/reply/check", &controllers.ForumController{}, "post:CheckReplyForum"),
 
     //区块链-用户钱包管理
     beego.NSRouter("/wallet/user/index", &controllers.WalletController{}, "get:User"),
