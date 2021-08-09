@@ -21,7 +21,7 @@ type Goods struct {
 	MerchantId     int64     `orm:"column(merchant_id);default(0);index" description:"商品所属商家ID" json:"merchant_id"`
 	Title          string    `orm:"column(title);size(512)" description:"商品标题" json:"title"`
 	Logo           string    `orm:"column(logo);size(150);default(/static/upload/default/user-default-60x60.png)" description:"商品封面" json:"logo"`
-	OriginCountry  string    `orm:"column(origin_country);size(150);default(中国)" description:"商品的产地" json:"origin_country"`
+	OriginStateId  int64     `orm:"column(origin_state_id);default(0)" description:"商品的产地" json:"origin_state_id"`
 	TotalAmount    int64     `orm:"column(total_amount);default(150000)" description:"商品总量" json:"total_amount"`
 	LeftAmount     int64     `orm:"column(left_amount);default(150000)" description:"剩余商品总量" json:"left_amount"`
 	GoodsPrice     float64   `orm:"column(goods_price);default(1);digits(22);decimals(8)" description:"商品价格" json:"goods_price"`

@@ -53,3 +53,12 @@ func (this *GoodsCat) Insert() error {
 	}
 	return nil
 }
+
+func GetGdsCatList() ([]*GoodsCat) {
+	gcat_list := make([]*GoodsCat, 0)
+	_, err := orm.NewOrm().QueryTable(GoodsCat{}).OrderBy("-id").All(&gcat_list)
+	if err != nil {
+		return nil
+	}
+	return gcat_list
+}

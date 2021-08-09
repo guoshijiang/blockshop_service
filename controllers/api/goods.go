@@ -12,6 +12,88 @@ type GoodsController struct {
 	beego.Controller
 }
 
+func orderByCdt() interface{} {
+	var odb_list []*goods.OrderBy
+	odb_time := &goods.OrderBy{
+		Way: 0,
+		WayName: "时间",
+	}
+	odb_list = append(odb_list, odb_time)
+	odb_xl := &goods.OrderBy{
+		Way: 1,
+		WayName: "销量",
+	}
+	odb_list = append(odb_list, odb_xl)
+	odb_jg := &goods.OrderBy{
+		Way: 2,
+		WayName: "价格",
+	}
+	odb_list = append(odb_list, odb_jg)
+	odb_sj := &goods.OrderBy{
+		Way: 3,
+		WayName: "商家",
+	}
+	odb_list = append(odb_list, odb_sj)
+	return odb_list
+}
+
+
+// GoodsQueryCondition @Title GoodsQueryCondition
+// @Description 商品查询条件 GoodsQueryCondition
+// @Success 200 status bool, data interface{}, msg string
+// @router /goods_query_condition [post]
+func (this *GoodsController) GoodsQueryCondition() {
+	goods_type_list := models.GetGdsTypeList()
+	var gds_types []*goods.GoodsType
+	if goods_type_list != nil {
+		for _, goods_type := range goods_type_list {
+			gsc := &goods.GoodsType{
+				Id: goods_type.Id,
+				TypeName: goods_type.Name,
+			}
+			gds_types = append(gds_types, gsc)
+		}
+	} else {
+		gds_types = nil
+	}
+	goods_cat_list := models.GetGdsCatList()
+	var gds_cat_list []*goods.GoodsCat
+	if goods_cat_list != nil {
+		for _, value := range goods_cat_list {
+			gcat_item := &goods.GoodsCat{
+				Id: value.Id,
+				CatName: value.Name,
+			}
+			gds_cat_list = append(gds_cat_list, gcat_item)
+		}
+	} else {
+		gds_cat_list = nil
+	}
+	gds_origin_states := models.GetGdsCatList()
+	var origin_state_list []*goods.OriginState
+	if goods_cat_list != nil {
+		for _, value := range gds_origin_states {
+			o_i := &goods.OriginState{
+				Id: value.Id,
+				StateName: value.Name,
+			}
+			origin_state_list = append(origin_state_list, o_i)
+		}
+	} else {
+		origin_state_list = nil
+	}
+	data := map[string]interface{}{
+		"goods_type": gds_types,
+		"goods_cat": gds_cat_list,
+		"origin_state": origin_state_list,
+		"order_by": orderByCdt(),
+		"pay_way": [2]string{"BTC", "USDT"},
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取查询条件成功")
+	this.ServeJSON()
+	return
+}
+
 // GoodsList @Title GoodsList
 // @Description 随机商品列表 GoodsList
 // @Success 200 status bool, data interface{}, msg string

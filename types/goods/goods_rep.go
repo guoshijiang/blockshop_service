@@ -1,5 +1,25 @@
 package goods
 
+type GoodsType struct {
+	Id int64 `json:"id"`
+	TypeName string `json:"type_name"`
+}
+
+type GoodsCat struct {
+	Id int64 `json:"id"`
+	CatName string `json:"cat_name"`
+}
+
+type OriginState struct {
+	Id int64 `json:"id"`
+	StateName string `json:"state_name"`
+}
+
+type OrderBy struct {
+	Way int64 `json:"way"`
+	WayName string `json:"way_name"`
+}
+
 type GoodsListRep struct {
 	GoodsId        int64   `json:"goods_id"`
 	Title          string  `json:"title"`

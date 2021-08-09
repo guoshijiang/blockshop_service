@@ -52,3 +52,12 @@ func (this *GoodsType) Insert() error {
 	return nil
 }
 
+func GetGdsTypeList() ([]*GoodsType) {
+	gdtp_list := make([]*GoodsType, 0)
+	_, err := orm.NewOrm().QueryTable(GoodsType{}).OrderBy("-id").All(&gdtp_list)
+	if err != nil {
+		return nil
+	}
+	return gdtp_list
+}
+
