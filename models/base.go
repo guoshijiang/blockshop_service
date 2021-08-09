@@ -23,7 +23,7 @@ func init() {
 		new(AdminMenu),new(Asset),new(Forum),new(ForumReply),new(GoodsCat),new(GoodsImage),
 		new(GoodsOrder),new(GoodsType),new(GoodsAttr),new(Merchant),new(UserWallet),
 		new(WalletRecord),new(Goods),new(News),new(Message),new(MerchantDataStat),
-		new(UserDataStat),new(GoodsComment),new(ForumCat), new(UserAddress))
+		new(UserDataStat),new(GoodsComment),new(ForumCat), new(UserAddress), new(ImageFile))
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
