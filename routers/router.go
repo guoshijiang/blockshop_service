@@ -233,7 +233,6 @@ func init() {
     beego.NSRouter("/user/update", &controllers.UserController{}, "post:Update"),
     //用户管理-删除
     beego.NSRouter("/user/del", &controllers.UserController{}, "post:Del"),
-
   )
   beego.AddNamespace(admin)
   api_path := beego.NewNamespace("/v1",
