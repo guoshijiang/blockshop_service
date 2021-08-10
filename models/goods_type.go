@@ -45,11 +45,11 @@ func (this *GoodsType) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *GoodsType) Insert() error {
-	if _, err := orm.NewOrm().Insert(this); err != nil {
-		return err
+func (this *GoodsType) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, id
 }
 
 func GetGdsTypeList() ([]*GoodsType) {
@@ -61,3 +61,11 @@ func GetGdsTypeList() ([]*GoodsType) {
 	return gdtp_list
 }
 
+func GetGdsTypeByName(type_name string) *GoodsType {
+	var goods_cat GoodsType
+	err := orm.NewOrm().QueryTable(GoodsType{}).Filter("name", type_name).One(&goods_cat)
+	if err != nil {
+		return nil
+	}
+	return &goods_cat
+}

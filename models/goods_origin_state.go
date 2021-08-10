@@ -44,11 +44,11 @@ func (this *GoodsOriginState) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *GoodsOriginState) Insert() error {
-	if _, err := orm.NewOrm().Insert(this); err != nil {
-		return err
+func (this *GoodsOriginState) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, id
 }
 
 func GetOriginStateList() ([]*GoodsOriginState) {
@@ -58,4 +58,14 @@ func GetOriginStateList() ([]*GoodsOriginState) {
 		return nil
 	}
 	return gog_list
+}
+
+
+func GetGdsOsByName(os_name string) *GoodsOriginState {
+	var goods_ost GoodsOriginState
+	err := orm.NewOrm().QueryTable(GoodsOriginState{}).Filter("name", os_name).One(&goods_ost)
+	if err != nil {
+		return nil
+	}
+	return &goods_ost
 }

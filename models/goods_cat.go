@@ -47,11 +47,11 @@ func (this *GoodsCat) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *GoodsCat) Insert() error {
-	if _, err := orm.NewOrm().Insert(this); err != nil {
-		return err
+func (this *GoodsCat) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, id
 }
 
 func GetGdsCatList() ([]*GoodsCat) {
@@ -61,4 +61,13 @@ func GetGdsCatList() ([]*GoodsCat) {
 		return nil
 	}
 	return gcat_list
+}
+
+func GetGdsCatByName(cat_name string) *GoodsCat {
+	var goods_cat GoodsCat
+	err := orm.NewOrm().QueryTable(GoodsCat{}).Filter("name", cat_name).One(&goods_cat)
+	if err != nil {
+		return nil
+	}
+	return &goods_cat
 }

@@ -49,11 +49,11 @@ func (this *GoodsAttr) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *GoodsAttr) Insert() error {
-	if _, err := orm.NewOrm().Insert(this); err != nil {
-		return err
+func (this *GoodsAttr) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, id
 }
 
 func GetGoodsAttrList(goods_id int64) ([]*GoodsAttr, int64, error) {

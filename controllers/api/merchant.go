@@ -6,6 +6,7 @@ import (
 	"blockshop/types/merchant"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"strings"
 )
 
 type MerchantController struct {
@@ -107,7 +108,40 @@ func (this *MerchantController) MerchantDetail() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /mct_add_goods [post]
 func (this *MerchantController) MerchantAddGoods() {
-
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	merchant_goods_add := merchant.MerchantAddUpdGoodsReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &merchant_goods_add); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := merchant_goods_add.GoodsAddParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, nil, err.Error())
+		this.ServeJSON()
+		return
+	}
+	code, err := models.CreateMerchantGoods(merchant_goods_add)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加商品成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.CreateGoodsFail, nil, "添加商品失败")
+		this.ServeJSON()
+		return
+	}
 }
 
 
@@ -116,16 +150,40 @@ func (this *MerchantController) MerchantAddGoods() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /mct_upd_goods [post]
 func (this *MerchantController) MerchantUpdGoods() {
-
-}
-
-
-// MerchantGoodsList @Title MerchantGoodsList
-// @Description 商家商品列表 MerchantGoodsList
-// @Success 200 status bool, data interface{}, msg string
-// @router /mct_goods_list [post]
-func (this *MerchantController) MerchantGoodsList() {
-
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	merchant_goods_upd := merchant.UpdateGoodsReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &merchant_goods_upd); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := merchant_goods_upd.GoodsUpdParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, nil, err.Error())
+		this.ServeJSON()
+		return
+	}
+	code, err := models.UpdateMerchantGoods(merchant_goods_upd)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "修改商品信息成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.CreateGoodsFail, nil, "修改商品信息失败")
+		this.ServeJSON()
+		return
+	}
 }
 
 
@@ -134,41 +192,38 @@ func (this *MerchantController) MerchantGoodsList() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /mct_del_goods [post]
 func (this *MerchantController) MerchantDelGoods() {
-
-}
-
-
-// MerchantGoodsCmtList @Title MerchantGoodsCmtList
-// @Description 商品商品评价 MerchantGoodsCmtList
-// @Success 200 status bool, data interface{}, msg string
-// @router /mct_goods_cmt_list [post]
-func (this *MerchantController) MerchantGoodsCmtList() {
-
-}
-
-
-// MerchantGoodsOrderList @Title MerchantGoodsOrderList
-// @Description 商品商品订单 MerchantGoodsOrderList
-// @Success 200 status bool, data interface{}, msg string
-// @router /mct_goods_order_list [post]
-func (this *MerchantController) MerchantGoodsOrderList() {
-
-}
-
-
-// MerchantGoodsOrderDetail @Title MerchantGoodsOrderDetail
-// @Description 商品商品订单 MerchantGoodsOrderDetail
-// @Success 200 status bool, data interface{}, msg string
-// @router /mct_goods_order_detail [post]
-func (this *MerchantController) MerchantGoodsOrderDetail() {
-
-}
-
-
-// MerchantGoodsUpdOrder @Title MerchantGoodsUpdOrder
-// @Description 商品商品订单状态维护 MerchantGoodsUpdOrder
-// @Success 200 status bool, data interface{}, msg string
-// @router /mct_goods_upd_order [post]
-func (this *MerchantController) MerchantGoodsUpdOrder() {
-
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	merchant_goods_del := merchant.DeleteGoodsReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &merchant_goods_del); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := merchant_goods_del.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, nil, err.Error())
+		this.ServeJSON()
+		return
+	}
+	code, err := models.DeleteGoodsById(merchant_goods_del.GoodsId)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "删除商品成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.CreateGoodsFail, nil, "删除商品失败")
+		this.ServeJSON()
+		return
+	}
 }

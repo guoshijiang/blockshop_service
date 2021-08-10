@@ -47,11 +47,11 @@ func (this *GoodsImage) Query() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(this)
 }
 
-func (this *GoodsImage) Insert() error {
-	if _, err := orm.NewOrm().Insert(this); err != nil {
-		return err
+func (this *GoodsImage) Insert() (err error, id int64) {
+	if id, err = orm.NewOrm().Insert(this); err != nil {
+		return err, 0
 	}
-	return nil
+	return nil, id
 }
 
 func GetGoodsImgList(goods_id int64) ([]*GoodsImage, int, error) {

@@ -37,3 +37,12 @@ func (this *ImageFile) GetImageById(id int64) (*ImageFile, int, error) {
 	}
 	return &image, types.ReturnSuccess, nil
 }
+
+func GetImageById(id int64) *ImageFile {
+	var image ImageFile
+	err := orm.NewOrm().QueryTable(ImageFile{}).Filter("id", id).One(&image)
+	if err != nil {
+		return nil
+	}
+	return &image
+}

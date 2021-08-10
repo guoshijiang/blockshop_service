@@ -7,6 +7,7 @@ import (
 type GoodsListReq struct {
 	types.PageSizeData
 	GoodsName     string   `json:"goods_name"`     // 商品名称
+	MerchantId    int64    `json:"merchant_id"`    // 商家ID
 	TypeId     	  int64    `json:"type_id"`        // 类别ID
 	CatId         int64    `json:"cat_id"`         // 类别ID
 	OriginStateId int64    `json:"origin_state_id"` // 产地
