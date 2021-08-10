@@ -10,6 +10,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type UserWallet struct {
@@ -66,12 +67,13 @@ func (w *UserWallet) GetUserWalletByUser() (*UserWallet, int, error) {
 	return w, types.ReturnSuccess, nil
 }
 
-func (w *UserWallet) GetUserWalletByUserId() error {
-	err := w.Query().Filter("user_id", w.UserId).One(w)
+func GetUserWalletByUserId(user_id, asset_id int64) (*UserWallet, error) {
+	var u_wallet UserWallet
+	err := orm.NewOrm().QueryTable(UserWallet{}).Filter("user_id", user_id).Filter("asset_id", asset_id).One(&u_wallet)
 	if err != nil {
-		return err
+		return nil, errors.New("获取钱包地址失败")
 	}
-	return nil
+	return &u_wallet, nil
 }
 
 func GetUserWalletBalance(asset_id, user_id int64) (float64, int, error) {

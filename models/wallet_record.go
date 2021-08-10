@@ -2,7 +2,9 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 )
 
 type WalletRecord struct {
@@ -42,4 +44,39 @@ func (this *WalletRecord) Update(fields ...string) error {
 
 func (this *WalletRecord) SearchField() []string {
   return []string{"chain_name"}
+}
+
+func (this *WalletRecord) GetWalletWithdrawList(asset_name string, page, page_size int64) ([]*WalletRecord, int, error) {
+	var wdd []*WalletRecord
+	filter := orm.NewOrm().QueryTable(&WalletRecord{}).Filter("user_id", this.UserId)
+	if this.Status > 0 {
+		filter = filter.Filter("status", this.Status)
+	}
+	if asset_name != "" {
+		var ast Asset
+		ast.Name = asset_name
+		asst, _ := ast.GetAsset()
+		filter = filter.Filter("asset_id", asst.Id)
+	}
+	if this.WOrD >= 0 {
+		filter = filter.Filter("w_or_d", this.WOrD)
+	}
+	total, err := filter.Count()
+	if err != nil {
+		return nil, types.QueryWalletRecodFail, errors.Wrap(err, "count deposit list fail")
+	}
+	_, err = filter.Limit(page_size, page_size*(page-1)).All(&wdd)
+	if err != nil {
+		return nil, types.QueryWalletRecodFail, errors.Wrap(err, "query deposit list fail")
+	}
+	return wdd, int(total), nil
+}
+
+func (this *WalletRecord) GetWalletWithdrawById(withdraw_id int64) (*WalletRecord, int, error) {
+	var wdd WalletRecord
+	err := orm.NewOrm().QueryTable(&WalletRecord{}).Filter("Id", withdraw_id).One(&wdd)
+	if err != nil {
+		return nil, types.SystemDbErr, errors.New("Query database error")
+	}
+	return &wdd, types.ReturnSuccess, nil
 }

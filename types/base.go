@@ -43,8 +43,13 @@ const (
 	PayOrderError                 = 4030  // 订单支付错误
 	QueryMessageFail              = 4031  // 查询消息失败
 	MessageEmpty                  = 4032  // 消息是空的
+	GetAssetListError             = 4033  // 获取资产失败
+	WithdrawToAddressEmpty        = 4034  // 提现转入地址为空
+	TxFeeNotEnough                = 4035  // 提币手续费太低
+	WithdrawAmountLessMin         = 4036  // 提币数量太小
+	WalletBalanceNotEnough        = 4037  // 钱包余额不够
+	QueryWalletRecodFail          = 4038  // 获取钱包记录失败
 
-	// 5000
 	InvalidWOrD                   = 5000  // 无效的充值或者提现
 	AmountLessZero                = 5001  // 充值或提现小于 0
 	TxHashEmpty                   = 5002  // 交易 Hash 为空
