@@ -290,6 +290,24 @@ func init() {
         &api.ForumController{},
       ),
     ),
+
+    beego.NSNamespace("/message",
+      beego.NSInclude(
+        &api.MessageController{},
+      ),
+    ),
+
+    beego.NSNamespace("/cwallet",
+      beego.NSInclude(
+        &api.ChainWalletController{},
+      ),
+    ),
+
+    beego.NSNamespace("/comment",
+      beego.NSInclude(
+        &api.CommentController{},
+      ),
+    ),
   )
   beego.AddNamespace(api_path)
 }
