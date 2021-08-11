@@ -11,7 +11,7 @@ type Asset struct {
 	Name      string   `orm:"column(name);unique;size(11);index" description:"币种名称" json:"name"`
 	ChainName string   `orm:"column(chain_name);unique;size(11);index" description:"链名称" json:"chain_name"`
 	UsdPrice  string   `orm:"column(usd_price)" description:"币种的美元价格" json:"usd_price"`
-	CnyPrice  string   `orm:"column(usd_price)" description:"币种的人民币价格" json:"cny_price"`
+	CnyPrice  string   `orm:"column(cny_price)" description:"币种的人民币价格" json:"cny_price"`
 	Unit      int64    `orm:"column(unit);default(8)" description:"币种精度" json:"unit"`
 }
 

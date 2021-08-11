@@ -24,7 +24,7 @@ func init() {
 		new(GoodsOrder),new(GoodsType),new(GoodsAttr),new(Merchant),new(UserWallet),
 		new(WalletRecord),new(Goods),new(News),new(Message),new(MerchantDataStat),
 		new(UserDataStat),new(GoodsComment),new(ForumCat), new(UserAddress), new(ImageFile),
-		new(GoodsOriginState),
+		new(GoodsOriginState),new(OrderProcess),
 	)
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
@@ -111,3 +111,18 @@ type ForumReplyList struct {
   ForumReply
   UserName        string            `json:"user_name"`
 }
+
+type GoodsOrderList struct {
+  GoodsOrder
+  UserName					string					`json:"user_name"`
+}
+
+type OrderProcessList struct {
+  OrderProcess
+  UserName				string					`json:"user_name"`
+  OrderNumber				string					`json:"order_number"`
+  GoodsName				string					`json:"goods_name"`
+  GoodsTitle				string					`json:"goods_title"`
+  PayAmount				float64					`json:"pay_amount"`
+}
+

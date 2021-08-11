@@ -200,6 +200,23 @@
 
 
             <div class="form-group">
+              <label for="origin_state_id" class="col-sm-2 control-label">商品产地</label>
+              <div class="col-sm-10 col-md-4">
+                <select name="origin_state_id" id="origin_state_id" class="form-control field-select" data-placeholder="请选择商品产地">
+                  <option value=""></option>
+                  {{range $key,$item := .origin}}
+                    <option value="{{$item.Id}}" {{if compare $.data.GoodsCatId $item.Id }} selected {{end}}>
+                      {{$item.Name}}
+                    </option>
+                  {{end}}
+                </select>
+              </div>
+            </div>
+            <script>
+              $('#origin_state_id').select2();
+            </script>
+
+            <div class="form-group">
               <label for="goods_name" class="col-sm-2 control-label">产品名称</label>
               <div class="col-sm-10 col-md-4">
                 <input maxlength="50" class="form-control" id="goods_name" placeholder="请输入产品名称" name="goods_name" value="{{.data.GoodsName}}">

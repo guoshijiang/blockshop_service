@@ -90,7 +90,7 @@ func (*GoodsCateService) Del(ids []int) int{
 
 func (*GoodsCateService) GetGoodsCats() []*models.GoodsCat{
   var cats []*models.GoodsCat
-  _,err := orm.NewOrm().QueryTable(new(models.GoodsCat)).Filter("is_removed__contains",0).Filter("cat_level__eq",1).All(&cats)
+  _,err := orm.NewOrm().QueryTable(new(models.GoodsCat)).Filter("is_removed__contains",0).All(&cats)
   if err != nil {
     return nil
   }

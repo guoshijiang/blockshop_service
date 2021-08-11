@@ -8,6 +8,7 @@ type GoodsForm struct {
   GoodsMark      string    `form:"goods_mark" validate:"required"`    				// 商品备注
   Serveice       string    `form:"serveice" validate:"required"`      				// 服务说明
   CalcWay        int8      `form:"calc_way" validate:"int"`     					    // 0:按件计量 1:按近计量
+  OriginStateId  int64     `form:"origin_state_id"`
   MerchantId     int64     `form:"merchant_id" validate:"required"`                   // 商品所属商家ID
   Title          string    `form:"title" validate:"required"`         				// 商品标题
   Logo           string    `form:"logo"`   						                    // 商品封面

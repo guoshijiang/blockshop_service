@@ -30,6 +30,7 @@ func (Self *GoodsController) Add() {
   Self.Data["calcway"] = []models.Select{{Id: 0,Name: "件"},{Id: 1,Name: "斤"}}
   Self.Data["cats"] = (&services.GoodsCateService{}).GetGoodsCats()
   Self.Data["types"] = (&services.GoodsTypeService{}).GetGoodsTypes()
+  Self.Data["origin"] = (&services.OriginStateService{}).GetOrigins()
   adminUser := admin["user"].(*models.AdminUser)
   Self.Data["merchant_id"] = adminUser.MerchantId
   Self.Data["merchants"] = (&services.MerchantService{}).GetMerchants()
@@ -88,6 +89,8 @@ func (Self *GoodsController) Edit() {
   Self.Data["imgs"] = images
   Self.Data["calcway"] = []models.Select{{Id: 0,Name: "件"},{Id: 1,Name: "斤"}}
   Self.Data["cats"] = (&services.GoodsCateService{}).GetGoodsCats()
+  Self.Data["types"] = (&services.GoodsTypeService{}).GetGoodsTypes()
+  Self.Data["origin"] = (&services.OriginStateService{}).GetOrigins()
   adminUser := admin["user"].(*models.AdminUser)
   Self.Data["merchant_id"] = adminUser.MerchantId
   Self.Data["merchants"] = (&services.MerchantService{}).GetMerchants()
@@ -120,9 +123,6 @@ func (Self *GoodsController) Update(){
   goodsForm.Logo = imgPath
   //商家验重
   var goodsService services.GoodsServices
-  //if goodsService.IsExistName(strings.TrimSpace(goodsForm.GoodsName), goodsForm.Id) {
-  //	response.ErrorWithMessage("名称已经存在", Self.Ctx)
-  //}
   _,err = new(services.UploadService).UploadMulti(Self.Ctx,"images",int64(goodsForm.Id))
   if goodsService.Update(&goodsForm) > 0  || err == nil {
     response.Success(Self.Ctx)

@@ -123,17 +123,13 @@ func IntegralType(t int8) string {
 	}
 }
 
-//支付方式 0:积分兑换，1:账户余额支付，2:微信支付；3:支付宝支付; 4:未知支付方式
+//支付方式 0:BTC，1:USDT
 func PayWay(t int8) string {
 	switch t {
 	case 0:
-		return "积分兑换"
+		return "BTC"
 	case 1:
-		return "账户余额支付"
-	case 2:
-		return "微信支付"
-	case 3:
-		return "支付宝支付"
+		return "USDT"
 	default:
 		return "未知"
 	}

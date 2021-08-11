@@ -219,6 +219,29 @@ func init() {
     beego.NSRouter("/message/history", &controllers.MessageController{}, "get:History"),
     beego.NSRouter("/message/send", &controllers.MessageController{}, "post:Send"),
 
+    //地域管理-商品属性管理
+    beego.NSRouter("/origin/index", &controllers.OriginStateController{}, "get:Index"),
+    //地域管理-添加界面
+    beego.NSRouter("/origin/add", &controllers.OriginStateController{}, "get:Add"),
+    //地域管理-添加
+    beego.NSRouter("/origin/create", &controllers.OriginStateController{}, "post:Create"),
+    //地域管理-修改界面
+    beego.NSRouter("/origin/edit", &controllers.OriginStateController{}, "get:Edit"),
+    //地域管理-修改
+    beego.NSRouter("/origin/update", &controllers.OriginStateController{}, "post:Update"),
+    //地域管理-删除
+    beego.NSRouter("/origin/del", &controllers.OriginStateController{}, "post:Del"),
+
+    //订单管理
+    beego.NSRouter("/order/index",&controllers.OrderController{},"get:Index"),
+    beego.NSRouter("/order/edit",&controllers.OrderController{},"get:Edit"),
+    beego.NSRouter("/order/update",&controllers.OrderController{},"post:Update"),
+    beego.NSRouter("/order/del",&controllers.OrderController{},"post:Del"),
+    beego.NSRouter("/order/process",&controllers.OrderController{},"get:Process"),
+    beego.NSRouter("/order/process/verify",&controllers.OrderController{},"post:Verify"),
+    beego.NSRouter("/order/process/detail",&controllers.OrderController{},"get:Detail"),
+
+
     //用户管理
     beego.NSRouter("/user/index", &controllers.UserController{}, "get:Index"),
     //用户管理-添加界面

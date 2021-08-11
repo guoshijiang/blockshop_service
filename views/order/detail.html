@@ -1,0 +1,164 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <!-- 表单头部 -->
+        <div class="box-header with-border">
+          <div class="btn-group">
+            <a class="btn flat btn-sm btn-default BackButton">
+              <i class="fa fa-arrow-left"></i>
+              返回
+            </a>
+          </div>
+        </div>
+
+        <div class="box-body table-responsive">
+          <h4>订单信息</h4>
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>订单编号</th>
+              <th>订单状态</th>
+              <th>支付方式</th>
+              <th>支付金额</th>
+              <th>积分</th>
+              <th>购买时间</th>
+              <th>付款时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{.data.Id}}</td>
+              <td>{{.data.OrderNumber}}</td>
+              <td>{{.data.OrderStatus | OrderStatus}}</td>
+              <td>{{.data.PayWay | PayWay}}</td>
+              <td>{{.data.PayAmount}}</td>
+{{/*              <td>{{.data.SendIntegral}}</td>*/}}
+              <td>{{.data.CreatedAt | TimeForFormat}}</td>
+              <td>{{.data.PayAt | TimeForFormat }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{if compare .addr nil}}
+          <div class="box-body table-responsive">
+            <h4>客户信息</h4>
+            <table class="table table-hover table-bordered datatable" width="100%">
+              <thead>
+              <tr>
+                <th>客户姓名</th>
+                <th>联系方式</th>
+                <th>地址</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>{{.addr.UserName}}</td>
+                <td>{{.addr.Phone}}</td>
+                <td>{{.addr.Address}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        {{end}}
+
+        <div class="box-body table-responsive">
+          <h4>商品信息</h4>
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>商品标题</th>
+              <th>产品名称</th>
+              <th>购买数量</th>
+              <th>购买时间</th>
+              <th>付款时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{.data.GoodsTitle}}</td>
+              <td>{{.data.GoodsName}}</td>
+              <td>{{.data.BuyNums}}</td>
+              <td>{{.data.CreatedAt | TimeForFormat}}</td>
+              <td>{{.data.PayAt | TimeForFormat}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{if compare .data.OrderStatus 3}}
+          <div class="box-body table-responsive">
+            <div class="alert alert-info" role="alert">{{.data.FailureReason}}</div>
+          </div>
+        {{end}}
+
+
+        {{if gt .data.OrderStatus 3 }}
+          <div class="box-body table-responsive">
+            <h4>发货信息</h4>
+            <table class="table table-hover table-bordered datatable" width="100%">
+              <thead>
+              <tr>
+                <th>快递编号</th>
+                <th>处理人</th>
+                <th>处理时间</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>{{.data.ShipNumber}}</td>
+                <td>{{.data.DealMerchant}}</td>
+                <td>{{.data.DealAt | TimeForFormat}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        {{end}}
+
+        {{if compare .data.OrderStatus 2}}
+          <div class="box-body table-responsive">
+            <form id="dataForm" class="form-horizontal dataForm" action="/admin/order/update" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="id" value="{{.data.Id}}">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="ship_number" class="col-sm-2 control-label">快递编号</label>
+                  <div class="col-sm-10 col-md-4">
+                    <input maxlength="50" class="form-control" id="ship_number" placeholder="请输入编号" name="ship_number" value="">
+                  </div>
+                </div>
+              </div>
+              <!--表单底部-->
+              <div class="box-footer">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-10 col-md-4">
+                  <div class="btn-group">
+                    <button type="submit" class="btn flat btn-info dataFormSubmit">
+                      发货
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        {{end}}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  $("#dataForm").validate({
+    rules: {
+
+    },
+    messages: {
+
+    },
+
+  });
+</script>
+

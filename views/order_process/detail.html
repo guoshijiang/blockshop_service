@@ -1,0 +1,207 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <!-- 表单头部 -->
+        <div class="box-header with-border">
+          <div class="btn-group">
+            <a class="btn flat btn-sm btn-default BackButton">
+              <i class="fa fa-arrow-left"></i>
+              返回
+            </a>
+          </div>
+        </div>
+
+        <div class="box-body table-responsive">
+          <h4>退货单信息</h4>
+          <form class="form-horizontal dataForm">
+            <div class="box-body">
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">退货原因</label>
+                <div class="col-sm-10 col-md-4">
+                  <input class="form-control" value="{{.data.RetGoodsRs}}" readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">问题描述</label>
+                <div class="col-sm-10 col-md-4">
+                  <textarea readonly>{{.data.QsDescribe}}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">问题图片1</label>
+                <div class="col-sm-10 col-md-4">
+                  <img src="{{.data.QsImgOne}}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">问题图片2</label>
+                <div class="col-sm-10 col-md-4">
+                  <img src="{{.data.QsImgTwo}}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">问题图片3</label>
+                <div class="col-sm-10 col-md-4">
+                  <img src="{{.data.QsImgThree}}"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-10 col-md-4">
+                  <input class="form-control" value="{{.data.Process | ProcessStatus}}" readonly>
+                </div>
+              </div>
+              {{if compare  .data.Process 2}}
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">拒绝理由</label>
+                  <div class="col-sm-10 col-md-4">
+                    <input class="form-control" value="{{.data.RetPayRs}}" readonly>
+                  </div>
+                </div>
+              {{end}}
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">是否收货</label>
+                <div class="col-sm-10 col-md-4">
+                  <input class="form-control" value="{{.data.IsRecvGoods | ProcessIsRecvGoods}}" readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">退款方式</label>
+                <div class="col-sm-10 col-md-4">
+                  <input class="form-control" value="{{.data.FundRet | ProcessFundRet}}" readonly>
+                </div>
+              </div>
+              {{if gt .data.Process 2}}
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">处理时长</label>
+                  <div class="col-sm-10 col-md-4">
+                    <input class="form-control" value="{{.data.LeftTime}}" readonly>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">处理时间</label>
+                  <div class="col-sm-10 col-md-4">
+                    <input class="form-control" value="{{.data.DealTime}}" readonly>
+                  </div>
+                </div>
+              {{end}}
+            </div>
+          </form>
+        </div>
+
+        <div class="box-body table-responsive">
+          <h4>订单信息</h4>
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>订单编号</th>
+              <th>订单状态</th>
+              <th>支付方式</th>
+              <th>支付金额</th>
+              <th>购买时间</th>
+{{/*              <th>付款时间</th>*/}}
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{.order.Id}}</td>
+              <td>{{.order.OrderNumber}}</td>
+              <td>{{.order.OrderStatus}}</td>
+              <td>{{.order.PayWay}}</td>
+              <td>{{.order.PayAmount}}</td>
+              <td>{{.order.CreatedAt | TimeForFormat}}</td>
+              {{/*                            <td>{{.order.PayAt | TimeForFormat}}</td>*/}}
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box-body table-responsive">
+          <h4>客户信息</h4>
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>客户姓名</th>
+              <th>联系方式</th>
+              <th>地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{.addr.UserName}}</td>
+              <td>{{.addr.Phone}}</td>
+              <td>{{.addr.Address}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box-body table-responsive">
+          <h4>商品信息</h4>
+          <table class="table table-hover table-bordered datatable" width="100%">
+            <thead>
+            <tr>
+              <th>商品标题</th>
+              <th>产品名称</th>
+              <th>购买数量</th>
+              <th>购买时间</th>
+              <th>付款时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{.order.GoodsTitle}}</td>
+              <td>{{.order.GoodsName}}</td>
+              <td>{{.order.BuyNums}}</td>
+              <td>{{.order.CreatedAt}}</td>
+              <td>{{.order.PayAt}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{if compare .order.OrderStatus 2}}
+          <div class="box-body table-responsive">
+            <form id="dataForm" class="form-horizontal dataForm" action="/admin/order/update" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="id" value="{{.data.Id}}">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="ship_number" class="col-sm-2 control-label">快递编号</label>
+                  <div class="col-sm-10 col-md-4">
+                    <input maxlength="50" class="form-control" id="ship_number" placeholder="请输入编号" name="ship_number" value="">
+                  </div>
+                </div>
+              </div>
+              <!--表单底部-->
+              <div class="box-footer">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-10 col-md-4">
+                  <div class="btn-group">
+                    <button type="submit" class="btn flat btn-info dataFormSubmit">
+                      发货
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        {{end}}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  $("#dataForm").validate({
+    rules: {
+    },
+    messages: {
+    },
+
+  });
+</script>
+
