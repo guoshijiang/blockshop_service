@@ -24,6 +24,10 @@ type GoodsListRep struct {
 	GoodsId        int64   `json:"goods_id"`
 	Title          string  `json:"title"`
 	Logo           string  `json:"logo"`
+	MerchantId     int64   `json:"merchant_id"`
+	MerchantName   string  `json:"merchant_name"`
+	TypeId         int64   `json:"type_id"`
+	TypeName       string  `json:"type_name"`
 	GoodsPrice     float64 `json:"goods_price"`
 	GoodsDisPrice  float64 `json:"goods_discount_price"`
 	IsDiscount     int8    `json:"is_discount"`

@@ -120,9 +120,20 @@ func (this *GoodsController) GoodsList() {
 	image_path := beego.AppConfig.String("img_root_path")
 	var goods_ret_list []goods.GoodsListRep
 	for _, value := range good_list {
+		merchant, code, err := models.GetMerchantDetail(value.MerchantId)
+		if err != nil {
+			this.Data["json"] = RetResource(false, code, err.Error(), "获取商家信息失败")
+			this.ServeJSON()
+			return
+		}
+		gds_type := models.GetGdsTypeById(value.GoodsTypeId)
 		gds_ret := goods.GoodsListRep{
 			GoodsId:   value.Id,
 			Title: value.Title,
+			MerchantId: merchant.Id,
+			MerchantName: merchant.MerchantName,
+			TypeId: gds_type.Id,
+			TypeName: gds_type.Name,
 			Logo: image_path + value.Logo,
 			GoodsPrice: value.GoodsPrice,
 			GoodsDisPrice: value.GoodsDisPrice,
@@ -172,6 +183,7 @@ func (this *GoodsController) GoodsDetail() {
 		"merchant_id": merchant.Id,
 		"merchant_logo": img_path + merchant.Logo,
 		"merchant_name": merchant.MerchantName,
+		"merchant_level": merchant.ShopLevel,
 	}
 	goods_img_lst, code, err := models.GetGoodsImgList(goods_dtl.Id)
 	if err != nil {
@@ -214,18 +226,23 @@ func (this *GoodsController) GoodsDetail() {
 			type_list = append(type_list, c_gds_type)
 		}
 	}
+	user_ll, _ := models.GetUserById(goods_dtl.UserId)
+	ors_state := models.GetGdsOsById(goods_dtl.OriginStateId)
 	goods_detail := map[string]interface{}{
 		"id": goods_dtl.Id,
+		"trust_level": user_ll.MemberLevel,
 		"title": goods_dtl.Title,
 		"mark": goods_dtl.GoodsMark,
 		"logo": img_path + goods_dtl.Logo,
 		"serveice": goods_dtl.Serveice,
+		"origin_state": ors_state.Name,
 		"calc_way": goods_dtl.CalcWay,
 		"sell_nums": goods_dtl.SellNums,
 		"total_amount": goods_dtl.TotalAmount,
 		"left_amount": goods_dtl.LeftAmount,
 		"goods_price": goods_dtl.GoodsPrice,
-		"goods_dis_price": goods_dtl.GoodsDisPrice,
+		"btc_price": goods_dtl.GoodsPrice,
+		"usdt_price": goods_dtl.GoodsPrice,
 		"goods_name": goods_dtl.GoodsName,
 		"goods_params": goods_dtl.GoodsParams,
 		"goods_detail": goods_dtl.GoodsDetail,

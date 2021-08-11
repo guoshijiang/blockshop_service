@@ -276,6 +276,7 @@ func (this *ForumController) ForumTopicCommentList() {
 			for _, reply := range reply_list_dt {
 				user, _ := models.GetUserById(reply.UserId)
 				f_rly := forum.ForumReply{
+					Id: reply.Id,
 					UserName: user.UserName,
 					UserPhoto: user.Avator,
 					Reply: reply.Content,
@@ -285,6 +286,7 @@ func (this *ForumController) ForumTopicCommentList() {
 			}
 		}
 		comment_reply := &forum.ForumCommentListRep {
+			Id: cmt.Id,
 			UserName: user.UserName,
 			UserPhoto: user.Avator,
 			Comment: cmt.Content,

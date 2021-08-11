@@ -69,3 +69,13 @@ func GetGdsOsByName(os_name string) *GoodsOriginState {
 	}
 	return &goods_ost
 }
+
+
+func GetGdsOsById(id int64) *GoodsOriginState {
+	var goods_ost GoodsOriginState
+	err := orm.NewOrm().QueryTable(GoodsOriginState{}).Filter("id", id).One(&goods_ost)
+	if err != nil {
+		return nil
+	}
+	return &goods_ost
+}

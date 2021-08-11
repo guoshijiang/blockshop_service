@@ -46,6 +46,7 @@ type ForumTopicListRep struct {
 }
 
 type ForumReply struct {
+	Id          int64   `json:"id"`
 	UserName    string  `json:"user_name"`
 	UserPhoto   string  `json:"user_photo"`
 	Reply       string  `json:"reply"`
@@ -53,6 +54,7 @@ type ForumReply struct {
 }
 
 type ForumCommentListRep struct {
+	Id          int64        `json:"id"`
 	UserName    string       `json:"user_name"`
 	UserPhoto   string       `json:"user_photo"`
 	Comment     string       `json:"comment"`

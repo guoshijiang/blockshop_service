@@ -69,3 +69,12 @@ func GetGdsTypeByName(type_name string) *GoodsType {
 	}
 	return &goods_cat
 }
+
+func GetGdsTypeById(id int64) *GoodsType {
+	var goods_cat GoodsType
+	err := orm.NewOrm().QueryTable(GoodsType{}).Filter("id", id).One(&goods_cat)
+	if err != nil {
+		return nil
+	}
+	return &goods_cat
+}
