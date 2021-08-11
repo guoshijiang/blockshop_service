@@ -11,7 +11,7 @@
  Target Server Version : 80014
  File Encoding         : 65001
 
- Date: 05/08/2021 12:05:21
+ Date: 11/08/2021 20:59:25
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `admin_menu` (
   `log_method` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '不记录',
   PRIMARY KEY (`id`),
   KEY `admin_menu_url` (`url`)
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- ----------------------------
 -- Records of admin_menu
@@ -136,6 +136,21 @@ INSERT INTO `admin_menu` VALUES (208, 206, '商品大类添加-创建', 'admin/g
 INSERT INTO `admin_menu` VALUES (209, 206, '商品大类编辑-界面', 'admin/goods/type/edit', 'fa-list', 0, 1000, '不记录');
 INSERT INTO `admin_menu` VALUES (210, 206, '商品大类编辑-更新', 'admin/goods/type/update', 'fa-list', 0, 1000, '不记录');
 INSERT INTO `admin_menu` VALUES (211, 206, '删除商品大类', 'admin/goods/type/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (212, 196, '论坛审核', 'admin/forum/check', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (213, 196, '论坛回复', 'admin/forum/reply/index', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (214, 213, '论坛回复审核', 'admin/forum/reply/check', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (215, 148, '地域管理', 'admin/origin/index', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (216, 215, '地域管理-添加界面', 'admin/origin/add', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (217, 215, '地域管理-创建', 'admin/origin/create', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (218, 215, '地域管理-编辑', 'admin/origin/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (219, 215, '地域管理-更新', 'admin/origin/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (220, 215, '地域管理-删除', 'admin/origin/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (221, 20, '订单管理-查看', 'admin/order/edit', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (222, 20, '订单管理-发货', 'admin/order/update', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (223, 20, '订单管理-删除', 'admin/order/del', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (224, 19, '退货管理', 'admin/order/process', 'fa-list', 1, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (225, 224, '退货管理-详情', 'admin/order/process/detail', 'fa-list', 0, 1000, '不记录');
+INSERT INTO `admin_menu` VALUES (226, 224, '退货管理-审核', 'admin/order/process/verify', 'fa-list', 0, 1000, '不记录');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
