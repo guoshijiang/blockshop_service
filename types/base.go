@@ -52,6 +52,12 @@ const (
 	CreateGoodsFail               = 4039  // 添加商品失败
 	GetBtcRateFail                = 4040  // 获取 BTC 的费率失败
 	GetUsdtRateFail               = 4041  // 获取 USDT 的费率失败
+	PhoneEmptyError               = 4042  // 手机号码不能为空
+	PhoneFormatError              = 4043  // 手机号码格式错误
+	AddressIdLessEqError          = 4044  // 地址不存在
+	CreateAddressFail             = 4045  // 创建地址失败
+	UpdateAddressFail             = 4046  // 修改地址失败
+
 
 
 	InvalidWOrD                   = 5000  // 无效的充值或者提现
