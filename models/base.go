@@ -29,7 +29,7 @@ func init() {
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
-	err := orm.RunSyncdb(mysqlConfig["db_alias"], false, false)
+	err := orm.RunSyncdb(mysqlConfig["db_alias"], false, true)
 	if err != nil {
 		logs.Error(err.Error())
 	}

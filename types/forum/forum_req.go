@@ -13,7 +13,8 @@ type ForumChildListReq struct {
 
 type ForumTopicListReq struct {
 	types.PageSizeData
-	LevelCatId int64 `json:"level_cat_id"`
+	CatId    int64   `json:"cat_id"`     // 分类ID
+	IsFather int8    `json:"is_father"`  // 是不是父级，0:不是，1:是
 }
 
 type ForumTopicDetailReq struct {
@@ -40,4 +41,11 @@ type CreateCmtReplyReq struct {
 	CtmReply       string `json:"ctm_reply"`
 }
 
+type ForumTopiceLikeReq struct {
+	ForumId    int64 `json:"forum_id"`
+}
+
+type CommentReplyLikeReq struct {
+	CmtReplyId    int64 `json:"cmt_reply_id"`
+}
 

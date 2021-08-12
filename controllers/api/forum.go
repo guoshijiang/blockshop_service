@@ -181,7 +181,7 @@ func (this *ForumController) ForumCTopicList() {
 		this.ServeJSON()
 		return
 	}
-	ft_list, total, err := models.GetForumList(int64(forum_topic_req.Page), int64(forum_topic_req.PageSize), forum_topic_req.LevelCatId)
+	ft_list, total, err := models.GetForumList(int64(forum_topic_req.Page), int64(forum_topic_req.PageSize), forum_topic_req.CatId, forum_topic_req.IsFather)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "获取论坛帖子数据失败")
 		this.ServeJSON()
@@ -367,9 +367,9 @@ func (this *ForumController) CreateForumTopic() {
 		this.ServeJSON()
 		return
 	}
-	cat_id, _ := models.CreateOrGetFcat(create_frm.CatName, 0, 1)
-	topic_id, _ := models.CreateOrGetFcat(create_frm.TopName, cat_id, 2)
-	code, msg  := models.CreateForum(user_.Id, topic_id, create_frm.Title, create_frm.Abstract, create_frm.Content)
+	father_cat_id, _ := models.CreateOrGetFcat(create_frm.CatName, 0, 1)
+	cat_id, _ := models.CreateOrGetFcat(create_frm.TopName, father_cat_id, 2)
+	code, msg  := models.CreateForum(user_.Id, father_cat_id, cat_id, create_frm.Title, create_frm.Abstract, create_frm.Content)
 	if code == types.ReturnSuccess {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "发布帖子成功")
 		this.ServeJSON()
@@ -412,6 +412,78 @@ func (this *ForumController) ForumTopicCommentReply() {
 		return
 	} else {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
+}
+
+// ForumTopicLike @Title ForumTopicLike
+// @Description 帖子点赞 ForumTopicLike
+// @Success 200 status bool, data interface{}, msg string
+// @router /forum_like [post]
+func (this *ForumController) ForumTopicLike() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	forum_topic_like := forum.ForumTopiceLikeReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_topic_like); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	code := models.ForumTopicLike(forum_topic_like.ForumId)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "点赞成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "点赞失败")
+		this.ServeJSON()
+		return
+	}
+}
+
+// CommentReplyLike @Title CommentReplyLike
+// @Description 评论回复点赞 CommentReplyLike
+// @Success 200 status bool, data interface{}, msg string
+// @router /comment_reply_like [post]
+func (this *ForumController) CommentReplyLike() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	cmtr_like := forum.CommentReplyLikeReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &cmtr_like); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	code := models.CommnetReplyLike(cmtr_like.CmtReplyId)
+	if code == types.ReturnSuccess {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "点赞评论回复成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "点赞评论回复失败")
 		this.ServeJSON()
 		return
 	}

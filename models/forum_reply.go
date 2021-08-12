@@ -102,3 +102,12 @@ func CreateForumCmtReply(user_id int64, forumt_id int64, father_reply_id int64, 
 	}
 	return types.ReturnSuccess,  "创建评论成功"
 }
+
+func CommnetReplyLike(id int64) (int) {
+	var forum_reply ForumReply
+	if err := orm.NewOrm().QueryTable(&ForumReply{}).Filter("Id", id).RelatedSel().One(&forum_reply); err != nil {
+		return types.SystemDbErr
+	}
+	forum_reply.Likes = forum_reply.Likes + 1
+	return types.ReturnSuccess
+}

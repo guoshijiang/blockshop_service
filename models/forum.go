@@ -11,7 +11,8 @@ type Forum struct { // 论坛表
 	BaseModel
 	Id             int64         `orm:"pk;column(id);auto;size(11)" description:"论坛ID" json:"id"`
 	UserId         int64         `orm:"column(user_id)" description:"用户ID" json:"user_id"`
-	CatId   	   int64         `orm:"column(cat_id)" description:"上级类别ID" json:"cat_id"`
+	FathrerCatId   int64  		 `orm:"column(fathrer_cat_id)" description:"顶级分类ID" json:"fathrer_cat_id"`
+	CatId   	   int64         `orm:"column(cat_id)" description:"类别ID" json:"cat_id"`
 	Title          string        `orm:"column(title);size(128)" description:"论坛标题" json:"title"`
 	Abstract       string        `orm:"column(abstract);type(text)" description:"论坛摘要" json:"abstract"`
 	Content        string        `orm:"column(content);type(text)" description:"论坛内容" json:"content"`
@@ -79,10 +80,16 @@ func GetLastestForumByCatId(cat_id int64) (*Forum, int, error) {
 	return &forum_dtl, types.ReturnSuccess, nil
 }
 
-func GetForumList(page int64, page_size int64, cat_id int64) ([]*Forum, int, error) {
+// 是不是父级，0:不是，1:是
+func GetForumList(page int64, page_size int64, cat_id int64, is_father int8) ([]*Forum, int, error) {
 	offset := (page - 1) * page_size
 	forum_list := make([]*Forum, 0)
-	query_forum := orm.NewOrm().QueryTable(Forum{}).Filter("cat_id", cat_id)
+	query_forum := orm.NewOrm().QueryTable(Forum{}).Filter("is_removed", 0)
+	if is_father == 1 {
+		query_forum = orm.NewOrm().QueryTable(Forum{}).Filter("fathrer_cat_id", cat_id)
+	} else {
+		query_forum = orm.NewOrm().QueryTable(Forum{}).Filter("cat_id", cat_id)
+	}
 	total, _ := query_forum.Count()
 	_, err := query_forum.Limit(page_size, offset).All(&forum_list)
 	if err != nil {
@@ -99,9 +106,10 @@ func GetForumDetail(id int64) (*Forum, int, error) {
 	return &forum, types.ReturnSuccess, nil
 }
 
-func CreateForum(user_id int64, cat_id int64, title string, abstract string, content string) (code int, msg string) {
+func CreateForum(user_id int64, father_cat_id int64, cat_id int64, title string, abstract string, content string) (code int, msg string) {
 	create_forum := Forum {
 		UserId: user_id,
+		FathrerCatId: father_cat_id,
 		CatId: cat_id,
 		Title: title,
 		Abstract: abstract,
@@ -112,4 +120,13 @@ func CreateForum(user_id int64, cat_id int64, title string, abstract string, con
 		return types.SystemDbErr, "创建论坛失败"
 	}
 	return types.ReturnSuccess,  "创建论坛成功"
+}
+
+func ForumTopicLike(id int64) (int) {
+	var forum Forum
+	if err := orm.NewOrm().QueryTable(Forum{}).Filter("Id", id).RelatedSel().One(&forum); err != nil {
+		return types.SystemDbErr
+	}
+	forum.Likes = forum.Likes + 1
+	return types.ReturnSuccess
 }
