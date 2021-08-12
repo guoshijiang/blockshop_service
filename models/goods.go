@@ -30,14 +30,10 @@ type Goods struct {
 	GoodsName      string    `orm:"column(goods_name);size(512);index" description:"产品名称" json:"goods_name"`
 	GoodsParams    string    `orm:"column(goods_params);type(text)" description:"产品参数" json:"goods_params"`
 	GoodsDetail    string    `orm:"column(goods_detail);type(text)" description:"产品详细介绍" json:"goods_detail"`
-	Discount       float64   `orm:"column(discount);default(0);index" description:"折扣" json:"discount"`              // 取值 0.1-9.9；0代表不打折
-	Sale           int8      `orm:"column(sale);default(0);index" description:"上架下架" json:"sale"`                   // 0:上架 1:下架
-	IsDisplay      int8      `orm:"column(is_display);default(0);index" description:"首页展示" json:"is_display"`       // 0:首页不展示, 1:首页展示
+	Discount       float64   `orm:"column(discount);default(0);index" description:"折扣" json:"discount"`        // 取值 0.1-9.9；0代表不打折
+	IsSale         int8      `orm:"column(is_sale);default(0);index" description:"上架下架" json:"is_sale"`      // 0:上架 1:下架
 	SellNums       int64     `orm:"column(sell_nums);default(0);index" description:"售出数量" json:"sell_nums"`
-	IsHot          int8      `orm:"column(is_hot);default(0);index" description:"爆款产品" json:"is_hot"`                // 0:非爆款产品 1:爆款产品
 	IsDiscount     int8      `orm:"column(is_discount);default(0);index" description:"打折活动" json:"is_discount"`      // 0:不打折，1:打折活动产品
-	LeftTime       int64     `orm:"column(left_time);default(0);index" description:"限时产品剩余时间" json:"left_time"`   // 限时产品剩余时间
-	IsLimitTime    int8      `orm:"column(is_limit_time);default(0);index" description:"限时产品" json:"is_limit_time"`  // 0:不是限时产品 1:是限时
 }
 
 type Select struct {
@@ -202,7 +198,7 @@ func CreateMerchantGoods(gds_param merchant.MerchantAddUpdGoodsReq) (int, error)
 		GoodsParams: gds_param.GoodsParams,
 		GoodsDetail: gds_param.GoodsDetail,
 		Discount: gds_param.Discount,
-		Sale: gds_param.Sale,
+		IsSale: gds_param.Sale,
 		IsDiscount: gds_param.IsDiscount,
 	}
 	err, goods_id := create_gds.Insert()
@@ -327,7 +323,7 @@ func UpdateMerchantGoods(gds_param merchant.UpdateGoodsReq) (int, error) {
 		gds.Discount = gds_param.Discount
 	}
 	if gds_param.Sale > 0 {
-		gds.Sale = gds_param.Sale
+		gds.IsSale = gds_param.Sale
 	}
 	if gds.IsDiscount  > 0 {
 		gds.IsDiscount = gds_param.IsDiscount

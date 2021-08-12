@@ -6,12 +6,6 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
 )
-/*
- tickers_conf = [
-            ['btc-price', 'api/spot/v3/instruments/BTC-USDT/ticker', 'last'],
-
-        ]
- */
 
 const BaseUrl = "https://www.ouyi.cc/api/futures/v3/rate"
 

@@ -68,6 +68,14 @@ func (a *Asset) GetAssetByName() (*Asset, error) {
 	return &asset, nil
 }
 
+func GetAssetByName(name string) (*Asset) {
+	var asset Asset
+	err := orm.NewOrm().QueryTable(Asset{}).Filter("name", name).One(&asset)
+	if err != nil {
+		return nil
+	}
+	return &asset
+}
 
 func (a *Asset) PageList(page,pageSize int,condition *orm.Condition) ([]*Asset,int64) {
 	offset := (page - 1) * pageSize

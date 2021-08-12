@@ -6,6 +6,7 @@ import (
 	"blockshop/types/goods"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"strconv"
 )
 
 type GoodsController struct {
@@ -228,6 +229,18 @@ func (this *GoodsController) GoodsDetail() {
 	}
 	user_ll, _ := models.GetUserById(goods_dtl.UserId)
 	ors_state := models.GetGdsOsById(goods_dtl.OriginStateId)
+	btc_price_b := 1.0
+	usdt_price_u := 1.0
+    btc_price := models.GetAssetByName("BTC")
+    if btc_price != nil {
+		btc_price_b_, _ := strconv.ParseFloat(btc_price.CnyPrice, 64)
+		btc_price_b = btc_price_b_
+	}
+    usdt_price := models.GetAssetByName("USDT")
+    if usdt_price != nil {
+		usdt_price_u_, _ := strconv.ParseFloat(usdt_price.CnyPrice, 64)
+		usdt_price_u = usdt_price_u_
+	}
 	goods_detail := map[string]interface{}{
 		"id": goods_dtl.Id,
 		"trust_level": user_ll.MemberLevel,
@@ -241,15 +254,14 @@ func (this *GoodsController) GoodsDetail() {
 		"total_amount": goods_dtl.TotalAmount,
 		"left_amount": goods_dtl.LeftAmount,
 		"goods_price": goods_dtl.GoodsPrice,
-		"btc_price": goods_dtl.GoodsPrice,
-		"usdt_price": goods_dtl.GoodsPrice,
+		"btc_price": goods_dtl.GoodsPrice / btc_price_b,
+		"usdt_price": goods_dtl.GoodsPrice / usdt_price_u,
 		"goods_name": goods_dtl.GoodsName,
 		"goods_params": goods_dtl.GoodsParams,
 		"goods_detail": goods_dtl.GoodsDetail,
 		"goods_img": gds_img_lst,
 		"user_address": user_address,
 		"merchant_info": merchant_info,
-		"is_hot": goods_dtl.IsHot,
 		"is_discount": goods_dtl.IsDiscount,
 		"goods_types": type_list,
 	}
