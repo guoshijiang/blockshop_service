@@ -39,7 +39,8 @@ type GoodsOrder struct {
 	UserId        int64      `orm:"column(user_id);size(64);index" description:"购买用户" json:"user_id"`
 	BuyNums       int64      `orm:"column(buy_nums);default(0)" description:"购买数量" json:"buy_nums"`
 	PayWay        int8       `orm:"column(pay_way);index" description:"支付方式" json:"pay_way"`  // 0:BTC，1:USDT
-	PayAmount     float64    `orm:"column(pay_amount);default(0);digits(22);decimals(8)" description:"支付金额" json:"pay_amount"`
+	PayCnyPrice   float64 	 `orm:"column(pay_cny_price);default(0);digits(22);decimals(8)" description:"支付金额" json:"pay_cny_price"`
+	PayCoinAmount float64    `orm:"column(pay_coin_amount);default(0);digits(22);decimals(8)" description:"支付币的数量" json:"pay_coin_amount"`
 	OrderNumber   string     `orm:"column(order_number);size(64);index" description:"订单号" json:"order_number"`
 	Logistics	  string     `orm:"column(logistics);size(64);index;default('')" description:"物流公司" json:"logistics"`
 	ShipNumber    string     `orm:"column(ship_number);size(64);index;default('')" description:"运单号" json:"ship_number"`
@@ -132,7 +133,7 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 	var pay_asset *Asset
 	if goods_order.PayWay == PayWayUSDT {
 		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
-		if supportedPayPrice != float64(goods_order.PayAmount) {
+		if supportedPayPrice != float64(goods_order.PayCnyPrice) {
 			err = errors.New("支付方式错误")
 			return false, err, types.VerifyPayAmount
 		}
@@ -150,7 +151,7 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 		}
 	} else {
 		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
-		if supportedPayPrice != float64(goods_order.PayAmount) {
+		if supportedPayPrice != float64(goods_order.PayCnyPrice) {
 			err = errors.New("支付方式错误")
 			return false, err, types.VerifyPayAmount
 		}
@@ -162,7 +163,7 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 		if err != nil {
 			return false, err, code
 		}
-		if total < supportedPayPrice {
+		if total < goods_order.PayCoinAmount {
 			err = errors.New("账户没有足够的资金，请去充值")
 			return false, err, types.AccountAmountNotEnough
 		}
@@ -175,7 +176,7 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 		}
 		return false, nil, types.PayOrderError
 	}
-	success, code, err = UpdateWalletBalance(db, pay_asset.Id, goods_order.UserId, float64(goods_order.PayAmount))
+	success, code, err = UpdateWalletBalance(db, pay_asset.Id, goods_order.UserId, float64(goods_order.PayCoinAmount))
 	if err != nil {
 		return success, err, code
 	}

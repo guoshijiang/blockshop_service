@@ -12,7 +12,8 @@ type CreateOrderReq struct {
 	UserId        int64   `json:"user_id"`
 	BuyNums       int64   `json:"buy_nums"`
 	PayWay        int8    `json:"pay_way"`         // 0:BTC支付，1:USDT支付
-	PayAmount     float64 `json:"pay_amount"`      // 支付金额
+	PayCnyPrice   float64 `json:"pay_cny_price"`      // 支付金额
+	PayCoinAmount float64 `json:"pay_coin_amount"`
 }
 
 func (this CreateOrderReq) ParamCheck() (int, error) {
@@ -98,9 +99,9 @@ func (this CancleReturnGoodsOrderReq) ParamCheck() (int, error) {
 
 
 type PayOrderReq struct {
-	OrderId     int64   `json:"order_id"`
-	PayAmount   float64 `json:"pay_amount"`    // 付款金额或者付款积分
-	PayWay      int8    `json:"pay_way"`       // 0:BTC支付，1:USDT支付
+	OrderId         int64   `json:"order_id"`
+	PayCoinAmount   float64 `json:"pay_coin_amount"`    // 付款金额或者付款积分
+	PayWay          int8    `json:"pay_way"`       // 0:BTC支付，1:USDT支付
 }
 
 func (this PayOrderReq) ParamCheck() (int, error) {

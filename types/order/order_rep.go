@@ -14,7 +14,9 @@ type OrderListRet struct {
 	SendIntegral float64 `json:"send_integral"`
 	OrderStatus int8    `json:"order_status"`
 	BuyNums     int64   `json:"buy_nums"`
-	PayAmount   float64 `json:"pay_amount"`
+	PayCnyPrice float64 `json:"pay_cny_price"`
+	PayCoinAmount float64 `json:"pay_coin_amount"`
+	PayWay      int8      `json:"pay_way"`
 	IsCancle    int8      `json:"is_cancle"`
 	IsComment   int8     `json:"is_comment"`
 	IsDiscount  int8    `json:"is_discount"`   // 0:不打折，1:打折活动产品
@@ -49,7 +51,8 @@ type OrderDetailRet struct {
 	GoodsLogo string `json:"goods_logo"`
 	OrderStatus int8    `json:"order_status"`
 	BuyNums     int64   `json:"buy_nums"`
-	PayAmount   float64 `json:"pay_amount"`
+	PayCnyPrice float64 `json:"pay_cny_price"`
+	PayCoinAmount float64 `json:"pay_coin_amount"`
 	ShipFee     float64 `json:"ship_fee"`
 	Logistics	string  `json:"logistics"`
 	ShipNumber  string  `json:"ship_number"`

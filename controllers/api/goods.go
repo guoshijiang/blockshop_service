@@ -16,22 +16,22 @@ type GoodsController struct {
 func orderByCdt() interface{} {
 	var odb_list []*goods.OrderBy
 	odb_time := &goods.OrderBy{
-		Way: 0,
+		Way: 1,
 		WayName: "时间",
 	}
 	odb_list = append(odb_list, odb_time)
 	odb_xl := &goods.OrderBy{
-		Way: 1,
+		Way: 2,
 		WayName: "销量",
 	}
 	odb_list = append(odb_list, odb_xl)
 	odb_jg := &goods.OrderBy{
-		Way: 2,
+		Way: 3,
 		WayName: "价格",
 	}
 	odb_list = append(odb_list, odb_jg)
 	odb_sj := &goods.OrderBy{
-		Way: 3,
+		Way: 4,
 		WayName: "商家",
 	}
 	odb_list = append(odb_list, odb_sj)

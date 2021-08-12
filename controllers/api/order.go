@@ -5,8 +5,10 @@ import (
 	"blockshop/types"
 	"blockshop/types/order"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 	uuid "github.com/satori/go.uuid"
+	"strconv"
 	"strings"
 )
 
@@ -50,11 +52,35 @@ func (this *OrderController) CreateOrder() {
 	}
 	gds, _, _ := models.GetGoodsDetail(create_order.GoodsId)
 	order_nmb := uuid.NewV4()
-	if gds.GoodsPrice * float64(create_order.BuyNums) != create_order.PayAmount {
+	if gds.GoodsPrice * float64(create_order.BuyNums) != create_order.PayCnyPrice {
 		this.Data["json"] = RetResource(false, types.InvalidGoodsPirce, err, "无效的商品价格")
 		this.ServeJSON()
 		return
 	}
+	var btc_usdt_price float64
+	if create_order.PayWay == 0 {
+		btc_price := models.GetAssetByName("BTC")
+		if btc_price != nil {
+			btc_price_b_, _ := strconv.ParseFloat(btc_price.CnyPrice, 64)
+			btc_usdt_price = btc_price_b_
+		} else {
+			this.Data["json"] = RetResource(false, types.GetBtcRateFail, err.Error(), "获取 BTC 费率失败")
+			this.ServeJSON()
+			return
+		}
+	}
+	if create_order.PayWay == 1{
+		usdt_price := models.GetAssetByName("USDT")
+		if usdt_price != nil {
+			usdt_price_u_, _ := strconv.ParseFloat(usdt_price.CnyPrice, 64)
+			btc_usdt_price = usdt_price_u_
+		} else {
+			this.Data["json"] = RetResource(false, types.GetUsdtRateFail, err.Error(), "获取 BTC 费率失败")
+			this.ServeJSON()
+			return
+		}
+	}
+	pay_coin_amount := create_order.PayCnyPrice / btc_usdt_price
 	cmt := models.GoodsOrder{
 		GoodsId: gds.Id,
 		MerchantId: gds.MerchantId,
@@ -65,7 +91,8 @@ func (this *OrderController) CreateOrder() {
 		UserId: create_order.UserId,
 		BuyNums: create_order.BuyNums,
 		PayWay: create_order.PayWay,
-		PayAmount: create_order.PayAmount,
+		PayCnyPrice: create_order.PayCnyPrice,
+		PayCoinAmount: pay_coin_amount,
 		OrderNumber: order_nmb.String(),
 		OrderStatus: 0,
 		FailureReason: "未支付",
@@ -76,7 +103,13 @@ func (this *OrderController) CreateOrder() {
 		this.ServeJSON()
 		return
 	} else {
-		this.Data["json"] = RetResource(true, types.ReturnSuccess, map[string]interface{}{"id": id}, "创建订单成功")
+		data := map[string]interface{}{
+			"id": id,
+			"pay_cny_amount": create_order.PayCnyPrice,
+			"pay_coin_amount": pay_coin_amount,
+			"pay_way": create_order.PayWay,
+		}
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "创建订单成功")
 		this.ServeJSON()
 		return
 	}
@@ -117,7 +150,7 @@ func (this *OrderController) PayOrder () {
 		this.ServeJSON()
 		return
 	}
-	if ordr.PayAmount != pay_order.PayAmount {
+	if ordr.PayCnyPrice != pay_order.PayCoinAmount {
 		this.Data["json"] = RetResource(false, types.VerifyPayAmount, nil, "支付金额不对")
 		this.ServeJSON()
 		return
@@ -128,6 +161,7 @@ func (this *OrderController) PayOrder () {
 		return
 	}
 	ok, err, code := models.PayOrder(pay_order.OrderId)
+	fmt.Println(err)
 	if err == nil && ok == true {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "支付成功")
 		this.ServeJSON()
@@ -201,7 +235,9 @@ func (this *OrderController) OrderList() {
 			GoodsPrice: goods_last_price,
 			OrderStatus: value.OrderStatus,
 			BuyNums: value.BuyNums,
-			PayAmount: value.PayAmount,
+			PayCnyPrice: value.PayCnyPrice,
+			PayCoinAmount: value.PayCoinAmount,
+			PayWay: value.PayWay,
 			IsCancle: value.IsCancle,
 			IsComment: value.IsComment,
 			IsDiscount: gds.IsDiscount,
@@ -275,7 +311,7 @@ func (this *OrderController) OrderDetail() {
 				ReturnPhone: mct.Phone,
 				ReturnAddress: mct.Address,
 				ReturnReson: order_process.RetGoodsRs,
-				ReturnAmount: ord_dtl.PayAmount,
+				ReturnAmount: ord_dtl.PayCoinAmount,
 				AskTime: order_process.CreatedAt,
 				// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:等待买家邮寄; 4:等待卖家收货; 5:卖家已经发货; 6:等待买家收货; 7:已完成
 				Process: order_process.Process,
@@ -302,7 +338,8 @@ func (this *OrderController) OrderDetail() {
 		GoodsPrice: goods_last_price,
 		OrderStatus: ord_dtl.OrderStatus,
 		BuyNums: ord_dtl.BuyNums,
-		PayAmount: ord_dtl.PayAmount,
+		PayCnyPrice: ord_dtl.PayCnyPrice,
+		PayCoinAmount: ord_dtl.PayCoinAmount,
 		ShipFee: 0,
 		PayWay: ord_dtl.PayWay,
 		OrderNumber: ord_dtl.OrderNumber,

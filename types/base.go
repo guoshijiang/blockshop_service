@@ -50,6 +50,9 @@ const (
 	WalletBalanceNotEnough        = 4037  // 钱包余额不够
 	QueryWalletRecodFail          = 4038  // 获取钱包记录失败
 	CreateGoodsFail               = 4039  // 添加商品失败
+	GetBtcRateFail                = 4040  // 获取 BTC 的费率失败
+	GetUsdtRateFail               = 4041  // 获取 USDT 的费率失败
+
 
 	InvalidWOrD                   = 5000  // 无效的充值或者提现
 	AmountLessZero                = 5001  // 充值或提现小于 0
