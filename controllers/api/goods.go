@@ -221,19 +221,19 @@ func (this *GoodsController) GoodsDetail() {
 	} else {
 		user_address = nil
 	}
-	type_list_data, _, err := models.GetGoodsAttrList(goods_dtl.Id)
-	var type_list []goods.GoodsAttrRet
-	if err != nil || type_list_data == nil {
-		type_list = nil
+	attr_list_data, _, err := models.GetGoodsAttrList(goods_dtl.Id)
+	var attr_list []goods.GoodsAttrRet
+	if err != nil || attr_list_data == nil {
+		attr_list = nil
 	} else {
-		for _, value_t := range type_list_data {
+		for _, value_t := range attr_list_data {
 			var value_list []string
 			json.Unmarshal([]byte(value_t.TypeVale), &value_list)
-			c_gds_type := goods.GoodsAttrRet{
+			c_gds_attr := goods.GoodsAttrRet{
 				GdsAttrKey: value_t.TypeKey,
 				GdsAttrValue: value_list,
 			}
-			type_list = append(type_list, c_gds_type)
+			attr_list = append(attr_list, c_gds_attr)
 		}
 	}
 	user_ll, _ := models.GetUserById(goods_dtl.UserId)
@@ -249,6 +249,13 @@ func (this *GoodsController) GoodsDetail() {
     if usdt_price != nil {
 		usdt_price_u_, _ := strconv.ParseFloat(usdt_price.CnyPrice, 64)
 		usdt_price_u = usdt_price_u_
+	}
+	var goods_type_name string
+	goods_tpe := models.GetGdsTypeById(goods_dtl.GoodsTypeId)
+	if goods_tpe != nil {
+		goods_type_name = goods_tpe.Name
+	} else {
+		goods_type_name = "未知类别商品"
 	}
 	goods_detail := map[string]interface{}{
 		"id": goods_dtl.Id,
@@ -272,7 +279,8 @@ func (this *GoodsController) GoodsDetail() {
 		"user_address": user_address,
 		"merchant_info": merchant_info,
 		"is_discount": goods_dtl.IsDiscount,
-		"goods_types": type_list,
+		"goods_attr": attr_list,
+		"goods_type": goods_type_name,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, goods_detail, "获取商品详情成功")
 	this.ServeJSON()
