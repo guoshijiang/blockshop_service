@@ -75,8 +75,19 @@ func (this *MerchantController) OpenMerchant() {
 		this.ServeJSON()
 		return
 	}
+	_, err, id := models.OpenMerchant(open_merchant)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.OpenMerchantFail, err, "开通商家失败")
+		this.ServeJSON()
+		return
+	}
+	data := map[string]interface{}{
+		"id":id,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "开通商家成功")
+	this.ServeJSON()
+	return
 }
-
 
 // MerchantList @Title MerchantList
 // @Description 商家列表接口 MerchantList
