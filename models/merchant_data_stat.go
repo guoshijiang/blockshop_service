@@ -9,6 +9,8 @@ type MerchantDataStat struct {
 	BaseModel
 	Id             int64         `orm:"pk;column(id);auto;size(11)" description:"统计ID" json:"id"`
 	UserId         int64         `orm:"column(user_id);index" description:"用户ID" json:"user_id"`
+	Desc           string        `orm:"column(desc);index" description:"统计识别符号" json:"desc"`
+	Val            int64         `orm:"column(val);index" description:"统计值" json:"val"`
 }
 
 func (this *MerchantDataStat) TableName() string {
@@ -44,3 +46,9 @@ func (this *MerchantDataStat) Insert() (err error, id int64) {
 	return nil, id
 }
 
+func (this *MerchantDataStat) InsertMany(data []*MerchantDataStat)(err error,id int64) {
+  if id,err = orm.NewOrm().InsertMulti(1,data);err != nil {
+    return  err,0
+  }
+  return nil,id
+}

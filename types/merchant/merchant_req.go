@@ -85,9 +85,20 @@ type DeleteGoodsReq struct {
 	GoodsId   int64  `json:"goods_id"`
 }
 
+type StaticDetailReq struct {
+  MerchantId  int64       `json:"merchant_id`
+}
+
 func (this DeleteGoodsReq) ParamCheck() (int, error) {
 	if this.GoodsId <= 0 {
 		return types.UserIsNotExist, errors.New("该商品不存在")
 	}
 	return types.ReturnSuccess, nil
+}
+
+func (this StaticDetailReq) ParamCheck() (int, error) {
+  if this.MerchantId <= 0 {
+    return types.UserIsNotExist, errors.New("参数错误")
+  }
+  return types.ReturnSuccess, nil
 }

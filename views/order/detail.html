@@ -22,6 +22,7 @@
               <th>订单状态</th>
               <th>支付方式</th>
               <th>支付金额</th>
+              <th>支付币数量</th>
               <th>积分</th>
               <th>购买时间</th>
               <th>付款时间</th>
@@ -33,8 +34,8 @@
               <td>{{.data.OrderNumber}}</td>
               <td>{{.data.OrderStatus | OrderStatus}}</td>
               <td>{{.data.PayWay | PayWay}}</td>
-              <td>{{.data.PayAmount}}</td>
-{{/*              <td>{{.data.SendIntegral}}</td>*/}}
+              <td>{{.data.PayCnyPrice}}</td>
+              <td>{{.data.PayCoinAmount}}</td>
               <td>{{.data.CreatedAt | TimeForFormat}}</td>
               <td>{{.data.PayAt | TimeForFormat }}</td>
             </tr>

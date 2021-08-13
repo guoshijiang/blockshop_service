@@ -29,6 +29,7 @@ func (this *AdminUserController) Index() {
 	this.TplName = "admin_user/index.html"
 }
 
+
 //用户管理-添加界面
 func (this *AdminUserController) Add() {
 	var adminRoleService services.AdminRoleService

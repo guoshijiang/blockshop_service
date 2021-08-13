@@ -53,6 +53,7 @@
               <th>购买数量</th>
               <th>支付方式</th>
               <th>支付金额</th>
+              <th>支付币数量</th>
               <th>操作</th>
             </tr>
             </thead>
@@ -70,7 +71,8 @@
                 <td>{{$item.GoodsName}}</td>
                 <td>{{$item.BuyNums}}</td>
                 <td>{{$item.PayWay | PayWay}}</td>
-                <td>{{$item.PayAmount}}</td>
+                <td>{{$item.PayCnyPrice}}</td>
+                <td>{{$item.PayCoinAmount}}</td>
                 <td class="td-do">
                   <a href="/admin/order/edit?id={{$item.Id}}"
                      class="btn btn-primary btn-xs" title="详情" data-toggle="tooltip">

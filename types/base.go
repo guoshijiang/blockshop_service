@@ -57,6 +57,7 @@ const (
 	AddressIdLessEqError          = 4044  // 地址不存在
 	CreateAddressFail             = 4045  // 创建地址失败
 	UpdateAddressFail             = 4046  // 修改地址失败
+	StaticDataFail                = 4047  // 统计失败
 
 
 

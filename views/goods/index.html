@@ -1,3 +1,10 @@
+<style scoped>
+   td {
+     max-width: 150px;
+     overflow: hidden;
+     text-overflow: ellipsis;
+   }
+</style>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -56,9 +63,9 @@
               <th>商品总量</th>
               <th>产品名称</th>
               <th>折扣</th>
-              <th>首页展示</th>
+{{/*              <th>首页展示</th>*/}}
               <th>上下架</th>
-              <th>爆款</th>
+{{/*              <th>爆款</th>*/}}
               <th>操作</th>
             </tr>
             </thead>
@@ -71,15 +78,15 @@
                          placeholder="选择/取消">
                 </td>
                 <td>{{$item.Id}}</td>
-                <td>{{$item.Title}}</td>
+                <td nowrap="nowrap">{{$item.Title}}</td>
                 <td><img style="max-width: 40px" src="{{$item.Logo}}"></td>
                 <td>{{$item.GoodsMark}}</td>
                 <td>{{$item.TotalAmount}}</td>
                 <td>{{$item.GoodsName}}</td>
                 <td>{{$item.Discount}}</td>
-                <td>{{if eq 1 $item.IsDisplay}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}</td>
-                <td>{{if eq 1 $item.Sale}} <span class="label label-success">下架</span> {{else}} <span class="label label-warning">上架</span> {{end}}</td>
-                <td>{{if eq 1 $item.IsHot}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}</td>
+{{/*                <td>{{if eq 1 $item.IsDisplay}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}</td>*/}}
+                <td>{{if eq 1 $item.IsSale}} <span class="label label-success">下架</span> {{else}} <span class="label label-warning">上架</span> {{end}}</td>
+{{/*                <td>{{if eq 1 $item.IsHot}} <span class="label label-success">是</span> {{else}} <span class="label label-warning">否</span> {{end}}</td>*/}}
                 <td class="td-do">
                   <a href="/admin/goods/edit?id={{$item.Id}}"
                      class="btn btn-primary btn-xs" title="修改" data-toggle="tooltip">
