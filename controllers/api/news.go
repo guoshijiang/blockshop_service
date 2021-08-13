@@ -35,7 +35,7 @@ func (nc *NewsController) GetNewsList() {
 			Author:    value.Author,
 			Views:     value.Views,
 			Likes:     value.Likes,
-			CreatedAt: value.CreatedAt,
+			CreatedAt: value.CreatedAt.Local(),
 		}
 		news_lists = append(news_lists, news_r)
 	}
