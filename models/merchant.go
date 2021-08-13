@@ -3,6 +3,8 @@ package models
 import (
 	"blockshop/common"
 	"blockshop/types"
+	type_merchant "blockshop/types/merchant"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
 )
@@ -57,7 +59,7 @@ func GetMerchantDetail(id int64) (*Merchant, int, error) {
 	return &merchant, types.ReturnSuccess, nil
 }
 
-func OpenMerchant(user_id int64, pay_way int8) (success bool, err error, code int) {
+func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err error, code int) {
 	db := orm.NewOrm()
 	if err := db.Begin(); err != nil {
 		err := errors.Wrap(err, "开启支付事物失败")
@@ -76,18 +78,18 @@ func OpenMerchant(user_id int64, pay_way int8) (success bool, err error, code in
 		return false, err, types.OrderPayException
 	}
 	user := User{}
-	if err = db.QueryTable(user).RelatedSel().Filter("id", user_id).One(&user); err != nil {
+	if err = db.QueryTable(user).RelatedSel().Filter("id", open_mct.UserId).One(&user); err != nil {
 		err = errors.New("查询开通商家用户失败")
 		return false, err, types.OrderPayException
 	}
 	var pay_asset *Asset
 	var pay_coin_aount float64
-	if pay_way == PayWayUSDT {
+	if open_mct.PayWay == PayWayUSDT {
 		var ast Asset
 		ast.Name = "USDT"
 		asst, _ := ast.GetAsset()
 		pay_asset = asst
-		total, code, err := GetUserWalletBalance(asst.Id, user_id)
+		total, code, err := GetUserWalletBalance(asst.Id, open_mct.UserId)
 		if err != nil {
 			return false, err, code
 		}
@@ -101,7 +103,7 @@ func OpenMerchant(user_id int64, pay_way int8) (success bool, err error, code in
 		ast.Name = "BTC"
 		asst, _ := ast.GetAsset()
 		pay_asset = asst
-		total, code, err := GetUserWalletBalance(asst.Id, user_id)
+		total, code, err := GetUserWalletBalance(asst.Id, open_mct.UserId)
 		if err != nil {
 			return false, err, code
 		}
@@ -111,9 +113,18 @@ func OpenMerchant(user_id int64, pay_way int8) (success bool, err error, code in
 		}
 		pay_coin_aount = merchant_config.BtcAmount
 	}
-	success, code, err = UpdateWalletBalance(db, pay_asset.Id, user_id, pay_coin_aount)
+	success, code, err = UpdateWalletBalance(db, pay_asset.Id, open_mct.UserId, pay_coin_aount)
 	if err != nil {
 		return success, err, code
 	}
+	mct := Merchant{
+		Logo: open_mct.MctLogo,
+		MerchantName: open_mct.MctName,
+		MerchantIntro: open_mct.MctAbstruct,
+		MerchantDetail: open_mct.MctDetail,
+		ContactUser: open_mct.MctCrtName,
+		Phone:open_mct.MctCrtPhone,
+	}
+	fmt.Println(mct)
 	return true, nil, types.ReturnSuccess
 }

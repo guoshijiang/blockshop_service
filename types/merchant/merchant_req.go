@@ -104,6 +104,13 @@ func (this StaticDetailReq) ParamCheck() (int, error) {
 }
 
 type OpenMerchantReq struct {
-	UserId  int64 `json:"user_id"`
-	PayWay  int8  `json:"pay_way"` //0:BTC，1:USDT
+	UserId      int64  `json:"user_id"`
+	PayWay      int8   `json:"pay_way"` //0:BTC，1:USDT
+	MctName     string `json:"mct_name"`
+	MctAbstruct string `json:"mct_abstruct"`
+	MctDetail   string `json:"mct_detail"`
+	MctLogo     string `json:"mct_logo"`
+	MctService  string `json:"mct_service"`
+	MctCrtName  string `json:"mct_crt_name"`
+	MctCrtPhone string `json:"mct_crt_phone"`
 }

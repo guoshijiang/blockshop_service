@@ -150,7 +150,7 @@ func (this *OrderController) PayOrder () {
 		this.ServeJSON()
 		return
 	}
-	if ordr.PayCnyPrice != pay_order.PayCoinAmount {
+	if ordr.PayCoinAmount != pay_order.PayCoinAmount {
 		this.Data["json"] = RetResource(false, types.VerifyPayAmount, nil, "支付金额不对")
 		this.ServeJSON()
 		return
