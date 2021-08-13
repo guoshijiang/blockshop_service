@@ -72,7 +72,7 @@ func (this *ForumController) ForumMainTopicList() {
 					UserName: query_user.UserName,
 					UserPhoto: query_user.Avator,
 					LstComment: lst_forum_reply.Content,
-					DataTime: lst_forum_reply.CreatedAt.String(),
+					DataTime: lst_forum_reply.CreatedAt.Format("2006-01-02 15:04:05"),
 				}
 				lst_f_reply = _lst_f_reply
 			}
@@ -147,7 +147,7 @@ func (this *ForumController) ForumChildTopicList() {
 					UserName: query_user.UserName,
 					UserPhoto: query_user.Avator,
 					LstComment: lst_forum_reply.Content,
-					DataTime: lst_forum_reply.CreatedAt.String(),
+					DataTime: lst_forum_reply.CreatedAt.Format("2006-01-02 15:04:05"),
 				}
 				lst_f_reply = _lst_f_reply
 			}
@@ -196,7 +196,7 @@ func (this *ForumController) ForumCTopicList() {
 			UserName: user.UserName,
 			UserPhoto: user.Avator,
 			Title: value.Title,
-			DataTime: value.CreatedAt.String(),
+			DataTime: value.CreatedAt.Format("2006-01-02 15:04:05"),
 			Views: value.Views,
 			Likes: value.Likes,
 			Answers: value.Answers,
@@ -234,7 +234,7 @@ func (this *ForumController) ForumCTopicDetail() {
 		"id": forum_.Id,
 		"title": forum_.Title,
 		"content": forum_.Content,
-		"datetime": forum_.CreatedAt.String(),
+		"datetime": forum_.CreatedAt.Format("2006-01-02 15:04:05"),
 		"user_id": forum_.UserId,
 		"user_name": user.UserName,
 		"photo": user.Avator,
@@ -280,7 +280,7 @@ func (this *ForumController) ForumTopicCommentList() {
 					UserName: user.UserName,
 					UserPhoto: user.Avator,
 					Reply: reply.Content,
-					Datetime: reply.CreatedAt.String(),
+					Datetime: reply.CreatedAt.Format("2006-01-02 15:04:05"),
 				}
 				reply_list = append(reply_list, f_rly)
 			}
@@ -290,7 +290,7 @@ func (this *ForumController) ForumTopicCommentList() {
 			UserName: user.UserName,
 			UserPhoto: user.Avator,
 			Comment: cmt.Content,
-			Datetime: cmt.CreatedAt.String(),
+			Datetime: cmt.CreatedAt.Format("2006-01-02 15:04:05"),
 			Reply: reply_list,
 		}
 		comment_reply_list = append(comment_reply_list, comment_reply)

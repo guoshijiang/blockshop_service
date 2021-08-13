@@ -283,7 +283,7 @@ func (this *UserController) GetUserInfo() {
 		Photo: user_if.Avator,
 		UserName: user_if.UserName,
 		IsMerchant: 1,
-		JoinTime: user_if.CreatedAt.Local().String(),
+		JoinTime: user_if.CreatedAt.Format("2006-01-02 15:04:05"),
 		TrustLevel: user_if.MemberLevel,
 		PublicKey: user_if.UserPublicKey,
 		BtcOrderAmount: "100",
