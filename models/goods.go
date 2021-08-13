@@ -137,6 +137,24 @@ func GetMerchantGoodsNums(metchant_id int64) int64 {
 	return total
 }
 
+//是否在售统计
+// LeftAmount 剩余数量
+func GetMerchantGoodsIsSale(metchant_id int64,is_sale int8) int64 {
+  total, err := orm.NewOrm().QueryTable(Goods{}).Filter("is_sale", is_sale).Filter("left_amount__gt",0).Filter("merchant_id__eq",metchant_id).Count()
+  if err != nil {
+    return 0
+  }
+  return total
+}
+
+//统计售罄
+func GetMerchantGoodsEmpty(metchant_id int64) int64 {
+  total, err := orm.NewOrm().QueryTable(Goods{}).Filter("left_amount__eq",0).Filter("merchant_id__eq",metchant_id).Filter("total_amount__gt",0).Count()
+  if err != nil {
+    return 0
+  }
+  return total
+}
 // 添加商品
 func CreateMerchantGoods(gds_param merchant.MerchantAddUpdGoodsReq) (int, error) {
 	var gds_cat_id int64

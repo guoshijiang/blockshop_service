@@ -93,6 +93,18 @@ func (this *GoodsOrder) SearchField() []string {
 	return []string{"order_num"}
 }
 
+func (this *GoodsOrder) Aggregation(merchant int64) ([]order.StateStatic,error) {
+  _,err := orm.NewOrm().Raw("SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'").Exec()
+  if err != nil {
+    println("err ----",err)
+  }
+  var data []order.StateStatic
+  _,err = orm.NewOrm().Raw("select count(order_status) val,order_status desc from goods_order where merchant_id = ?",merchant).QueryRows(&data)
+  if err != nil {
+    return nil,err
+  }
+  return data,nil
+}
 
 func PayOrder(order_id int64) (success bool, err error, code int) {
 	db := orm.NewOrm()

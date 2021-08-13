@@ -239,15 +239,15 @@
 
 
             <div class="form-group">
-              <label for="sale" class="col-sm-2 control-label">上/下架</label>
+              <label for="is_sale" class="col-sm-2 control-label">上/下架</label>
               <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="sale" value="1" {{if eq 1 .data.Sale}} checked {{end}} type="checkbox"/>
-                <input class="switch field-switch" placeholder="是否启用" name="sale"
-                       value="{{.data.Sale}}" hidden/>
+                <input class="input-switch" id="is_sale" value="1" {{if eq 1 .data.IsSale}} checked {{end}} type="checkbox"/>
+                <input class="switch field-switch" placeholder="是否启用" name="is_sale"
+                       value="{{.data.IsSale}}" hidden/>
               </div>
             </div>
             <script>
-              $('#sale').bootstrapSwitch({
+              $('#is_sale').bootstrapSwitch({
                 onText: "下架",
                 offText: "上架",
                 onColor: "success",
@@ -258,44 +258,44 @@
               });
             </script>
 
-            <div class="form-group">
-              <label for="is_display" class="col-sm-2 control-label">首页展示</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_display" value="1" {{if eq 1 .data.IsDisplay}}checked {{end}} type="checkbox"/>
-                <input class="switch field-switch" name="is_display" value="{{.data.Sale}}" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_display').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
+{{/*            <div class="form-group">*/}}
+{{/*              <label for="is_display" class="col-sm-2 control-label">首页展示</label>*/}}
+{{/*              <div class="col-sm-10 col-md-4">*/}}
+{{/*                <input class="input-switch" id="is_display" value="1" {{if eq 1 .data.IsDisplay}}checked {{end}} type="checkbox"/>*/}}
+{{/*                <input class="switch field-switch" name="is_display" value="{{.data.Sale}}" hidden/>*/}}
+{{/*              </div>*/}}
+{{/*            </div>*/}}
+{{/*            <script>*/}}
+{{/*              $('#is_display').bootstrapSwitch({*/}}
+{{/*                onText: "是",*/}}
+{{/*                offText: "否",*/}}
+{{/*                onColor: "success",*/}}
+{{/*                offColor: "danger",*/}}
+{{/*                onSwitchChange: function (event, state) {*/}}
+{{/*                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();*/}}
+{{/*                }*/}}
+{{/*              });*/}}
+{{/*            </script>*/}}
 
 
-            <div class="form-group">
-              <label for="is_hot" class="col-sm-2 control-label">爆款产品</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_hot" value="1" {{if eq 1 .data.IsHot}} checked  {{end}} type="checkbox"/>
-                <input class="switch field-switch" name="is_hot" value="{{.data.IsHot}}" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_hot').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
+{{/*            <div class="form-group">*/}}
+{{/*              <label for="is_hot" class="col-sm-2 control-label">爆款产品</label>*/}}
+{{/*              <div class="col-sm-10 col-md-4">*/}}
+{{/*                <input class="input-switch" id="is_hot" value="1" {{if eq 1 .data.IsHot}} checked  {{end}} type="checkbox"/>*/}}
+{{/*                <input class="switch field-switch" name="is_hot" value="{{.data.IsHot}}" hidden/>*/}}
+{{/*              </div>*/}}
+{{/*            </div>*/}}
+{{/*            <script>*/}}
+{{/*              $('#is_hot').bootstrapSwitch({*/}}
+{{/*                onText: "是",*/}}
+{{/*                offText: "否",*/}}
+{{/*                onColor: "success",*/}}
+{{/*                offColor: "danger",*/}}
+{{/*                onSwitchChange: function (event, state) {*/}}
+{{/*                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();*/}}
+{{/*                }*/}}
+{{/*              });*/}}
+{{/*            </script>*/}}
 
             <div class="form-group">
               <label for="is_discount" class="col-sm-2 control-label">打折活动产品</label>
@@ -341,24 +341,24 @@
 
 
 
-            <div class="form-group">
-              <label for="is_limit_time" class="col-sm-2 control-label">限时产品</label>
-              <div class="col-sm-10 col-md-4">
-                <input class="input-switch" id="is_limit_time" value="1" {{if eq 1 .data.IsLimitTime}} checked  {{end}} type="checkbox"/>
-                <input class="switch field-switch" name="is_limit_time" value="{{.data.IsLimitTime}}" hidden/>
-              </div>
-            </div>
-            <script>
-              $('#is_limit_time').bootstrapSwitch({
-                onText: "是",
-                offText: "否",
-                onColor: "success",
-                offColor: "danger",
-                onSwitchChange: function (event, state) {
-                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                }
-              });
-            </script>
+{{/*            <div class="form-group">*/}}
+{{/*              <label for="is_limit_time" class="col-sm-2 control-label">限时产品</label>*/}}
+{{/*              <div class="col-sm-10 col-md-4">*/}}
+{{/*                <input class="input-switch" id="is_limit_time" value="1" {{if eq 1 .data.IsLimitTime}} checked  {{end}} type="checkbox"/>*/}}
+{{/*                <input class="switch field-switch" name="is_limit_time" value="{{.data.IsLimitTime}}" hidden/>*/}}
+{{/*              </div>*/}}
+{{/*            </div>*/}}
+{{/*            <script>*/}}
+{{/*              $('#is_limit_time').bootstrapSwitch({*/}}
+{{/*                onText: "是",*/}}
+{{/*                offText: "否",*/}}
+{{/*                onColor: "success",*/}}
+{{/*                offColor: "danger",*/}}
+{{/*                onSwitchChange: function (event, state) {*/}}
+{{/*                  $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();*/}}
+{{/*                }*/}}
+{{/*              });*/}}
+{{/*            </script>*/}}
 
             <div class="form-group">
               <label for="goods_detail" class="col-sm-2 control-label">产品详细介绍</label>

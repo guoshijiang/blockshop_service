@@ -68,3 +68,8 @@ type OrderDetailRet struct {
 	GoodsTypes  string `json:"goods_types"`
 	RetrurnOrder  *ReturnOrderProcess `json:"retrurn_order"`
 }
+
+type StateStatic struct {
+  Total       int64            `json:"total"`
+  State       int8             `json:"state"`
+}

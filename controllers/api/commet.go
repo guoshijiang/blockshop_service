@@ -51,11 +51,14 @@ func (this *CommentController) AddCommet() {
 	cmt := models.GoodsComment{
 		GoodsId: add_comment.GoodsId,
 		UserId: add_comment.UserId,
-		Star: add_comment.Star,
+		QualityStar: add_comment.QualityStar,
+		ServiceStar: add_comment.ServiceStar,
+		TradeStar: add_comment.TradeStar,
 		Content: add_comment.Content,
 		ImgOneId: add_comment.ImgOneId,
 		ImgTwoId: add_comment.ImgTwoId,
 		ImgThreeId: add_comment.ImgThreeId,
+		MerchantId: add_comment.MerchantId,
 	}
 	err, id := cmt.Insert()
 	if err != nil {
@@ -179,7 +182,9 @@ func (this *CommentController) GetCommentList() {
 			UserPho: user_s.Avator,
 			GoodsId: v.GoodsId,
 			UserId: v.UserId,
-			Star: v.Star,
+			QualityStar: v.QualityStar,
+			ServiceStar: v.ServiceStar,
+			TradeStar: v.TradeStar,
 			Content: v.Content,
 			ImgOne: image_path + one_url,
 			ImgTwo: image_path + two_url,

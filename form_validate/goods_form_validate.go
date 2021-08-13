@@ -18,13 +18,11 @@ type GoodsForm struct {
   GoodsName      string    `form:"goods_name" validate:"required"`  					// 产品名称
   GoodsParams    string    `form:"goods_params" validate:"required"`   				// 产品参数
   GoodsDetail    string    `form:"goods_detail" validate:"required"`   				// 产品详细介绍
-  Discount       float64   `form:"discount" validate:"float64"`       				// 折扣，取值 0.1-9.9；0代表不打折
-  Sale           int8      `form:"sale" validate:"int"`             					// 0:上架 1:下架
-  IsDisplay      int8      `form:"is_display" validate:"int"` 						// 0:首页不展示, 1:首页展示
-  IsHot          int8      `form:"is_hot" validate:"int"`                       		// 0:非爆款产品 1:爆款产品
+  Discount       float64   `form:"discount" validate:"float"`       				// 折扣，取值 0.1-9.9；0代表不打折
+  IsSale           int8      `form:"is_sale" validate:"int"`             					// 0:上架 1:下架
+  //IsDisplay      int8      `form:"is_display" validate:"int"` 						// 0:首页不展示, 1:首页展示
+  //IsHot          int8      `form:"is_hot" validate:"int"`                       		// 0:非爆款产品 1:爆款产品
   IsDiscount     int8      `form:"is_discount" validate:"int"`                  		// 0:不打折，1:打折活动产品
-  IsIntegral     int8      `form:"is_integral" validate:"int" `                  		// 0:非积分兑换产品 1:积分兑换产品
-  IsLimitTime    int8      `form:"is_limit_time" validate:"int"`                	// 0:不是限时产品 1:是限时
   IsCreate 	   int    	 `form:"_create"`
 }
 
@@ -41,12 +39,11 @@ func (g GoodsForm) Messages() map[string]string {
     "GoodsDisPrice.required":       "商品折扣不能为空",
     "GoodsParams.required":         "产品参数不能为空",
     "GoodsName.required":          	"产品名称不能为空",
-    "Discount.float64":             "折扣不能为空",
-    "Sale.int":                     "上下架必须选择",
-    "IsDisplay.int":                "首页是否展示必须选择",
-    "IsHot.int":                    "是否热销必须选择",
+    "Discount.float":             "折扣不能为空",
+    "IsSale.int":                     "上下架必须选择",
+    //"IsDisplay.int":                "首页是否展示必须选择",
+    //"IsHot.int":                    "是否热销必须选择",
     "IsDiscount.int":               "是否折扣产品必须选择",
     "IsIntegral.int":               "是否积分兑换必须选择",
-    "IsLimitTime.int":              "是否限时产品必须选择",
   }
 }

@@ -10,7 +10,9 @@ type CommentListRep struct {
 	GoodsId     int64  `json:"goods_id"`
 	UserId      int64  `json:"user_id"`
 	Title       string `json:"title"`
-	Star        int8   `json:"star"`
+  QualityStar  int8   `json:"quality_star"`
+  ServiceStar  int8   `json:"Service_star"`
+  TradeStar    int8   `json:"trade_star"`
 	Content     string `json:"content"`
 	ImgOne      string `json:"img_one_id"`
 	ImgTwo      string `json:"img_two_id"`

@@ -5,8 +5,11 @@ import (
 	"blockshop/types"
 	"blockshop/types/merchant"
 	"encoding/json"
-	"github.com/astaxie/beego"
-	"strings"
+  "fmt"
+  "github.com/astaxie/beego"
+  "strconv"
+  "strings"
+  "time"
 )
 
 type MerchantController struct {
@@ -226,4 +229,69 @@ func (this *MerchantController) MerchantDelGoods() {
 		this.ServeJSON()
 		return
 	}
+}
+
+
+// MerchantStaticDetail @Title MerchantStaticDetail
+// @Description 商家统计 MerchantStaticDetail
+// @Success 200 status bool, data interface{}, msg string
+// @router /mct_static_detail [post]
+func (this *MerchantController) MerchantStaticDetail() {
+  bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+  if len(bearerToken) == 0 {
+    this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+    this.ServeJSON()
+    return
+  }
+  token := strings.TrimPrefix(bearerToken, "Bearer ")
+  _, err := models.GetUserByToken(token)
+  if err != nil {
+    this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+    this.ServeJSON()
+    return
+  }
+  req := merchant.StaticDetailReq{}
+  if err := json.Unmarshal(this.Ctx.Input.RequestBody, &req); err != nil {
+    this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+    this.ServeJSON()
+    return
+  }
+  if code, err := req.ParamCheck(); err != nil {
+    this.Data["json"] = RetResource(false, code, nil, err.Error())
+    this.ServeJSON()
+    return
+  }
+  //订单统计
+  orderState,err := (new(models.GoodsOrder)).Aggregation(req.MerchantId)
+  fmt.Println(orderState)
+  if err != nil {
+    this.Data["json"] = RetResource(false, types.StaticDataFail, nil, "统计订单状态失败")
+    this.ServeJSON()
+    return
+  }
+  //商品统计
+  goodsSale := models.GetMerchantGoodsIsSale(req.MerchantId,0)
+  goodsSaleOff := models.GetMerchantGoodsIsSale(req.MerchantId,1)
+  goodsEmpty := models.GetMerchantGoodsEmpty(req.MerchantId)
+  fmt.Println(goodsSale,goodsSaleOff,goodsEmpty)
+  //评价统计
+  starOne := models.GetGoodsCommentStar(GetMonthStartAndEnd("01"))
+  starSix := models.GetGoodsCommentStar(GetMonthStartAndEnd("06"))
+  starTwl := models.GetGoodsCommentStar(GetMonthStartAndEnd("12"))
+  fmt.Println(starOne,starSix,starTwl)
+}
+
+
+func GetMonthStartAndEnd(myMonth string) time.Time {
+  if len(myMonth)==1 {
+    myMonth = "0"+myMonth
+  }
+  myYear := time.Now().Year()
+  myYearStr := strconv.Itoa(myYear)
+
+  timeLayout := "2006-01-02 15:04:05"
+  loc, _ := time.LoadLocation("Local")
+  theTime, _ := time.ParseInLocation(timeLayout, myYearStr+"-"+myMonth+"-01 00:00:00", loc)
+  newMonth := theTime.Month()
+  return time.Date(myYear,newMonth+1, 0, 0, 0, 0, 0, time.Local)
 }

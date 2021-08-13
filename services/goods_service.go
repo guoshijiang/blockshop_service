@@ -40,7 +40,7 @@ func (*GoodsServices) Create(form *form_validate.GoodsForm) int {
     GoodsDetail: form.GoodsDetail,
     Discount: form.Discount,
     IsDiscount: form.IsDiscount,
-    IsSale: form.Sale,
+    IsSale: form.IsSale,
     Title: form.Title,
     Logo: form.Logo,
     GoodsMark: form.GoodsMark,
@@ -114,7 +114,7 @@ func (*GoodsServices) Update(form *form_validate.GoodsForm) int{
       goods.Logo = form.Logo
     }
     goods.Discount  = form.Discount
-    goods.IsSale  = form.Sale
+    goods.IsSale  = form.IsSale
     goods.GoodsMark  = form.GoodsMark
     goods.GoodsPrice  = form.GoodsPrice
     goods.GoodsDisPrice  = form.GoodsDisPrice

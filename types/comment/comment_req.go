@@ -9,12 +9,16 @@ type AddCommentReq struct {
 	OrderId      int64  `json:"order_id"`
 	GoodsId      int64  `json:"goods_id"`
 	UserId       int64  `json:"user_id"`
+  MerchantId   int64  `json:"merchant_id"`
 	Title        string `json:"title"`
-	Star         int8   `json:"star"`
+	QualityStar  int8   `json:"quality_star"`
+	ServiceStar  int8   `json:"Service_star"`
+	TradeStar    int8   `json:"trade_star"`
 	Content      string `json:"content"`
 	ImgOneId     int64  `json:"img_one_id"`
 	ImgTwoId     int64  `json:"img_two_id"`
 	ImgThreeId   int64  `json:"img_three_id"`
+
 }
 
 func (this AddCommentReq) ParamCheck() (int, error) {
@@ -24,10 +28,13 @@ func (this AddCommentReq) ParamCheck() (int, error) {
 	if this.UserId <= 0 {
 		return types.ParamLessZero, errors.New("用户ID不能小于0")
 	}
+	if this.MerchantId <= 0 {
+    return types.ParamLessZero, errors.New("商户ID不能小于0")
+  }
 	if this.Title == "" {
 		return types.ParamEmptyError, errors.New("评论标题为空")
 	}
-	if this.Star <= 0 {
+	if this.ServiceStar <= 0 || this.TradeStar <= 0  || this.QualityStar <= 0 {
 		return types.ParamEmptyError, errors.New("评论星级不能小于0")
 	}
 	if this.Content == "" {
