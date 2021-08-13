@@ -14,6 +14,7 @@ type UserController struct {
 	beego.Controller
 }
 
+
 // Register @Title Register
 // @Description 注册手机号 Register
 // @Success 200 status bool, data interface{}, msg string
