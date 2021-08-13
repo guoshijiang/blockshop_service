@@ -9,7 +9,9 @@ import (
 type MerchantConfig struct {
 	BaseModel
 	Id             int64         `orm:"pk;column(id);auto;size(11)" description:"配置ID" json:"id"`
-	BtcAmount      float64       `orm:"pk;column(id);auto;size(11)" description:"开通商家需要的BTC数量" json:"id"`
+	BtcAmount      float64       `orm:"pk;column(btc_amount);default(0)" description:"BTC数量" json:"btc_amount"`
+	UsdtAmount     float64       `orm:"pk;column(usdt_amount);default(0)" description:"BTC数量" json:"usdt_amount"`
+	ConfigType     int8    		 `orm:"pk;column(config_type);default(0)" description:"BTC数量" json:"config_type"` //0:da
 }
 
 func (this *MerchantConfig) TableName() string {
