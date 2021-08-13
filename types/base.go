@@ -58,6 +58,7 @@ const (
 	CreateAddressFail             = 4045  // 创建地址失败
 	UpdateAddressFail             = 4046  // 修改地址失败
 	StaticDataFail                = 4047  // 统计失败
+	OpenMerchantFail              = 4048  // 开通商家失败
 
 
 

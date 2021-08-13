@@ -21,9 +21,9 @@ func init() {
 	orm.RegisterModel(new(User),new(AdminLog),new(AdminLogData),new(AdminUser),new(AdminRole),
 		new(AdminMenu),new(Asset),new(Forum),new(ForumReply),new(GoodsCat),new(GoodsImage),
 		new(GoodsOrder),new(GoodsType),new(GoodsAttr),new(Merchant),new(UserWallet),
-		new(WalletRecord),new(Goods),new(News),new(Message),new(MerchantDataStat),
+		new(WalletRecord),new(Goods),new(News),new(Message),new(MerchantOpenRecord),
 		new(UserDataStat),new(GoodsComment),new(ForumCat), new(UserAddress), new(ImageFile),
-		new(GoodsOriginState),new(OrderProcess),
+		new(GoodsOriginState),new(OrderProcess), new(MerchantConfig),
 	)
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true

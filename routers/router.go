@@ -330,6 +330,12 @@ func init() {
         &api.CommentController{},
       ),
     ),
+
+    beego.NSNamespace("/address",
+      beego.NSInclude(
+        &api.UserAddressController{},
+      ),
+    ),
   )
   beego.AddNamespace(api_path)
 }

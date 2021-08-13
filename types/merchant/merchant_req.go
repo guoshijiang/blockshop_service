@@ -102,3 +102,8 @@ func (this StaticDetailReq) ParamCheck() (int, error) {
   }
   return types.ReturnSuccess, nil
 }
+
+type OpenMerchantReq struct {
+	UserId  int64 `json:"user_id"`
+	PayWay  int8  `json:"pay_way"` //0:BTC，1:USDT
+}

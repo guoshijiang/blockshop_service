@@ -56,3 +56,64 @@ func GetMerchantDetail(id int64) (*Merchant, int, error) {
 	}
 	return &merchant, types.ReturnSuccess, nil
 }
+
+func OpenMerchant(user_id int64, pay_way int8) (success bool, err error, code int) {
+	db := orm.NewOrm()
+	if err := db.Begin(); err != nil {
+		err := errors.Wrap(err, "开启支付事物失败")
+		return false, err, types.OrderPayException
+	}
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(db.Rollback(), "回滚事物失败")
+		} else {
+			err = errors.Wrap(db.Commit(), "提交事物失败")
+		}
+	}()
+	merchant_config := MerchantConfig{}
+	if err = db.QueryTable(merchant_config.TableName()).Filter("config_type", 0).One(&merchant_config); err != nil {
+		err := errors.New("查询配置失败")
+		return false, err, types.OrderPayException
+	}
+	user := User{}
+	if err = db.QueryTable(user).RelatedSel().Filter("id", user_id).One(&user); err != nil {
+		err = errors.New("查询开通商家用户失败")
+		return false, err, types.OrderPayException
+	}
+	var pay_asset *Asset
+	var pay_coin_aount float64
+	if pay_way == PayWayUSDT {
+		var ast Asset
+		ast.Name = "USDT"
+		asst, _ := ast.GetAsset()
+		pay_asset = asst
+		total, code, err := GetUserWalletBalance(asst.Id, user_id)
+		if err != nil {
+			return false, err, code
+		}
+		if total < merchant_config.UsdtAmount {
+			err = errors.New("账户没有足够的资金，请去充值")
+			return false, err, types.AccountAmountNotEnough
+		}
+		pay_coin_aount = merchant_config.UsdtAmount
+	} else {
+		var ast Asset
+		ast.Name = "BTC"
+		asst, _ := ast.GetAsset()
+		pay_asset = asst
+		total, code, err := GetUserWalletBalance(asst.Id, user_id)
+		if err != nil {
+			return false, err, code
+		}
+		if total < merchant_config.BtcAmount {
+			err = errors.New("账户没有足够的资金，请去充值")
+			return false, err, types.AccountAmountNotEnough
+		}
+		pay_coin_aount = merchant_config.BtcAmount
+	}
+	success, code, err = UpdateWalletBalance(db, pay_asset.Id, user_id, pay_coin_aount)
+	if err != nil {
+		return success, err, code
+	}
+	return true, nil, types.ReturnSuccess
+}

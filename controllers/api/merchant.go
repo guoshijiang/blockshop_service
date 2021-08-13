@@ -16,6 +16,68 @@ type MerchantController struct {
 	beego.Controller
 }
 
+// MerchantOpenFee @Title MerchantOpenFee
+// @Description 商家开通支付费用 MerchantOpenFee
+// @Success 200 status bool, data interface{}, msg string
+// @router /marchant_open_fee [post]
+func (this *MerchantController) MerchantOpenFee() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	merchant_config := models.GetMerchantConfig()
+	if merchant_config != nil {
+		data := map[string]interface{}{
+			"btc_amount": merchant_config.BtcAmount,
+			"usdt_amount": merchant_config.UsdtAmount,
+		}
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取商家开通费率成功")
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(false, types.OpenMerchantFail, nil, "商家模块权限没有对您开放")
+		this.ServeJSON()
+		return
+	}
+}
+
+
+// OpenMerchant @Title OpenMerchant
+// @Description 商家开通支付费用 OpenMerchant
+// @Success 200 status bool, data interface{}, msg string
+// @router /open_marchant [post]
+func (this *MerchantController) OpenMerchant() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	open_merchant := merchant.OpenMerchantReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &open_merchant); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+}
+
+
 // MerchantList @Title MerchantList
 // @Description 商家列表接口 MerchantList
 // @Success 200 status bool, data interface{}, msg string
