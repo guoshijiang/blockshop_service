@@ -75,9 +75,9 @@ func (this *MerchantController) OpenMerchant() {
 		this.ServeJSON()
 		return
 	}
-	_, err, id := models.OpenMerchant(open_merchant)
-	if err != nil {
-		this.Data["json"] = RetResource(false, types.OpenMerchantFail, err, "开通商家失败")
+	msg, err, id := models.OpenMerchant(open_merchant)
+	if id == 0 {
+		this.Data["json"] = RetResource(false, types.OpenMerchantFail, msg, "开通商家失败")
 		this.ServeJSON()
 		return
 	}

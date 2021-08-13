@@ -38,7 +38,7 @@ func (this *MerchantConfig) Delete() error {
 
 func GetMerchantConfig() *MerchantConfig {
 	var mer_config MerchantConfig
-	err := orm.NewOrm().QueryTable(MerchantConfig{}).Filter("config_type", 1).One(&mer_config)
+	err := orm.NewOrm().QueryTable(MerchantConfig{}).Filter("config_type", 0).One(&mer_config)
 	if err != nil {
 		return nil
 	}

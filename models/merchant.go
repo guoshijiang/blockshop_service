@@ -66,11 +66,11 @@ func GetMerchantDetail(id int64) (*Merchant, int, error) {
 	return &merchant, types.ReturnSuccess, nil
 }
 
-func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err error, id int64) {
+func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (msg string, err error, id int64) {
 	db := orm.NewOrm()
 	if err := db.Begin(); err != nil {
 		err := errors.Wrap(err, "开启支付事物失败")
-		return false, err, 0
+		return "开启支付事物失败", err, 0
 	}
 	defer func() {
 		if err != nil {
@@ -82,12 +82,12 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err err
 	merchant_config := MerchantConfig{}
 	if err = db.QueryTable(merchant_config.TableName()).Filter("config_type", 0).One(&merchant_config); err != nil {
 		err := errors.New("查询配置失败")
-		return false, err, 0
+		return "查询配置失败", err, 0
 	}
 	user := User{}
 	if err = db.QueryTable(user).RelatedSel().Filter("id", open_mct.UserId).One(&user); err != nil {
 		err = errors.New("查询开通商家用户失败")
-		return false, err, 0
+		return "查询开通商家用户失败", err, 0
 	}
 	var pay_asset *Asset
 	var pay_coin_aount float64
@@ -98,11 +98,12 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err err
 		pay_asset = asst
 		total, _, err := GetUserWalletBalance(asst.Id, open_mct.UserId)
 		if err != nil {
-			return false, err, 0
+			err = errors.New("用户没有钱包")
+			return "用户没有钱包", err, 0
 		}
 		if total < merchant_config.UsdtAmount {
 			err = errors.New("账户没有足够的资金，请去充值")
-			return false, err, 0
+			return "账户没有足够的资金，请去充值", err, 0
 		}
 		pay_coin_aount = merchant_config.UsdtAmount
 	} else {
@@ -112,17 +113,19 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err err
 		pay_asset = asst
 		total, _, err := GetUserWalletBalance(asst.Id, open_mct.UserId)
 		if err != nil {
-			return false, err, 0
+			err = errors.New("用户没有钱包")
+			return "用户没有钱包", err, 0
 		}
 		if total < merchant_config.BtcAmount {
 			err = errors.New("账户没有足够的资金，请去充值")
-			return false, err, 0
+			return "账户没有足够的资金，请去充值", err, 0
 		}
 		pay_coin_aount = merchant_config.BtcAmount
 	}
-	success, _, err = UpdateWalletBalance(db, pay_asset.Id, open_mct.UserId, pay_coin_aount)
+	_, _, err = UpdateWalletBalance(db, pay_asset.Id, open_mct.UserId, pay_coin_aount)
 	if err != nil {
-		return success, err, 0
+		err = errors.New("更新钱包余额失败")
+		return "更新钱包余额失败", err, 0
 	}
 	mct := Merchant{
 		Logo: open_mct.MctLogo,
@@ -135,7 +138,7 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err err
 	err, id = mct.Insert()
 	if err != nil {
 		err = errors.New("新增商家信息失败")
-		return false, err, 0
+		return "新增商家信息失败", err, 0
 	}
 	now := time.Now()
 	mct_record := MerchantOpenRecord{
@@ -148,7 +151,7 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (success bool, err err
 	err, _ = mct_record.Insert()
 	if err != nil {
 		err = errors.New("新增商家信息失败")
-		return false, err, 0
+		return "新增商家信息失败", err, 0
 	}
-	return true, nil, id
+	return "", nil, id
 }

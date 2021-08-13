@@ -45,6 +45,7 @@ type OrderDetailRet struct {
 	MerchantId int64    `json:"merchant_id"`
 	MerchantName string `json:"merchant_name"`
 	GoodsName string    `json:"goods_name"`
+	GoodsTilte string   `json:"goods_tilte"`
 	GoodsPrice float64  `json:"goods_price"`
 	PayIntegral float64 `json:"pay_integral"`
 	SendIntegral float64 `json:"send_integral"`
