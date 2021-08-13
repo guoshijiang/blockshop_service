@@ -127,14 +127,23 @@ func (this *GoodsController) GoodsList() {
 			this.ServeJSON()
 			return
 		}
+		var type_id int64
+		var type_name string
 		gds_type := models.GetGdsTypeById(value.GoodsTypeId)
+		if gds_type != nil {
+			type_id =  gds_type.Id
+			type_name = gds_type.Name
+		} else {
+			type_id = 0
+			type_name = "未知"
+		}
 		gds_ret := goods.GoodsListRep{
 			GoodsId:   value.Id,
 			Title: value.Title,
 			MerchantId: merchant.Id,
 			MerchantName: merchant.MerchantName,
-			TypeId: gds_type.Id,
-			TypeName: gds_type.Name,
+			TypeId:type_id,
+			TypeName: type_name,
 			Logo: image_path + value.Logo,
 			GoodsPrice: value.GoodsPrice,
 			GoodsDisPrice: value.GoodsDisPrice,
