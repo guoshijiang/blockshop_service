@@ -94,15 +94,15 @@ func GetGoodsList(req goods.GoodsListReq) ([]*Goods, int64, error) {
 		query_good = query_good.Filter("goods_cat_id", req.CatId)
 	}
 	// 在售
-	if req.MctStatus == 0 {
+	if req.MctStatus == 1 {
 		query_good = query_good.Filter("is_sale", 0).Filter("sell_nums__gte", 1)
 	}
 	// 售完
-	if req.MctStatus == 1 {
+	if req.MctStatus == 2 {
 		query_good = query_good.Filter("sell_nums__gte", 1)
 	}
 	// 下架
-	if req.MctStatus == 2 {
+	if req.MctStatus == 3 {
 		query_good = query_good.Filter("is_sale", 1)
 	}
 	if req.StartPrice >= 0 && req.EndPrice != 0 && req.EndPrice >= req.StartPrice {
