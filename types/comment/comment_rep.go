@@ -1,7 +1,9 @@
 package comment
 
-
-import "time"
+import (
+  "blockshop/models"
+  "time"
+)
 
 type CommentListRep struct {
 	CommentId   int64  `json:"comment_id"`
@@ -18,4 +20,11 @@ type CommentListRep struct {
 	ImgTwo      string `json:"img_two_id"`
 	ImgThree    string `json:"img_three_id"`
 	CreateTime  time.Time `json:"create_time"`
+}
+
+type CommentListJoinRep struct {
+  models.GoodsComment
+  MerchantName            string        `json:"merchant_name"`
+  GoodsName               string        `json:"goods_name"`
+  UserName                string        `json:"user_name"`
 }

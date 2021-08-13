@@ -275,12 +275,37 @@ func (this *MerchantController) MerchantStaticDetail() {
   goodsEmpty := models.GetMerchantGoodsEmpty(req.MerchantId)
   fmt.Println(goodsSale,goodsSaleOff,goodsEmpty)
   //评价统计
-  starOne := models.GetGoodsCommentStar(GetMonthStartAndEnd("01"))
-  starSix := models.GetGoodsCommentStar(GetMonthStartAndEnd("06"))
-  starTwl := models.GetGoodsCommentStar(GetMonthStartAndEnd("12"))
-  fmt.Println(starOne,starSix,starTwl)
-}
+  oneBad,oneMid,oneGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("01"),req.MerchantId)
+  sixBad,sixMid,sixGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("06"),req.MerchantId)
+  twlBad,twlMid,twlGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("12"),req.MerchantId)
+  //总评论数
+  total := (new(models.GoodsComment)).GetGoodsCommentAll(req.MerchantId)
+  //计算比率 质量平均率  服务平均率 交易平均律
+  qualityRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,1)/total
+  serviceRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,2)/total
+  tradeRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,3)/total
 
+  data := map[string]interface{}{
+    "goods_on_sale":goodsSale,
+    "goods_off_sale":goodsSaleOff,
+    "goods_empty_sale":goodsEmpty,
+    "bad_one_star":oneBad,
+    "bad_six_star":sixBad,
+    "bad_twl_star":twlBad,
+    "mid_one_star":oneMid,
+    "mid_six_star":sixMid,
+    "mid_twl_star":twlMid,
+    "good_one_star":oneGood,
+    "good_six_star":sixGood,
+    "good_twl_star":twlGood,
+    "quality_rate":qualityRate,
+    "service_rate":serviceRate,
+    "trade_rate":tradeRate,
+  }
+  this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取统计列表成功")
+  this.ServeJSON()
+  return
+}
 
 func GetMonthStartAndEnd(myMonth string) time.Time {
   if len(myMonth)==1 {
