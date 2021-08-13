@@ -236,8 +236,20 @@ func (this *GoodsController) GoodsDetail() {
 			attr_list = append(attr_list, c_gds_attr)
 		}
 	}
+	var member_level int8
 	user_ll, _ := models.GetUserById(goods_dtl.UserId)
+	if user_ll != nil {
+		member_level = user_ll.MemberLevel
+	} else {
+		member_level = 0
+	}
+	var os_sta string
 	ors_state := models.GetGdsOsById(goods_dtl.OriginStateId)
+	if ors_state != nil {
+		os_sta = ors_state.Name
+	} else {
+		os_sta = "未知"
+	}
 	btc_price_b := 1.0
 	usdt_price_u := 1.0
     btc_price := models.GetAssetByName("BTC")
@@ -259,12 +271,12 @@ func (this *GoodsController) GoodsDetail() {
 	}
 	goods_detail := map[string]interface{}{
 		"id": goods_dtl.Id,
-		"trust_level": user_ll.MemberLevel,
+		"trust_level": member_level,
 		"title": goods_dtl.Title,
 		"mark": goods_dtl.GoodsMark,
 		"logo": img_path + goods_dtl.Logo,
 		"serveice": goods_dtl.Serveice,
-		"origin_state": ors_state.Name,
+		"origin_state": os_sta,
 		"calc_way": goods_dtl.CalcWay,
 		"sell_nums": goods_dtl.SellNums,
 		"total_amount": goods_dtl.TotalAmount,
