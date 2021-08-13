@@ -280,8 +280,8 @@ func (this *UserController) GetUserInfo() {
 	}
 	// 判断用户是否开通商家
 	var merchant_id int64
-	mct, code, err := models.GetMerchantByUserId(user_if.Id)
-	if mct != nil && err == nil && code != types.ReturnSuccess {
+	mct, _, _ := models.GetMerchantByUserId(user_if.Id)
+	if mct != nil {
 		merchant_id = mct.Id
 	} else {
 		merchant_id = 0

@@ -45,13 +45,13 @@ func (this *GoodsCollect) Insert() (err error, id int64) {
 }
 
 func AddGoodsCollect(req_c collect.GoodsCollectReq) (msg string, code int) {
-	ok := orm.NewOrm().QueryTable(BlackList{}).Filter("black_mct_id", req_c.GoodsId).Exist()
+	ok := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("ct_gds_id", req_c.GoodsId).Exist()
 	if ok {
-		return "该店铺已经加入黑名单", types.BlackListExist
+		return "该商品已经收藏过了", types.GoodsCollectExist
 	}
-	bl := BlackList{
+	bl := GoodsCollect{
 		UserId: req_c.UserId,
-		BlackMctId: req_c.GoodsId,
+		CtGdsId: req_c.GoodsId,
 	}
 	err, _ := bl.Insert()
 	if err != nil {
@@ -60,10 +60,10 @@ func AddGoodsCollect(req_c collect.GoodsCollectReq) (msg string, code int) {
 	return "", types.ReturnSuccess
 }
 
-func GoodsCollectList(page, pageSize int) ([]*BlackList, int64) {
+func GoodsCollectList(page, pageSize int) ([]*GoodsCollect, int64) {
 	offset := (page - 1) * pageSize
-	list := make([]*BlackList, 0)
-	query := orm.NewOrm().QueryTable(BlackList{}).Filter("is_removed", 0)
+	list := make([]*GoodsCollect, 0)
+	query := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("is_removed", 0)
 	total, _ := query.Count()
 	_, err := query.OrderBy("-id").Limit(pageSize,offset).All(&list)
 	if err != nil {
