@@ -278,8 +278,17 @@ func (this *UserController) GetUserInfo() {
 		UsdPrice: "6.5",
 		CnyPrice: "55",
 	}
+	// 判断用户是否开通商家
+	var merchant_id int64
+	mct, code, err := models.GetMerchantByUserId(user_if.Id)
+	if mct == nil && err != nil && code != types.ReturnSuccess {
+		merchant_id = mct.Id
+	} else {
+		merchant_id = 0
+	}
 	data := user.UserInfoRep{
 		UserId: user_if.Id,
+		MctId: merchant_id,
 		Photo: user_if.Avator,
 		UserName: user_if.UserName,
 		IsMerchant: 1,

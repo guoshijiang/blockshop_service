@@ -12,6 +12,7 @@ import (
 type Merchant struct {
 	BaseModel
 	Id             int64     `orm:"pk;column(id);auto;size(11)" description:"商品属性ID"  json:"id"`
+	UserId         int64     `orm:"column(user_id);size(64);index" description:"用户ID" json:"user_id"`
 	Logo           string    `orm:"column(logo);size(150);default(/static/upload/default/user-default-60x60.png)" description:"商家Logo" json:"logo"`
 	MerchantName   string    `orm:"column(merchant_name);size(512);index" description:"商家名称" json:"merchant_name"`
 	MerchantIntro  string    `orm:"column(merchant_intro);size(512);index" description:"商家简介" json:"merchant_intro"`
@@ -128,6 +129,7 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (msg string, err error
 		return "更新钱包余额失败", err, 0
 	}
 	mct := Merchant{
+		UserId: open_mct.UserId,
 		Logo: open_mct.MctLogo,
 		MerchantName: open_mct.MctName,
 		MerchantIntro: open_mct.MctAbstruct,
@@ -154,4 +156,12 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (msg string, err error
 		return "新增商家信息失败", err, 0
 	}
 	return "", nil, id
+}
+
+func GetMerchantByUserId(user_id int64) (*Merchant, int, error) {
+	var merchant Merchant
+	if err := orm.NewOrm().QueryTable(Merchant{}).Filter("user_id", user_id).RelatedSel().One(&merchant); err != nil {
+		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
+	}
+	return &merchant, types.ReturnSuccess, nil
 }

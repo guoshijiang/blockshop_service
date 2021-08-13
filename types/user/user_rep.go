@@ -34,6 +34,7 @@ type UserSecrity struct {
 
 type UserInfoRep struct {
 	UserId          int64   `json:"user_id"`
+	MctId           int64   `json:"mct_id"`
 	Photo           string  `json:"photo"`
 	UserName        string  `json:"user_name"`
 	IsMerchant      int8    `json:"is_merchant"`

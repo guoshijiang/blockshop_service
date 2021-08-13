@@ -15,6 +15,7 @@ type GoodsListReq struct {
 	EndPrice      float64  `json:"end_price"`      // 结束价格
 	OrderBy       int8     `json:"order_by"`       // 0:时间，1:销量；2:价格; 3:商家
 	PayWay        string   `json:"pay_way"`        // 支付方式；BTC/USDT
+	MctStatus     int8     `json:"mct_status"`
 }
 
 func (this GoodsListReq) ParamCheck() (int, error) {

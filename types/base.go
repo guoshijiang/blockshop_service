@@ -59,7 +59,7 @@ const (
 	UpdateAddressFail             = 4046  // 修改地址失败
 	StaticDataFail                = 4047  // 统计失败
 	OpenMerchantFail              = 4048  // 开通商家失败
-
+	BlackListExist                = 4049  // 已经加入过黑名单
 
 
 	InvalidWOrD                   = 5000  // 无效的充值或者提现
