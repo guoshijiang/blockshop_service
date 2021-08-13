@@ -37,6 +37,16 @@ func (this *BlackListController) AddBlackList() {
 		this.ServeJSON()
 		return
 	}
+	msg, code := models.AddBlackList(blacklist_c)
+	if code != types.ReturnSuccess {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, err, "加入黑名单成功")
+		this.ServeJSON()
+		return
+	}
 }
 
 
@@ -58,6 +68,30 @@ func (this *BlackListController) GetBlackListList() {
 		this.ServeJSON()
 		return
 	}
+	page_s := types.PageSizeData{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &page_s); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	bl_lst, total := models.BlackListList(page_s.Page, page_s.PageSize)
+	var bl_list []*collect.BlackListRep
+	for _, value := range bl_lst {
+		bl := &collect.BlackListRep{
+			BlId: value.Id,
+			MerchantId: 1,
+			MerchanName: "",
+			DateTime: "",
+		}
+		bl_list =append(bl_list, bl)
+	}
+	data := map[string]interface{}{
+		"total": total,
+		"data": bl_list,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "退换货成功")
+	this.ServeJSON()
+	return
 }
 
 

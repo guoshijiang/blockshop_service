@@ -3,6 +3,8 @@ package api
 import (
 	"blockshop/models"
 	"blockshop/types"
+	"blockshop/types/collect"
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"strings"
 )
@@ -26,6 +28,22 @@ func (this *GoodsCollectController) AddGoodsCollect() {
 	_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	goods_c := collect.GoodsCollectReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &goods_c); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	msg, code := models.AddGoodsCollect(goods_c)
+	if code != types.ReturnSuccess {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, err, "收藏商品成功")
 		this.ServeJSON()
 		return
 	}

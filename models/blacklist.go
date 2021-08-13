@@ -44,7 +44,7 @@ func (this *BlackList) Insert() (err error, id int64) {
 }
 
 func AddBlackList(req_c collect.BlackListReq) (msg string, code int) {
-	ok := orm.NewOrm().QueryTable(BlackList{}).Filter("black_mct_id", req_c.MerchantId).Exist()
+	ok := orm.NewOrm().QueryTable(BlackList{}).Filter("black_mct_id", req_c.MerchantId).Filter("user_id", req_c.UserId).Exist()
 	if ok {
 		return "该店铺已经加入黑名单", types.BlackListExist
 	}
@@ -59,7 +59,7 @@ func AddBlackList(req_c collect.BlackListReq) (msg string, code int) {
 	return "", types.ReturnSuccess
 }
 
-func lackListList(page, pageSize int) ([]*BlackList, int64) {
+func BlackListList(page, pageSize int) ([]*BlackList, int64) {
 	offset := (page - 1) * pageSize
 	list := make([]*BlackList, 0)
 	query := orm.NewOrm().QueryTable(BlackList{}).Filter("is_removed", 0)

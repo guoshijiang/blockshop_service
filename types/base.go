@@ -61,6 +61,7 @@ const (
 	OpenMerchantFail              = 4048  // 开通商家失败
 	BlackListExist                = 4049  // 已经加入过黑名单
 	GoodsCollectExist             = 4050  // 商品已经收藏过来
+	MctCollectExist               = 4050  // 商品已经收藏过来
 
 
 	InvalidWOrD                   = 5000  // 无效的充值或者提现

@@ -2,6 +2,8 @@ package models
 
 import (
 	"blockshop/common"
+	"blockshop/types"
+	"blockshop/types/collect"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -39,4 +41,41 @@ func (this *MerchantCollect) Insert() (err error, id int64) {
 		return err, 0
 	}
 	return nil, id
+}
+
+
+func AddMerchantCollect(req_c collect.MerchantCollectReq) (msg string, code int) {
+	ok := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("ct_mct_id", req_c.MctId).Filter("user_id", req_c.UserId).Exist()
+	if ok {
+		return "该店铺已经收藏过了", types.MctCollectExist
+	}
+	bl := MerchantCollect{
+		UserId: req_c.UserId,
+		CtMctId: req_c.MctId,
+	}
+	err, _ := bl.Insert()
+	if err != nil {
+		return "店铺收藏失败", types.SystemDbErr
+	}
+	return "", types.ReturnSuccess
+}
+
+func MerchantCollectList(page, pageSize int) ([]*MerchantCollect, int64) {
+	offset := (page - 1) * pageSize
+	list := make([]*MerchantCollect, 0)
+	query := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("is_removed", 0)
+	total, _ := query.Count()
+	_, err := query.OrderBy("-id").Limit(pageSize,offset).All(&list)
+	if err != nil {
+		return nil, types.SystemDbErr
+	}
+	return list, total
+}
+
+func RemoveMerchantCollect(bl_id int64) (msg string, code int) {
+	_, err := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("id", bl_id).Delete()
+	if err != nil {
+		return "移除收藏店铺失败", types.SystemDbErr
+	}
+	return "", types.ReturnSuccess
 }

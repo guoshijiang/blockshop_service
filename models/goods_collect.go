@@ -45,7 +45,7 @@ func (this *GoodsCollect) Insert() (err error, id int64) {
 }
 
 func AddGoodsCollect(req_c collect.GoodsCollectReq) (msg string, code int) {
-	ok := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("ct_gds_id", req_c.GoodsId).Exist()
+	ok := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("ct_gds_id", req_c.GoodsId).Filter("user_id", req_c.UserId).Exist()
 	if ok {
 		return "该商品已经收藏过了", types.GoodsCollectExist
 	}
@@ -55,7 +55,7 @@ func AddGoodsCollect(req_c collect.GoodsCollectReq) (msg string, code int) {
 	}
 	err, _ := bl.Insert()
 	if err != nil {
-		return "该店铺加入黑名单失败", types.SystemDbErr
+		return "商品收藏失败", types.SystemDbErr
 	}
 	return "", types.ReturnSuccess
 }
