@@ -14,6 +14,7 @@ type CreateOrderReq struct {
 	PayWay        int8    `json:"pay_way"`         // 0:BTC支付，1:USDT支付
 	PayCnyPrice   float64 `json:"pay_cny_price"`      // 支付金额
 	PayCoinAmount float64 `json:"pay_coin_amount"`
+	GoodsAttr     string  `json:"goods_attr"`
 }
 
 func (this CreateOrderReq) ParamCheck() (int, error) {

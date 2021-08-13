@@ -67,6 +67,7 @@ type OrderDetailRet struct {
 	IsDiscount  int8    `json:"is_discount"`   // 0:不打折，1:打折活动产品
 	IsIntegral  int8    `json:"is_integral"`
 	GoodsTypes  string `json:"goods_types"`
+	IsAdmin     int8 `json:"is_admin"`
 	RetrurnOrder  *ReturnOrderProcess `json:"retrurn_order"`
 }
 

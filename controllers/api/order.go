@@ -87,6 +87,7 @@ func (this *OrderController) CreateOrder() {
 		AddressId: create_order.AddressId,
 		GoodsTitle: gds.Title,
 		GoodsName: gds.GoodsName,
+		GoodsAttrs: create_order.GoodsAttr,
 		Logo: gds.Logo,
 		UserId: create_order.UserId,
 		BuyNums: create_order.BuyNums,
@@ -348,8 +349,9 @@ func (this *OrderController) OrderDetail() {
 		IsCancle: ord_dtl.IsCancle,
 		IsComment: ord_dtl.IsComment,
 		IsDiscount: gdsdtl.IsDiscount,
-		GoodsTypes: ord_dtl.GoodsTypes,
+		GoodsTypes: ord_dtl.GoodsAttrs,
 		RetrurnOrder: ret_ordr,
+		IsAdmin: gdsdtl.IsAdmin,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, odl, "获取订单详情成功")
 	this.ServeJSON()

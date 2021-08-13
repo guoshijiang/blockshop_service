@@ -32,7 +32,7 @@ type GoodsOrder struct {
 	GoodsId       int64      `orm:"column(goods_id);size(64);index" description:"商品ID" json:"goods_id"`
 	MerchantId    int64      `orm:"column(merchant_id);size(64);index" description:"商户ID" json:"merchant_id"`
 	AddressId     int64      `orm:"column(address_id);size(64);index" description:"地址ID" json:"address_id"`
-	GoodsTypes    string     `orm:"column(goods_types);size(512)" description:"商品属性" json:"goods_types"`
+	GoodsAttrs    string     `orm:"column(goods_types);size(512)" description:"商品属性" json:"goods_attrs"`
 	GoodsTitle    string     `orm:"column(goods_title);size(64)" description:"商品标题" json:"goods_title"`
 	GoodsName     string     `orm:"column(goods_name);size(512);index" description:"产品名称" json:"goods_name"`
 	Logo          string     `orm:"column(logo);size(150);default(/static/upload/default/user-default-60x60.png)" description:"商品Logo" json:"logo"`
