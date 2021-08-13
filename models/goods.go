@@ -24,16 +24,17 @@ type Goods struct {
 	Logo           string    `orm:"column(logo);size(150);default(/static/upload/default/user-default-60x60.png)" description:"商品封面" json:"logo"`
 	OriginStateId  int64     `orm:"column(origin_state_id);default(0)" description:"商品的产地" json:"origin_state_id"`
 	TotalAmount    int64     `orm:"column(total_amount);default(150000)" description:"商品总量" json:"total_amount"`
-	LeftAmount     int64     `orm:"column(left_amount);default(150000)" description:"剩余商品总量" json:"left_amount"`
-	GoodsPrice     float64   `orm:"column(goods_price);default(1);digits(22);decimals(8)" description:"商品价格" json:"goods_price"`
-	GoodsDisPrice  float64   `orm:"column(goods_discount_price);default(1);digits(22);decimals(8)" description:"商品折扣价格" json:"goods_discount_price"`
-	GoodsName      string    `orm:"column(goods_name);size(512);index" description:"产品名称" json:"goods_name"`
-	GoodsParams    string    `orm:"column(goods_params);type(text)" description:"产品参数" json:"goods_params"`
-	GoodsDetail    string    `orm:"column(goods_detail);type(text)" description:"产品详细介绍" json:"goods_detail"`
-	Discount       float64   `orm:"column(discount);default(0);index" description:"折扣" json:"discount"`        // 取值 0.1-9.9；0代表不打折
-	IsSale         int8      `orm:"column(is_sale);default(0);index" description:"上架下架" json:"is_sale"`      // 0:上架 1:下架
-	SellNums       int64     `orm:"column(sell_nums);default(0);index" description:"售出数量" json:"sell_nums"`
-	IsDiscount     int8      `orm:"column(is_discount);default(0);index" description:"打折活动" json:"is_discount"`      // 0:不打折，1:打折活动产品
+	LeftAmount    int64   `orm:"column(left_amount);default(150000)" description:"剩余商品总量" json:"left_amount"`
+	GoodsPrice    float64 `orm:"column(goods_price);default(1);digits(22);decimals(8)" description:"商品价格" json:"goods_price"`
+	GoodsDisPrice float64 `orm:"column(goods_discount_price);default(1);digits(22);decimals(8)" description:"商品折扣价格" json:"goods_discount_price"`
+	GoodsName     string  `orm:"column(goods_name);size(512);index" description:"产品名称" json:"goods_name"`
+	GoodsParams   string  `orm:"column(goods_params);type(text)" description:"产品参数" json:"goods_params"`
+	GoodsDetail   string  `orm:"column(goods_detail);type(text)" description:"产品详细介绍" json:"goods_detail"`
+	Discount      float64 `orm:"column(discount);default(0);index" description:"折扣" json:"discount"`        // 取值 0.1-9.9；0代表不打折
+	IsSale        int8    `orm:"column(is_sale);default(0);index" description:"上架下架" json:"is_sale"`      // 0:上架 1:下架
+	SellNums      int64   `orm:"column(sell_nums);default(0);index" description:"售出数量" json:"sell_nums"`
+	IsDiscount    int8    `orm:"column(is_discount);default(0);index" description:"打折活动" json:"is_discount"` // 0:不打折，1:打折活动产品
+	IsAdmin       int8    `orm:"column(is_admin);default(0)" description:"是否代管" json:"is_admin"`             // 0:不代管，1:代管
 }
 
 type Select struct {
@@ -218,6 +219,7 @@ func CreateMerchantGoods(gds_param merchant.MerchantAddUpdGoodsReq) (int, error)
 		Discount: gds_param.Discount,
 		IsSale: gds_param.Sale,
 		IsDiscount: gds_param.IsDiscount,
+		IsAdmin: gds_param.IsAdmin,
 	}
 	err, goods_id := create_gds.Insert()
 	if err != nil {

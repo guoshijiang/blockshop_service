@@ -148,6 +148,7 @@ func (this *GoodsController) GoodsList() {
 			GoodsPrice: value.GoodsPrice,
 			GoodsDisPrice: value.GoodsDisPrice,
 			IsDiscount: value.IsDiscount,
+			IsAdmin: value.IsAdmin,
 		}
 		goods_ret_list = append(goods_ret_list, gds_ret)
 	}
@@ -293,6 +294,7 @@ func (this *GoodsController) GoodsDetail() {
 		"is_discount": goods_dtl.IsDiscount,
 		"goods_attr": attr_list,
 		"goods_type": goods_type_name,
+		"is_admin": goods_dtl.IsAdmin,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, goods_detail, "获取商品详情成功")
 	this.ServeJSON()
