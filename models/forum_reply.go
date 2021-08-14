@@ -16,6 +16,7 @@ type ForumReply struct {
 	Content        string        `orm:"column(content);type(text)" description:"回复内容" json:"content"`
 	Views          int64         `orm:"column(abstract);default(0)" description:"回复浏览次数" json:"views"`
 	Likes          int64         `orm:"column(likes);default(0)" description:"回复点赞次数" json:"likes"`
+	UnLikes        int64         `orm:"column(un_likes);default(0)" description:"回复踩次数" json:"un_likes"`
 	Answers        int64         `orm:"column(answers);default(0)" description:"回复次数" json:"answers"`
 	IsCheck        int8          `orm:"column(is_check);default(0);index" description:"是否审核" json:"is_check"`  // 0:未审核 1:已审核
 }
@@ -103,11 +104,16 @@ func CreateForumCmtReply(user_id int64, forumt_id int64, father_reply_id int64, 
 	return types.ReturnSuccess,  "创建评论成功"
 }
 
-func CommnetReplyLike(id int64) (int) {
+func CommnetReplyLike(id int64, is_like int) (int) {
 	var forum_reply ForumReply
 	if err := orm.NewOrm().QueryTable(&ForumReply{}).Filter("Id", id).RelatedSel().One(&forum_reply); err != nil {
 		return types.SystemDbErr
 	}
-	forum_reply.Likes = forum_reply.Likes + 1
+	if is_like == 0 {
+		forum_reply.Likes = forum_reply.Likes + 1
+	} else {
+		forum_reply.UnLikes = forum_reply.UnLikes + 1
+	}
+
 	return types.ReturnSuccess
 }

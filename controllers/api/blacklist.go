@@ -77,11 +77,21 @@ func (this *BlackListController) GetBlackListList() {
 	bl_lst, total := models.BlackListList(page_s.Page, page_s.PageSize)
 	var bl_list []*collect.BlackListRep
 	for _, value := range bl_lst {
+		var mct_name string
+		var date_time string
+		mct, _, _ := models.GetMerchantDetail(value.BlackMctId)
+		if mct != nil {
+			mct_name = mct.MerchantName
+			date_time = mct.CreatedAt.Format("2006-01-02 15:04:05")
+		} else {
+			mct_name = ""
+			date_time = ""
+		}
 		bl := &collect.BlackListRep{
 			BlId: value.Id,
-			MerchantId: 1,
-			MerchanName: "",
-			DateTime: "",
+			MerchantId: value.BlackMctId,
+			MerchanName: mct_name,
+			DateTime: date_time,
 		}
 		bl_list =append(bl_list, bl)
 	}
@@ -110,6 +120,22 @@ func (this *BlackListController) RemoveBlackList() {
 	_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	blacklist_c := collect.BlackListReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &blacklist_c); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	msg, code := models.RemoveBlackList(blacklist_c.MerchantId, blacklist_c.UserId)
+	if code != types.ReturnSuccess {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, err, "移除黑名单成功")
 		this.ServeJSON()
 		return
 	}

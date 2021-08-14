@@ -199,6 +199,7 @@ func (this *ForumController) ForumCTopicList() {
 			DataTime: value.CreatedAt.Format("2006-01-02 15:04:05"),
 			Views: value.Views,
 			Likes: value.Likes,
+			UnLikes: value.UnLikes,
 			Answers: value.Answers,
 		}
 		ft_list_rep = append(ft_list_rep, ft)
@@ -280,6 +281,8 @@ func (this *ForumController) ForumTopicCommentList() {
 					UserName: user.UserName,
 					UserPhoto: user.Avator,
 					Reply: reply.Content,
+					UnLikes: reply.UnLikes,
+					Likes: reply.Likes,
 					Datetime: reply.CreatedAt.Format("2006-01-02 15:04:05"),
 				}
 				reply_list = append(reply_list, f_rly)
@@ -290,6 +293,8 @@ func (this *ForumController) ForumTopicCommentList() {
 			UserName: user.UserName,
 			UserPhoto: user.Avator,
 			Comment: cmt.Content,
+			UnLikes: cmt.UnLikes,
+			Likes: cmt.Likes,
 			Datetime: cmt.CreatedAt.Format("2006-01-02 15:04:05"),
 			Reply: reply_list,
 		}
@@ -435,13 +440,13 @@ func (this *ForumController) ForumTopicLike() {
 		this.ServeJSON()
 		return
 	}
-	forum_topic_like := forum.ForumTopiceLikeReq{}
+	forum_topic_like := forum.ForumTopiceUnOrLikeReq{}
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &forum_topic_like); err != nil {
 		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
 		this.ServeJSON()
 		return
 	}
-	code := models.ForumTopicLike(forum_topic_like.ForumId)
+	code := models.ForumTopicLike(forum_topic_like.ForumId, forum_topic_like.IsLike)
 	if code == types.ReturnSuccess {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "点赞成功")
 		this.ServeJSON()
@@ -471,13 +476,13 @@ func (this *ForumController) CommentReplyLike() {
 		this.ServeJSON()
 		return
 	}
-	cmtr_like := forum.CommentReplyLikeReq{}
+	cmtr_like := forum.CommentReplyUnOrLikeReq{}
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &cmtr_like); err != nil {
 		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
 		this.ServeJSON()
 		return
 	}
-	code := models.CommnetReplyLike(cmtr_like.CmtReplyId)
+	code := models.CommnetReplyLike(cmtr_like.CmtReplyId, cmtr_like.IsLike)
 	if code == types.ReturnSuccess {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "点赞评论回复成功")
 		this.ServeJSON()

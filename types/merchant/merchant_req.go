@@ -87,7 +87,7 @@ type DeleteGoodsReq struct {
 }
 
 type StaticDetailReq struct {
-  MerchantId  int64       `json:"merchant_id`
+  MerchantId  int64       `json:"merchant_id"`
 }
 
 func (this DeleteGoodsReq) ParamCheck() (int, error) {

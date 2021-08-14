@@ -41,11 +41,13 @@ type CreateCmtReplyReq struct {
 	CtmReply       string `json:"ctm_reply"`
 }
 
-type ForumTopiceLikeReq struct {
+type ForumTopiceUnOrLikeReq struct {
 	ForumId    int64 `json:"forum_id"`
+	IsLike     int   `json:"is_like"` // 0点赞， 1: 擦
 }
 
-type CommentReplyLikeReq struct {
+type CommentReplyUnOrLikeReq struct {
 	CmtReplyId    int64 `json:"cmt_reply_id"`
+	IsLike        int   `json:"is_like"` // 0点赞， 1: 擦
 }
 

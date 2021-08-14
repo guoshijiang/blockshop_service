@@ -41,6 +41,7 @@ type ForumTopicListRep struct {
 	Title       string  `json:"title"`
 	DataTime    string  `json:"data_time"`
 	Views       int64   `json:"views"`
+	UnLikes     int64   `json:"un_likes"`
 	Likes       int64   `json:"likes"`
 	Answers     int64   `json:"answers"`
 }
@@ -51,6 +52,8 @@ type ForumReply struct {
 	UserPhoto   string  `json:"user_photo"`
 	Reply       string  `json:"reply"`
 	Datetime    string  `json:"datetime"`
+	UnLikes     int64   `json:"un_likes"`
+	Likes       int64   `json:"likes"`
 }
 
 type ForumCommentListRep struct {
@@ -60,6 +63,8 @@ type ForumCommentListRep struct {
 	Comment     string       `json:"comment"`
 	Datetime    string       `json:"datetime"`
 	Reply       []ForumReply `json:"reply"`
+	UnLikes     int64   `json:"un_likes"`
+	Likes       int64   `json:"likes"`
 }
 
 

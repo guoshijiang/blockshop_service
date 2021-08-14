@@ -17,6 +17,7 @@ type Forum struct { // 论坛表
 	Abstract       string        `orm:"column(abstract);type(text)" description:"论坛摘要" json:"abstract"`
 	Content        string        `orm:"column(content);type(text)" description:"论坛内容" json:"content"`
 	Views          int64         `orm:"column(views);default(0)" description:"论坛浏览次数" json:"views"`
+	UnLikes        int64         `orm:"column(un_likes);default(0)" description:"论坛踩次数" json:"un_likes"`
 	Likes          int64         `orm:"column(likes);default(0)" description:"论坛点赞次数" json:"likes"`
 	Answers        int64         `orm:"column(answers);default(0)" description:"论坛评论次数" json:"answers"`
 	IsCheck        int8          `orm:"column(is_check);default(0);index" description:"是否审核" json:"is_check"`  // 0:未审核 1:已审核
@@ -122,11 +123,15 @@ func CreateForum(user_id int64, father_cat_id int64, cat_id int64, title string,
 	return types.ReturnSuccess,  "创建论坛成功"
 }
 
-func ForumTopicLike(id int64) (int) {
+func ForumTopicLike(id int64, is_like int) (int) {
 	var forum Forum
 	if err := orm.NewOrm().QueryTable(Forum{}).Filter("Id", id).RelatedSel().One(&forum); err != nil {
 		return types.SystemDbErr
 	}
-	forum.Likes = forum.Likes + 1
+	if is_like == 0 {
+		forum.Likes = forum.Likes + 1
+	} else {
+		forum.UnLikes = forum.UnLikes + 1
+	}
 	return types.ReturnSuccess
 }
