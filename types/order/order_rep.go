@@ -21,6 +21,7 @@ type OrderListRet struct {
 	IsComment   int8     `json:"is_comment"`
 	IsDiscount  int8    `json:"is_discount"`   // 0:不打折，1:打折活动产品
 	IsIntegral  int8    `json:"is_integral"`
+	IsAdmin     int8    `json:"is_admin"`
 }
 
 type ReturnOrderProcess struct {

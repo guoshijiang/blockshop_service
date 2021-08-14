@@ -242,6 +242,7 @@ func (this *OrderController) OrderList() {
 			IsCancle: value.IsCancle,
 			IsComment: value.IsComment,
 			IsDiscount: gds.IsDiscount,
+			IsAdmin: gds.IsAdmin,
 		}
 		olst_ret = append(olst_ret, ordr)
 	}
