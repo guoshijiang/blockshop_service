@@ -61,6 +61,6 @@ type MerchantDetailRep struct {
 	TotalSellAmount   float64          `json:"total_sell_amount"`
 	AdjustVictor      int64            `json:"adjust_victor"`
 	AdjustFail        int64            `json:"adjust_fail"`
-	CreatedAt         string           `json:"created_at"`
-	UpdatedAt	      string           `json:"updated_at"`
+	JoinTime          string           `json:"join_time"`
+	LstLoginTime	  string           `json:"lst_login_time"`
 }

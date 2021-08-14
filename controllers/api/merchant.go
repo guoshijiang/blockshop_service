@@ -205,8 +205,8 @@ func (this *MerchantController) MerchantDetail() {
 		TotalSellAmount: mcrt_detail.TotalSellAmount,
 		AdjustVictor: mcrt_detail.AdjustVictor,
 		AdjustFail: mcrt_detail.AdjustFail,
-		CreatedAt:mcrt_detail.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt: mcrt_detail.UpdatedAt.Format("2006-01-02 15:04:05"),
+		JoinTime:mcrt_detail.CreatedAt.Format("2006-01-02 15:04:05"),
+		LstLoginTime: mcrt_detail.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, mct_ret_dtl, "获取商家详情成功")
 	this.ServeJSON()
