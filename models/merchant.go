@@ -31,6 +31,8 @@ type Merchant struct {
 	MonthSellAmount float64   `orm:"column(month_sell_amount)" description:"本月销售总额" json:"month_sell_amount"`
     TotalSellNum    int64     `orm:"column(total_sell_num)" description:"本月销售量" json:"total_sell_num"`
 	TotalSellAmount float64	  `orm:"column(total_sell_amount)" description:"本月销售量" json:"total_sell_amount"`
+	AdjustVictor    int64     `orm:"column(adjust_victor);default(0)" description:"胜诉" json:"adjust_victor"`
+	AdjustFail      int64     `orm:"column(adjust_fail);default(0)" description:"败诉" json:"adjust_fail"`
 	IsShow          int8      `orm:"column(is_show);default(0)" description:"是否在首页展示" json:"is_show"` // 0:不展示，1:展示
 }
 

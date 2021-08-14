@@ -159,6 +159,31 @@ func (this *MerchantController) MerchantDetail() {
 		return
 	}
 	m_goods_nums := models.GetMerchantGoodsNums(merchant_dtil.MerchantId)
+	order_stat := &merchant.OrderDataStat{
+		WaidPayOrderNum: 100,
+		WaitSendOrderNum:  10,
+		WaitReturnOrderNum: 10,
+		SendOrderNum:1000,
+	}
+	goods_stat := &merchant.GoodsDataStat{
+		OnSaleNum: 100,
+		SoldOutNum:122,
+		OffShelfNum: 1000,
+	}
+	comment_stat :=  &merchant.CommentDataStat{
+		SericeBest: 100,
+		ServiceGood: 100,
+		ServiceBad: 100,
+		ServiceAvg: 4.5,
+		TradeBest: 1200,
+		TradeGood: 1200,
+		TradeBad: 1200,
+		TradeAvg:4.95,
+		QualityBest: 101,
+		QualityGood: 101,
+		QualityBad: 112,
+		QualityAvg:4.75,
+	}
 	mct_ret_dtl := merchant.MerchantDetailRep{
 		MctId: mcrt_detail.Id,
 		MctLogo: image_path + mcrt_detail.Logo,
@@ -170,14 +195,23 @@ func (this *MerchantController) MerchantDetail() {
 		MctWay: mcrt_detail.MerchantWay,
 		ShopLevel: mcrt_detail.ShopLevel,
 		ShopServer: mcrt_detail.ShopServer,
-		CreatedAt:mcrt_detail.CreatedAt,
-		UpdatedAt: mcrt_detail.UpdatedAt,
+		OrderStat: order_stat,
+		GoodsStat: goods_stat,
+		CommentStat: comment_stat,
+		ShopScore: mcrt_detail.ShopScore,
+		MonthSellNum: mcrt_detail.MonthSellNum,
+		MonthSellAmount: mcrt_detail.MonthSellAmount,
+		TotalSellNum: mcrt_detail.TotalSellNum,
+		TotalSellAmount: mcrt_detail.TotalSellAmount,
+		AdjustVictor: mcrt_detail.AdjustVictor,
+		AdjustFail: mcrt_detail.AdjustFail,
+		CreatedAt:mcrt_detail.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: mcrt_detail.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, mct_ret_dtl, "获取商家详情成功")
 	this.ServeJSON()
 	return
 }
-
 
 // MerchantAddGoods @Title MerchantAddGoods
 // @Description 商家新增商品 MerchantAddGoods
