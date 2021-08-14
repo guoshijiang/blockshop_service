@@ -9,16 +9,14 @@ type AddCommentReq struct {
 	OrderId      int64  `json:"order_id"`
 	GoodsId      int64  `json:"goods_id"`
 	UserId       int64  `json:"user_id"`
-  MerchantId   int64  `json:"merchant_id"`
-	Title        string `json:"title"`
+    MerchantId   int64  `json:"merchant_id"`
 	QualityStar  int8   `json:"quality_star"`
 	ServiceStar  int8   `json:"Service_star"`
 	TradeStar    int8   `json:"trade_star"`
 	Content      string `json:"content"`
-	ImgOneId     int64  `json:"img_one_id"`
-	ImgTwoId     int64  `json:"img_two_id"`
-	ImgThreeId   int64  `json:"img_three_id"`
-
+	ImgOne     	 string `json:"img_one"`
+	ImgTwo       string `json:"img_two"`
+	ImgThree     string `json:"img_three"`
 }
 
 func (this AddCommentReq) ParamCheck() (int, error) {
@@ -31,23 +29,11 @@ func (this AddCommentReq) ParamCheck() (int, error) {
 	if this.MerchantId <= 0 {
     return types.ParamLessZero, errors.New("商户ID不能小于0")
   }
-	if this.Title == "" {
-		return types.ParamEmptyError, errors.New("评论标题为空")
-	}
 	if this.ServiceStar <= 0 || this.TradeStar <= 0  || this.QualityStar <= 0 {
 		return types.ParamEmptyError, errors.New("评论星级不能小于0")
 	}
 	if this.Content == "" {
 		return types.ParamEmptyError, errors.New("评论内容为空")
-	}
-	if this.ImgOneId < 0 {
-		return types.ParamEmptyError, errors.New("评论图片一ID小于0")
-	}
-	if this.ImgTwoId < 0 {
-		return types.ParamEmptyError, errors.New("评论图片二ID小于0")
-	}
-	if this.ImgThreeId < 0 {
-		return types.ParamEmptyError, errors.New("评论图片三ID小于0")
 	}
 	return types.ReturnSuccess, nil
 }
@@ -66,11 +52,13 @@ func (this DelCommentReq) ParamCheck() (int, error) {
 
 type CommentListReq struct {
 	types.PageSizeData
-	GoodsId  int64 `json:"goods_id"`
+	GoodsId    int64 `json:"goods_id"`
+	MerchantId int64 `json:"merchant_id"`
+	CmtStatus  int8  `json:"cmt_status"` //1:好评; 2:中评; 3:差评
 }
 
 func (this CommentListReq) ParamCheck() (int, error) {
-	code, err := this.ParamCheck()
+	code, err := this.SizeParamCheck()
 	if err != nil {
 		return code, err
 	}

@@ -1,11 +1,10 @@
 package api
 
-
 import (
-	"encoding/json"
 	"blockshop/models"
 	"blockshop/types"
 	type_comment "blockshop/types/comment"
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"strings"
 )
@@ -55,9 +54,9 @@ func (this *CommentController) AddCommet() {
 		ServiceStar: add_comment.ServiceStar,
 		TradeStar: add_comment.TradeStar,
 		Content: add_comment.Content,
-		ImgOneId: add_comment.ImgOneId,
-		ImgTwoId: add_comment.ImgTwoId,
-		ImgThreeId: add_comment.ImgThreeId,
+		ImgOneUrl: add_comment.ImgOne,
+		ImgTwoUrl: add_comment.ImgTwo,
+		ImgThreeUrl: add_comment.ImgThree,
 		MerchantId: add_comment.MerchantId,
 	}
 	err, id := cmt.Insert()
@@ -143,7 +142,7 @@ func (this *CommentController) GetCommentList() {
 		this.ServeJSON()
 		return
 	}
-	clst, total, err := models.GetGoodsCommentList(clist.Page, clist.PageSize, clist.GoodsId)
+	clst, total, err := models.GetGoodsCommentList(clist.Page, clist.PageSize, clist.GoodsId, clist.MerchantId, clist.CmtStatus)
 	if err !=  nil {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, err.Error())
 		this.ServeJSON()
@@ -151,29 +150,6 @@ func (this *CommentController) GetCommentList() {
 	}
 	var cmt_list []type_comment.CommentListRep
 	for _, v := range clst {
-		var img_mdl_one, img_mdl_two, img_mdl_three   models.ImageFile
-		img_mdl_one.Id = v.ImgOneId
-		img_mdl_two.Id = v.ImgTwoId
-		img_mdl_three.Id = v.ImgThreeId
-		var one_url, two_url, three_url string
-		ImgOne_img, _, _ := img_mdl_one.GetImageById(v.ImgOneId)
-		if ImgOne_img != nil {
-			one_url = ImgOne_img.Url
-		} else {
-			one_url = ""
-		}
-		ImgTwo_img, _, _ := img_mdl_one.GetImageById(v.ImgTwoId)
-		if ImgTwo_img != nil {
-			two_url = ImgTwo_img.Url
-		} else {
-			two_url = ""
-		}
-		ImgThree_img, _, _ := img_mdl_one.GetImageById(v.ImgThreeId)
-		if ImgThree_img != nil {
-			three_url = ImgThree_img.Url
-		} else {
-			three_url = ""
-		}
 		image_path := beego.AppConfig.String("img_root_path")
 		user_s, _ := models.GetUserById(v.UserId)
 		cl := type_comment.CommentListRep{
@@ -186,9 +162,9 @@ func (this *CommentController) GetCommentList() {
 			ServiceStar: v.ServiceStar,
 			TradeStar: v.TradeStar,
 			Content: v.Content,
-			ImgOne: image_path + one_url,
-			ImgTwo: image_path + two_url,
-			ImgThree: image_path + three_url,
+			ImgOne: image_path + v.ImgOneUrl,
+			ImgTwo: image_path + v.ImgTwoUrl,
+			ImgThree: image_path + v.ImgThreeUrl,
 			CreateTime: v.CreatedAt,
 		}
 		cmt_list = append(cmt_list, cl)

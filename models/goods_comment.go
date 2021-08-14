@@ -18,18 +18,17 @@ type GoodsComment struct {
     ServiceStar  int8      `orm:"column(service_star);default(5);index" description:"服务评论星级" json:"service_star"`
 	TradeStar    int8      `orm:"column(trade_star);default(5);index" description:"交易评论星级" json:"trade_star"`
 	Content      string    `orm:"column(content);type(text)" description:"评论内容"  json:"content"`
-	ImgOneId     int64     `orm:"column(img_one_id);size(64)" description:"评论图片1" json:"img_one_id"`
-	ImgTwoId     int64     `orm:"column(img_two_id);size(64)" description:"评论图片2" json:"img_two_id"`
-	ImgThreeId   int64     `orm:"column(img_three_id);size(64)" description:"评论图片3" json:"img_three_id"`
+	ImgOneUrl    string    `orm:"column(img_one_url);size(64)" description:"评论图片1" json:"img_one_url"`
+	ImgTwoUrl    string    `orm:"column(img_two_url);size(64)" description:"评论图片2" json:"img_two_url"`
+	ImgThreeUrl  string    `orm:"column(img_three_url);size(64)" description:"评论图片3" json:"img_three_url"`
 }
 
 func (this *GoodsComment) TableName() string {
 	return common.TableName("goods_comment")
 }
 
-
 func (this *GoodsComment) SearchField() []string {
-	return []string{"title"}
+	return []string{"content"}
 }
 
 func (this *GoodsComment) Update(fields ...string) error {
@@ -58,17 +57,30 @@ func (this *GoodsComment) Insert() (error, int64) {
 	return nil, id
 }
 
-func GetGoodsCommentList(page, pageSize int, goods_id int64) ([]*GoodsComment, int64, error) {
-	offset := (page - 1) * pageSize
+func GetGoodsCommentList(page, page_size int, goods_id, mct_id int64, cmt_status int8) ([]*GoodsComment, int64, error) {
+	offset := (page - 1) * page_size
 	gct_list := make([]*GoodsComment, 0)
-
-	cond := orm.NewCondition()
-	cond.And("")
-
-	query := orm.NewOrm().QueryTable(GoodsComment{}).Filter("GoodsId", goods_id)
+	query := orm.NewOrm().QueryTable(GoodsComment{}).Filter("is_removed", 0).OrderBy("-id")
+	if goods_id >=1 {
+		query =  query.Filter("goods_id", goods_id)
+	}
+	if mct_id >=1 {
+		query =  query.Filter("merchant_id", mct_id)
+	}
+	// 1:好评, 四星级以上
+	if cmt_status ==1 {
+		query =  query.Filter("quality_star__gte", 4)
+	}
+	// 2:中评 二到四星级
+	if cmt_status ==2 {
+		query =  query.Filter("quality_star__in", 2,3)
+	}
+	// 3:差评 一星级以下
+	if cmt_status ==2 {
+		query =  query.Filter("quality_star__lte", 1)
+	}
 	total, _ := query.Count()
-
-	_, err := query.Limit(pageSize, offset).All(&gct_list)
+	_, err := query.Limit(page_size, offset).All(&gct_list)
 	if err != nil {
 		return nil, types.SystemDbErr, errors.New("查询数据库失败")
 	}
