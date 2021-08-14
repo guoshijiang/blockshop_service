@@ -50,9 +50,6 @@ func (this OrderListReq) ParamCheck() (int, error) {
 	if this.UserId <= 0 {
 		return types.ParamLessZero, errors.New("用户ID小于等于 0")
 	}
-	if this.OrderStatus < 0 || this.OrderStatus > 6 {
-		return types.InvalidFormatError, errors.New("查看的订单状态无效")
-	}
 	return types.ReturnSuccess, nil
 }
 
