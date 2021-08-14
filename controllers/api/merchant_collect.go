@@ -68,6 +68,40 @@ func (this *MerchantCollectController) GetMctCollectList() {
 		this.ServeJSON()
 		return
 	}
+	page_s := types.PageSizeData{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &page_s); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	mct_c_list, total := models.MerchantCollectList(page_s.Page, page_s.PageSize)
+	var mctc_list []*collect.MerchantListRep
+	for _, value := range mct_c_list {
+		var mct_name string
+		var date_time string
+		mct, _, _ := models.GetMerchantDetail(value.CtMctId)
+		if mct != nil {
+			mct_name = mct.MerchantName
+			date_time = mct.CreatedAt.Format("2006-01-02 15:04:05")
+		} else {
+			mct_name = ""
+			date_time = ""
+		}
+		bl := &collect.MerchantListRep{
+			MctCollectId: value.Id,
+			MerchantId: value.CtMctId,
+			MerchanName: mct_name,
+			DateTime: date_time,
+		}
+		mctc_list =append(mctc_list, bl)
+	}
+	data := map[string]interface{}{
+		"total": total,
+		"data": mctc_list,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取收藏店铺列表成功")
+	this.ServeJSON()
+	return
 }
 
 
@@ -86,6 +120,22 @@ func (this *MerchantCollectController) RemoveMctCollect() {
 	_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	mct_c_del := collect.MerchantCollectDelReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &mct_c_del); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	msg, code := models.RemoveMerchantCollect(mct_c_del.MctCollectId)
+	if code != types.ReturnSuccess {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, err, "移除收藏商铺成功")
 		this.ServeJSON()
 		return
 	}

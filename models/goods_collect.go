@@ -72,8 +72,8 @@ func GoodsCollectList(page, pageSize int) ([]*GoodsCollect, int64) {
 	return list, total
 }
 
-func RemoveGoodsCollect(bl_id int64) (msg string, code int) {
-	_, err := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("id", bl_id).Delete()
+func RemoveGoodsCollect(gds_id int64) (msg string, code int) {
+	_, err := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("id", gds_id).Delete()
 	if err != nil {
 		return "移除收藏商品失败", types.BlackListExist
 	}

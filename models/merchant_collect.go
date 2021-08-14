@@ -45,13 +45,13 @@ func (this *MerchantCollect) Insert() (err error, id int64) {
 
 
 func AddMerchantCollect(req_c collect.MerchantCollectReq) (msg string, code int) {
-	ok := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("ct_mct_id", req_c.MctId).Filter("user_id", req_c.UserId).Exist()
+	ok := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("ct_mct_id", req_c.MerchantId).Filter("user_id", req_c.UserId).Exist()
 	if ok {
 		return "该店铺已经收藏过了", types.MctCollectExist
 	}
 	bl := MerchantCollect{
 		UserId: req_c.UserId,
-		CtMctId: req_c.MctId,
+		CtMctId: req_c.MerchantId,
 	}
 	err, _ := bl.Insert()
 	if err != nil {

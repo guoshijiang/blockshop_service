@@ -68,6 +68,41 @@ func (this *GoodsCollectController) GetAddGoodsCollectList() {
 		this.ServeJSON()
 		return
 	}
+	page_s := types.PageSizeData{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &page_s); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	bl_lst, total := models.GoodsCollectList(page_s.Page, page_s.PageSize)
+	var gdsc_list []*collect.GoodsListRep
+	for _, value := range bl_lst {
+		goods_dtl, _, _ := models.GetGoodsDetail(value.CtGdsId)
+		if goods_dtl != nil {
+			gds_c := &collect.GoodsListRep{
+				GdsCollectId: value.CtGdsId,
+				GoodsTitle: goods_dtl.Title,
+				GoodsName: goods_dtl.GoodsName,
+				Views: 1,
+				SellNum: goods_dtl.SellNums,
+				LeftNum: goods_dtl.LeftAmount,
+				GoodsPrice: goods_dtl.GoodsPrice,
+				GoodsBtcAmount: 10.0,
+				GoodsUsdtAmount: 0.0,
+				IsAdmin: goods_dtl.IsAdmin,
+			}
+			gdsc_list =append(gdsc_list, gds_c)
+		} else {
+			continue
+		}
+	}
+	data := map[string]interface{}{
+		"total": total,
+		"data":  gdsc_list,
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取收藏的商品列表成功")
+	this.ServeJSON()
+	return
 }
 
 
@@ -86,6 +121,22 @@ func (this *GoodsCollectController) RemoveGoodsCollect() {
 	_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	gds_c_del := collect.GoodsCollectDelReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &gds_c_del); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	msg, code := models.RemoveGoodsCollect(gds_c_del.GoodsCollecId)
+	if code != types.ReturnSuccess {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
+		this.ServeJSON()
+		return
+	} else {
+		this.Data["json"] = RetResource(true, types.ReturnSuccess, err, "移除收藏商品成功")
 		this.ServeJSON()
 		return
 	}

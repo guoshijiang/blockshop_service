@@ -99,7 +99,7 @@ func (this *BlackListController) GetBlackListList() {
 		"total": total,
 		"data": bl_list,
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "退换货成功")
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取屏蔽商家列表成功")
 	this.ServeJSON()
 	return
 }
@@ -123,13 +123,13 @@ func (this *BlackListController) RemoveBlackList() {
 		this.ServeJSON()
 		return
 	}
-	blacklist_c := collect.BlackListReq{}
+	blacklist_c := collect.BlackListDelReq{}
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &blacklist_c); err != nil {
 		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
 		this.ServeJSON()
 		return
 	}
-	msg, code := models.RemoveBlackList(blacklist_c.MerchantId, blacklist_c.UserId)
+	msg, code := models.RemoveBlackList(blacklist_c.BlackListId)
 	if code != types.ReturnSuccess {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, err, msg)
 		this.ServeJSON()

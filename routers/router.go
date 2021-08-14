@@ -336,6 +336,24 @@ func init() {
         &api.UserAddressController{},
       ),
     ),
+
+    beego.NSNamespace("/blacklist",
+      beego.NSInclude(
+        &api.BlackListController{},
+      ),
+    ),
+
+    beego.NSNamespace("/goods_collect",
+      beego.NSInclude(
+        &api.GoodsCollectController{},
+      ),
+    ),
+
+    beego.NSNamespace("/marchant_collect",
+      beego.NSInclude(
+        &api.MerchantCollectController{},
+      ),
+    ),
   )
   beego.AddNamespace(api_path)
 }

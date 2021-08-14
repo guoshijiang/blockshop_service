@@ -13,9 +13,9 @@ type GoodsComment struct {
 	Id           int64     `orm:"pk;column(id);auto;size(11)" description:"评论ID" json:"id"`
 	GoodsId      int64     `orm:"column(goods_id);size(64)" description:"评论商品" json:"goods_id"`
 	UserId       int64     `orm:"column(user_id);default(1);" description:"评论人" json:"user_id"`
-  MerchantId   int64     `orm:"column(merchant_id);default(1);" description:"商家" json:"merchant_id"`
+    MerchantId   int64     `orm:"column(merchant_id);default(1);" description:"商家" json:"merchant_id"`
 	QualityStar  int8      `orm:"column(quality_star);default(5);index" description:"质量评论星级" json:"quality_star"`
-  ServiceStar  int8      `orm:"column(service_star);default(5);index" description:"服务评论星级" json:"service_star"`
+    ServiceStar  int8      `orm:"column(service_star);default(5);index" description:"服务评论星级" json:"service_star"`
 	TradeStar    int8       `orm:"column(trade_star);default(5);index" description:"交易评论星级" json:"trade_star"`
 	Content      string    `orm:"column(content);type(text)" description:"评论内容"  json:"content"`
 	ImgOneId     int64     `orm:"column(img_one_id);size(64)" description:"评论图片1" json:"img_one_id"`

@@ -71,8 +71,8 @@ func BlackListList(page, pageSize int) ([]*BlackList, int64) {
 	return list, total
 }
 
-func RemoveBlackList(bl_id int64, user_id int64) (msg string, code int) {
-	_, err := orm.NewOrm().QueryTable(BlackList{}).Filter("id", bl_id).Filter("user_id", user_id).Delete()
+func RemoveBlackList(bl_id int64) (msg string, code int) {
+	_, err := orm.NewOrm().QueryTable(BlackList{}).Filter("id", bl_id).Delete()
 	if err != nil {
 		return "移除商铺黑名单失败", types.BlackListExist
 	}
