@@ -16,7 +16,7 @@ type GoodsComment struct {
     MerchantId   int64     `orm:"column(merchant_id);default(1);" description:"商家" json:"merchant_id"`
 	QualityStar  int8      `orm:"column(quality_star);default(5);index" description:"质量评论星级" json:"quality_star"`
     ServiceStar  int8      `orm:"column(service_star);default(5);index" description:"服务评论星级" json:"service_star"`
-	TradeStar    int8       `orm:"column(trade_star);default(5);index" description:"交易评论星级" json:"trade_star"`
+	TradeStar    int8      `orm:"column(trade_star);default(5);index" description:"交易评论星级" json:"trade_star"`
 	Content      string    `orm:"column(content);type(text)" description:"评论内容"  json:"content"`
 	ImgOneId     int64     `orm:"column(img_one_id);size(64)" description:"评论图片1" json:"img_one_id"`
 	ImgTwoId     int64     `orm:"column(img_two_id);size(64)" description:"评论图片2" json:"img_two_id"`
