@@ -75,6 +75,13 @@ func (this *OrderProcess) SearchField() []string {
 }
 
 
+func (this *OrderProcess) WaitReturnOrderTotal() int64 {
+  total,_ := orm.NewOrm().QueryTable(this).Filter("process__lt",7).Count()
+  return  total
+}
+
+
+
 func GetOrderProcessDetail(id int64) (*OrderProcess, int, error) {
 	order_ps := OrderProcess{}
 	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("OrderId", id).RelatedSel().Limit(1).One(&order_ps); err != nil {

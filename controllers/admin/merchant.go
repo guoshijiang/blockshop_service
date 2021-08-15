@@ -4,7 +4,9 @@ import (
   "blockshop/form_validate"
   "blockshop/global"
   "blockshop/global/response"
+  "blockshop/models"
   "blockshop/services"
+  "fmt"
   "github.com/gookit/validate"
   "log"
   "strconv"
@@ -66,6 +68,11 @@ func (Self *MerchantController) Create() {
     url = global.URL_RELOAD
   }
   if insertId > 0 && userInsertId > 0 {
+    //添加统计记录
+    state := new(models.MerchantStat)
+    state.MerchantId = int64(insertId)
+    err,_ := state.Insert()
+    if err != nil {fmt.Println("统计记录---失败",err)}
     response.SuccessWithMessageAndUrl("添加成功", url, Self.Ctx)
   } else {
     response.Error(Self.Ctx)

@@ -1,15 +1,12 @@
 package api
 
 import (
-	"blockshop/models"
-	"blockshop/types"
-	"blockshop/types/merchant"
-	"encoding/json"
-  "fmt"
+  "blockshop/models"
+  "blockshop/types"
+  "blockshop/types/merchant"
+  "encoding/json"
   "github.com/astaxie/beego"
-  "strconv"
   "strings"
-  "time"
 )
 
 type MerchantController struct {
@@ -159,30 +156,34 @@ func (this *MerchantController) MerchantDetail() {
 		return
 	}
 	m_goods_nums := models.GetMerchantGoodsNums(merchant_dtil.MerchantId)
+  WaidPayOrderNum,WaitSendOrderNum,SendOrderNum := (new(models.GoodsOrder)).Aggregation(merchant_dtil.MerchantId)
+  WaitReturnOrderNum := new(models.OrderProcess).WaitReturnOrderTotal()
 	order_stat := &merchant.OrderDataStat{
-		WaidPayOrderNum: 100,
-		WaitSendOrderNum:  10,
-		WaitReturnOrderNum: 10,
-		SendOrderNum:1000,
+		WaidPayOrderNum: WaidPayOrderNum,
+		WaitSendOrderNum:  WaitSendOrderNum,
+		WaitReturnOrderNum: WaitReturnOrderNum,
+		SendOrderNum:SendOrderNum,
 	}
 	goods_stat := &merchant.GoodsDataStat{
-		OnSaleNum: 100,
-		SoldOutNum:122,
-		OffShelfNum: 1000,
+		OnSaleNum: models.GetMerchantGoodsIsSale(merchant_dtil.MerchantId,0),
+		SoldOutNum:models.GetMerchantGoodsIsSale(merchant_dtil.MerchantId,1),
+		OffShelfNum: models.GetMerchantGoodsEmpty(merchant_dtil.MerchantId),
 	}
+
+  merchant_state,_ := (&models.MerchantStat{MerchantId:merchant_dtil.MerchantId}).QueryByMerchant()
 	comment_stat :=  &merchant.CommentDataStat{
-		SericeBest: 100,
-		ServiceGood: 100,
-		ServiceBad: 100,
-		ServiceAvg: 4.5,
-		TradeBest: 1200,
-		TradeGood: 1200,
-		TradeBad: 1200,
-		TradeAvg:4.95,
-		QualityBest: 101,
-		QualityGood: 101,
-		QualityBad: 112,
-		QualityAvg:4.75,
+		SericeBest: merchant_state.ServiceBest,
+		ServiceGood: merchant_state.ServiceGood,
+		ServiceBad: merchant_state.ServiceBad,
+		ServiceAvg: merchant_state.ServiceAvg,
+		TradeBest: merchant_state.TradeBest,
+		TradeGood: merchant_state.TradeGood,
+		TradeBad: merchant_state.TradeBad,
+		TradeAvg:merchant_state.ServiceAvg,
+		QualityBest: merchant_state.TradeBest,
+		QualityGood: merchant_state.QualityGood,
+		QualityBad: merchant_state.QualityBad,
+		QualityAvg:merchant_state.QualityAvg,
 	}
 	mct_ret_dtl := merchant.MerchantDetailRep{
 		MctId: mcrt_detail.Id,
@@ -344,86 +345,4 @@ func (this *MerchantController) MerchantDelGoods() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /mct_static_detail [post]
 func (this *MerchantController) MerchantStaticDetail() {
-  bearerToken := this.Ctx.Input.Header(HttpAuthKey)
-  if len(bearerToken) == 0 {
-    this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
-    this.ServeJSON()
-    return
-  }
-  token := strings.TrimPrefix(bearerToken, "Bearer ")
-  _, err := models.GetUserByToken(token)
-  if err != nil {
-    this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
-    this.ServeJSON()
-    return
-  }
-  req := merchant.StaticDetailReq{}
-  if err := json.Unmarshal(this.Ctx.Input.RequestBody, &req); err != nil {
-    this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
-    this.ServeJSON()
-    return
-  }
-  if code, err := req.ParamCheck(); err != nil {
-    this.Data["json"] = RetResource(false, code, nil, err.Error())
-    this.ServeJSON()
-    return
-  }
-  //订单统计
-  orderState,err := (new(models.GoodsOrder)).Aggregation(req.MerchantId)
-  fmt.Println(orderState)
-  if err != nil {
-    this.Data["json"] = RetResource(false, types.StaticDataFail, nil, "统计订单状态失败")
-    this.ServeJSON()
-    return
-  }
-  //商品统计
-  goodsSale := models.GetMerchantGoodsIsSale(req.MerchantId,0)
-  goodsSaleOff := models.GetMerchantGoodsIsSale(req.MerchantId,1)
-  goodsEmpty := models.GetMerchantGoodsEmpty(req.MerchantId)
-  fmt.Println(goodsSale,goodsSaleOff,goodsEmpty)
-  //评价统计
-  oneBad,oneMid,oneGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("01"),req.MerchantId)
-  sixBad,sixMid,sixGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("06"),req.MerchantId)
-  twlBad,twlMid,twlGood := models.GetGoodsCommentStar(GetMonthStartAndEnd("12"),req.MerchantId)
-  //总评论数
-  total := (new(models.GoodsComment)).GetGoodsCommentAll(req.MerchantId)
-  //计算比率 质量平均率  服务平均率 交易平均律
-  qualityRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,1)/total
-  serviceRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,2)/total
-  tradeRate := (new(models.GoodsComment)).GetGoodsCommentStars(req.MerchantId,3)/total
-
-  data := map[string]interface{}{
-    "goods_on_sale":goodsSale,
-    "goods_off_sale":goodsSaleOff,
-    "goods_empty_sale":goodsEmpty,
-    "bad_one_star":oneBad,
-    "bad_six_star":sixBad,
-    "bad_twl_star":twlBad,
-    "mid_one_star":oneMid,
-    "mid_six_star":sixMid,
-    "mid_twl_star":twlMid,
-    "good_one_star":oneGood,
-    "good_six_star":sixGood,
-    "good_twl_star":twlGood,
-    "quality_rate":qualityRate,
-    "service_rate":serviceRate,
-    "trade_rate":tradeRate,
-  }
-  this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取统计列表成功")
-  this.ServeJSON()
-  return
-}
-
-func GetMonthStartAndEnd(myMonth string) time.Time {
-  if len(myMonth)==1 {
-    myMonth = "0"+myMonth
-  }
-  myYear := time.Now().Year()
-  myYearStr := strconv.Itoa(myYear)
-
-  timeLayout := "2006-01-02 15:04:05"
-  loc, _ := time.LoadLocation("Local")
-  theTime, _ := time.ParseInLocation(timeLayout, myYearStr+"-"+myMonth+"-01 00:00:00", loc)
-  newMonth := theTime.Month()
-  return time.Date(myYear,newMonth+1, 0, 0, 0, 0, 0, time.Local)
 }

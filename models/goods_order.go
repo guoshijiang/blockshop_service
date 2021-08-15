@@ -93,17 +93,36 @@ func (this *GoodsOrder) SearchField() []string {
 	return []string{"order_num"}
 }
 
-func (this *GoodsOrder) Aggregation(merchant int64) ([]order.StateStatic,error) {
+
+
+// 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已完成
+func (this *GoodsOrder) Aggregation(merchant int64) (int64,int64,int64) {
   _,err := orm.NewOrm().Raw("SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'").Exec()
   if err != nil {
     println("err ----",err)
   }
   var data []order.StateStatic
-  _,err = orm.NewOrm().Raw("select count(order_status) val,order_status desc from goods_order where merchant_id = ?",merchant).QueryRows(&data)
+  _,err = orm.NewOrm().Raw("select count(order_status) total,order_status state from goods_order where merchant_id = ?",merchant).QueryRows(&data)
   if err != nil {
-    return nil,err
+    return 0,0,0
   }
-  return data,nil
+  var (
+    WaidPayOrderNum int64
+    WaitSendOrderNum int64
+    SendOrderNum int64
+  )
+  for _,item := range data {
+    if item.State == 0 {
+      WaidPayOrderNum += 1
+    }
+    if item.State == 2 {
+      WaitSendOrderNum += 1
+    }
+    if item.State == 4 {
+      SendOrderNum += 1
+    }
+  }
+  return WaidPayOrderNum,WaitSendOrderNum,SendOrderNum
 }
 
 func PayOrder(order_id int64) (success bool, err error, code int) {

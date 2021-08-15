@@ -76,3 +76,9 @@ type StateStatic struct {
   Total       int64            `json:"total"`
   State       int8             `json:"state"`
 }
+
+type StateStaticReq struct {
+  Total       int64           `json:"total"`
+  StateName   string          `json:"state_name"`
+  State       int8            `json:"state"`
+}
