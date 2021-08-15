@@ -228,7 +228,15 @@ func (this *OrderController) OrderList() {
 		}
 		var addr models.UserAddress
 		addr.Id = value.AddressId
+		rec_user := ""
+		rec_pbone := ""
+		rec_address := ""
 		addrs, _, _ := addr.GetAddressById()
+		if addrs != nil {
+			rec_user = addrs.UserName
+			rec_pbone = addrs.Phone
+			rec_address = addrs.Address
+		}
 		ordr := order.OrderListRet {
 			MerchantId: m.Id,
 			MerchantName: m.MerchantName,
@@ -238,9 +246,9 @@ func (this *OrderController) OrderList() {
 			GoodsTitel: value.GoodsTitle,
 			GoodsLogo: img_path + value.Logo,
 			GoodsPrice: goods_last_price,
-			RecUser: addrs.UserName,
-			RecPhone: addrs.Phone,
-			RecAddress: addrs.Address,
+			RecUser: rec_user,
+			RecPhone: rec_pbone,
+			RecAddress: rec_address,
 			OrderStatus: value.OrderStatus,
 			BuyNums: value.BuyNums,
 			PayCnyPrice: value.PayCnyPrice,
