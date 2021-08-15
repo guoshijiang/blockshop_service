@@ -39,6 +39,7 @@ type WalletWithDrawReq struct {
 	Amount    float64 `json:"amount"`
 	Fee       float64 `json:"fee"`
 	Comment   string  `json:"comment"`
+	PinCode   string  `json:"pin_code"`
 }
 
 func (this WalletWithDrawReq) ParamCheck() (int, error) {
@@ -148,7 +149,7 @@ type WalletWithdrawReq struct {
 
 
 type AddressReq struct {
-	UserId  int64 `json:"user_id"`
+	UserId  string `json:"user_id"`
 	WalletId  int64 `json:"wallet_id"`
 }
 

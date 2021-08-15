@@ -190,6 +190,11 @@ func (uw *UserWalletController) WalletAssetWithdraw() {
 		uw.ServeJSON()
 		return
 	} else {
+		if withdrawdata.PinCode != user.PinCode {
+			uw.Data["json"] = RetResource(false, types.PinCodeErr, nil, "输入的Pin码错误，请核对后再输入")
+			uw.ServeJSON()
+			return
+		}
 		var userwallet models.UserWallet
 		if code, err := withdrawdata.ParamCheck(); err != nil {
 			uw.Data["json"] = RetResource(false, code, nil, err.Error())
@@ -349,6 +354,53 @@ func (uw *UserWalletController) WalletWDRecord() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /wallet_fund_asset [post]
 func (uw *UserWalletController) WalletFundAsset() {
-
+	bearerToken := uw.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		uw.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		uw.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	user, err := models.GetUserByToken(token)
+	if err != nil {
+		uw.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		uw.ServeJSON()
+		return
+	}
+	var user_wallet models.UserWallet
+	user_wallet.UserId = user.Id
+	user_wlist, code, err := user_wallet.GetUserWalletListByUserId()
+	if err != nil {
+		uw.Data["json"] = RetResource(false, code, nil, err.Error())
+		uw.ServeJSON()
+		return
+	}
+	var usd_total_amount float64
+	var cyn_total_amoubt float64
+	var uwfa_list []wallet.UserWalletFundAsset
+	for _, value := range user_wlist {
+		price_md := models.GetAssetById(value.AssetId)
+		float_coin_to_usd, _ := strconv.ParseFloat(price_md.UsdPrice, 64)
+		float_coin_to_cny, _ := strconv.ParseFloat(price_md.CnyPrice, 64)
+		coin_to_usd := value.Balance * float_coin_to_usd
+		coin_to_cyn := value.Balance * float_coin_to_cny
+		usd_total_amount = usd_total_amount + coin_to_usd
+		cyn_total_amoubt = cyn_total_amoubt + coin_to_cyn
+		uwfa := wallet.UserWalletFundAsset{
+			AssetId:     value.Id,
+			AssetName:   price_md.Name,
+			TotalAmount: value.Balance,
+			UsdPrice:    coin_to_usd,
+			CnyPrice:    coin_to_cyn,
+		}
+		uwfa_list = append(uwfa_list, uwfa)
+	}
+	ret_data := make(map[string]interface{})
+	ret_data["coin_to_usd"] = usd_total_amount
+	ret_data["coin_to_cny"] = cyn_total_amoubt
+	ret_data["wallet_list"] = uwfa_list
+	uw.Data["json"] = RetResource(true, types.ReturnSuccess, ret_data, "获取用户钱包资产列表成功")
+	uw.ServeJSON()
+	return
 }
 

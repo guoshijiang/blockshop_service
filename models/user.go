@@ -120,9 +120,13 @@ func UserRegister(register user.Register) (code int, msg string) {
 		UserPublicKey: register.PublicKey,
 		IsOpen: is_open,
 	}
-	err, _ := user_data.Insert()
+	err, user_id := user_data.Insert()
 	if err != nil {
 		return types.SystemDbErr, "创建用户失败"
+	}
+	code = GeneratedUserWallet(user_id)
+	if code != types.ReturnSuccess {
+		return  code, "注册时创建钱包失败"
 	}
 	return types.ReturnSuccess,  "用户注册成功"
 }

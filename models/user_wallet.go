@@ -11,6 +11,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
+	"strconv"
 )
 
 type UserWallet struct {
@@ -111,8 +112,9 @@ func UpdateWalletBalance(db orm.Ormer, asset_id, user_id int64, pay_amount float
 func CreateWalletAddress(user_id, wallet_id int64) error {
 	wallet_url := beego.AppConfig.String("wallet_url")
 	request_url := wallet_url + "create_address"
+	user_id_str := strconv.FormatInt(user_id,10)
 	data := wallet.AddressReq{
-		UserId:   user_id,
+		UserId:   user_id_str,
 		WalletId: wallet_id,
 	}
 	response := http.HttpPost(request_url, data, "application/json")

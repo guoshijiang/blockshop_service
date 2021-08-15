@@ -62,6 +62,7 @@ const (
 	BlackListExist                = 4049  // 已经加入过黑名单
 	GoodsCollectExist             = 4050  // 商品已经收藏过来
 	MctCollectExist               = 4050  // 商品已经收藏过来
+	PinCodeErr                    = 4060  // pin码错误
 
 
 	InvalidWOrD                   = 5000  // 无效的充值或者提现
