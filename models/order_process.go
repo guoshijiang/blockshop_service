@@ -30,6 +30,7 @@ type OrderProcess struct {
 	// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:买家发起申诉，4:等待平台处理申诉; 5:等待买家邮寄; 6:等待卖家收货; 7:卖家已经发货; 8:等待买家收货; 9:已完成
 	Process       int8       `orm:"column(process);default(0)" description:"订单退换货情况" json:"process"`
 	IsRecvGoods   int8       `orm:"column(is_recv_goods);default(0)" description:"是否收到货物" json:"is_recv_goods"` // 0:未收到货物，1:已经收到货物
+	FundRet       int8       `orm:"column(fund_ret);default(0)" description:"退换货" json:"fund_ret"` // 1.退货 2:换货
 	LeftTime      int64      `orm:"column(left_time);default(604800)" description:"处理时长" json:"left_time"`
 	DealTime      time.Time  `orm:"column(deal_time);auto_now_add;type(datetime)" description:"处理时间" json:"deal_time"`
 }
@@ -88,4 +89,12 @@ func GetOrderProcessDetailById(id int64) (*OrderProcess, int, error) {
 		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
 	return &order_ps, types.ReturnSuccess, nil
+}
+
+func RemoveOrderProcess(order_id int64, user_id int64) error {
+	_, err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).Filter("user_id", user_id).Delete()
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -74,7 +74,7 @@ type ReturnGoodsOrderReq struct {
 	QsImgTwo      string `json:"qs_img_two"`
 	QsImgThree    string `json:"qs_img_three"`
 	IsRecvGoods   int8   `json:"is_recv_goods"`   // 0:未收到货物，1:已经收到货物
-	FundRet       int8   `json:"fund_ret"`        // 1.退货,资金返回钱包账号; 2:退货,资金原路返回; 3:换货
+	FundRet       int8   `json:"fund_ret"`        // 1.退货 2:换货
 }
 
 func (this ReturnGoodsOrderReq) ParamCheck() (int, error) {

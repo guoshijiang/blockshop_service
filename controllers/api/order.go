@@ -408,6 +408,7 @@ func (this *OrderController) ReturnGoodsOrder() {
 	return
 }
 
+
 // CancleReturnGoodsOrder @Title CancleReturnGoodsOrder finished
 // @Description 撤销换退货 CancleReturnGoodsOrder
 // @Success 200 status bool, data interface{}, msg string
@@ -420,7 +421,7 @@ func (this *OrderController) CancleReturnGoodsOrder() {
 		return
 	}
 	token := strings.TrimPrefix(bearerToken, "Bearer ")
-	_, err := models.GetUserByToken(token)
+	user_, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
 		this.ServeJSON()
@@ -434,6 +435,12 @@ func (this *OrderController) CancleReturnGoodsOrder() {
 	}
 	if code, err := cancle_order.ParamCheck(); err != nil {
 		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err = models.RemoveOrderProcess(cancle_order.OrderId, user_.Id)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "没有这个退货记录")
 		this.ServeJSON()
 		return
 	}

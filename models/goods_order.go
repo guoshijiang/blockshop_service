@@ -234,16 +234,15 @@ func GetGoodsOrderDetail(id int64) (*GoodsOrder, int, error) {
 }
 
 
-// 1.退货,资金返回钱包账号; 2:退货,资金原路返回; 3:换货
 func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) {
 	var order_dtl GoodsOrder
 	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("Id", oret.OrderId).RelatedSel().One(&order_dtl); err != nil {
 		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
-	if oret.FundRet == 1 || oret.FundRet == 2 {
+	if oret.FundRet == 1 {
 		order_dtl.IsCancle = 1
 	}
-	if oret.FundRet == 3 {
+	if oret.FundRet == 2  {
 		order_dtl.IsCancle = 2
 	}
 	err := order_dtl.Update()
@@ -264,6 +263,7 @@ func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) 
 		Process: 0,
 		LeftTime: 604800,
 		IsRecvGoods: oret.IsRecvGoods,    // 0:未收到货物，1:已经收到货物
+		FundRet: oret.FundRet,
 	}
 	err, _ = order_p.Insert()
 	if err != nil {
