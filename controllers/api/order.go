@@ -258,6 +258,7 @@ func (this *OrderController) OrderList() {
 			IsComment: value.IsComment,
 			IsDiscount: gds.IsDiscount,
 			IsAdmin: gds.IsAdmin,
+			CreateTime: gds.CreatedAt.Format("2006-01-02 15:04:05"),
 		}
 		olst_ret = append(olst_ret, ordr)
 	}
@@ -329,9 +330,15 @@ func (this *OrderController) OrderDetail() {
 				ReturnAddress: mct.Address,
 				ReturnReson: order_process.RetGoodsRs,
 				ReturnAmount: ord_dtl.PayCoinAmount,
+				AcceptRejectRs: order_process.RetPayRs,
+				QuestionDes: order_process.QsDescribe,
+				AdjustContent: order_process.AdjustContent,
+				QsImgOne: order_process.QsImgOne,
+				QsImgTwo: order_process.QsImgTwo,
+				QsImgThree: order_process.QsImgThree,
 				AskTime: order_process.CreatedAt,
-				// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:等待买家邮寄; 4:等待卖家收货; 5:卖家已经发货; 6:等待买家收货; 7:已完成
 				Process: order_process.Process,
+				IsRecvGoods: order_process.IsRecvGoods,
 				LeftTime: order_process.LeftTime,
 			}
 		} else {

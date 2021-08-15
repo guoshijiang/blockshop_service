@@ -23,6 +23,7 @@ type OrderListRet struct {
 	IsComment   int8     `json:"is_comment"`
 	IsDiscount  int8    `json:"is_discount"`   // 0:不打折，1:打折活动产品
 	IsAdmin     int8    `json:"is_admin"`
+	CreateTime  string `json:"create_time"`
 }
 
 type ReturnOrderProcess struct {

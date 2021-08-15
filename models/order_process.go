@@ -19,11 +19,10 @@ type OrderProcess struct {
 	AddressId     int64      `orm:"column(address_id);size(64);index" description:"地址ID" json:"address_id"`
 	GoodsId       int64      `orm:"column(goods_id);size(64);index" description:"商品ID" json:"goods_id"`
 	RetGoodsRs    string     `orm:"column(ret_goods_rs);size(512)" description:"退货原因" json:"ret_goods_rs"`
-	RetPayRs	  string	 `orm:"column(ret_pay_rs);size(512);default('')" description:"拒绝原因" json:"ret_pay_rs"`
+	RetPayRs	  string	 `orm:"column(ret_pay_rs);size(512);default('')" description:"商家拒绝原因" json:"ret_pay_rs"`
 	QsDescribe    string     `orm:"column(qs_describe);size(512)" description:"问题描述" json:"qs_describe"`
 	VectoryId     int64      `orm:"column(vectory_id);default(0);size(64);index" description:"申诉胜出方" json:"vectory_id"`  // 商家是商家ID，用户是用户ID
 	FailId        int64      `orm:"column(fail_id);default(0);size(64);index" description:"申诉失败方" json:"fail_id"`  // 商家是商家ID，用户是用户ID
-	AcceptRejectRs  string   `orm:"column(reject_rs);size(512)" description:"商家拒绝原因" json:"accept_reject_rs"`
 	AdjustContent string     `orm:"column(adjust_content);size(512)" description:"申述描述" json:"adjust_content"`
 	QsImgOne      string     `orm:"column(qs_img_one);size(150)" description:"图片1" json:"qs_img_one"`
 	QsImgTwo      string     `orm:"column(qs_img_two);size(150)" description:"图片2" json:"qs_img_two"`
@@ -140,7 +139,7 @@ func OrderAcceptOrReject(order_id int64, reson string, is_accept int8) (error, s
 		}
 		order_ps.Process = 2
 	}
-	order_ps.AcceptRejectRs = reson
+	order_ps.RetPayRs = reson
 	err := order_ps.Update()
 	if err != nil {
 		return err, "更新申诉描述失败"
