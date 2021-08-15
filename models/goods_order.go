@@ -45,7 +45,7 @@ type GoodsOrder struct {
 	Logistics	  string     `orm:"column(logistics);size(64);index;default('')" description:"物流公司" json:"logistics"`
 	ShipNumber    string     `orm:"column(ship_number);size(64);index;default('')" description:"运单号" json:"ship_number"`
 	RetShipNumber string     `orm:"column(ret_ship_number);size(64);index;default('')" description:"退货运单号" json:"ret_ship_number"`
-	OrderStatus   int8       `orm:"column(order_status);index" description:"支付状态" json:"order_status"` // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已完成
+	OrderStatus   int8       `orm:"column(order_status);index" description:"支付状态" json:"order_status"` // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已经收货; 6:待退款，7：全部
 	FailureReason string     `orm:"column(failure_reason)" description:"失败原因" json:"failure_reason"`
 	PayAt         *time.Time `orm:"column(pay_at);type(datetime);null" description:"支付时间" json:"pay_at"`
 	DealMerchant  string     `orm:"column(deal_user);default('')" description:"处理商家" json:"deal_user"`
@@ -239,7 +239,7 @@ func GetGoodsOrderList(page, pageSize int, user_id, merchant_id int64, status in
 	if merchant_id >= 1 {
 		query = query.Filter("merchant_id", merchant_id)
 	}
-	if status >= 0  && status <= 5 {
+	if status >= 0  && status <= 6 {
 		query = query.Filter("OrderStatus", status)
 	}
 	total, _ := query.Count()

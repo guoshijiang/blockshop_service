@@ -40,7 +40,7 @@ type OrderListReq struct {
 	types.PageSizeData
 	UserId      int64 `json:"user_id"`
 	MerchantId  int64 `json:"merchant_id"`
-	OrderStatus int8 `json:"order_status"`  // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已经收货; 6: 全部
+	OrderStatus int8 `json:"order_status"`  // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已经收货; 6:待退款，7：全部
 }
 
 func (this OrderListReq) ParamCheck() (int, error) {

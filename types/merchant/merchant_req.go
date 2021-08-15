@@ -114,8 +114,20 @@ type OpenMerchantReq struct {
 	MctService  string `json:"mct_service"`
 	MctCrtName  string `json:"mct_crt_name"`
 	MctCrtPhone string `json:"mct_crt_phone"`
+	MctCrtAddress string `json:"mct_crt_address"`
 }
 
+type UpdateMerchantReq struct {
+	MerchantId  int64 `json:"merchant_id"`
+	MctName     string `json:"mct_name"`
+	MctAbstruct string `json:"mct_abstruct"`
+	MctDetail   string `json:"mct_detail"`
+	MctLogo     string `json:"mct_logo"`
+	MctService  string `json:"mct_service"`
+	MctCrtName  string `json:"mct_crt_name"`
+	MctCrtPhone string `json:"mct_crt_phone"`
+	MctCrtAddress string `json:"mct_crt_address"`
+}
 
 type OrderShipNumberReq struct {
 	OrderId      int64   `json:"order_id"`

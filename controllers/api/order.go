@@ -466,7 +466,7 @@ func (this *OrderController) ReturnGoodsShipNumber() {
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加退货快递单号成功")
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加快递单号成功")
 	this.ServeJSON()
 	return
 }

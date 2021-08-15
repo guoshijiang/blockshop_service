@@ -46,7 +46,10 @@ type MerchantDetailRep struct {
 	MctName           string           `json:"merchant_name"`
 	MctIntroduce      string           `json:"merchant_intro"`
 	MerchantDetail    string           `json:"merchant_detail"`
+	ContractUser      string           `json:"contract_user"`
+	ContractPhone     string           `json:"contract_phone"`
 	Address           string           `json:"address"`
+	MerchantServie    string           `json:"merchant_servie"`
 	GoodsNum          int64            `json:"goods_num"`
 	MctWay            int8             `json:"merchant_way"`
 	ShopLevel      	  int8             `json:"shop_level"`

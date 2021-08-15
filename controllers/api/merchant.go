@@ -86,6 +86,42 @@ func (this *MerchantController) OpenMerchant() {
 	return
 }
 
+
+// UpdateMerchant @Title UpdateMerchant
+// @Description 商家开通支付费用 UpdateMerchant
+// @Success 200 status bool, data interface{}, msg string
+// @router /update_marchant [post]
+func (this *MerchantController) UpdateMerchant() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	update_merchant := merchant.UpdateMerchantReq{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &update_merchant); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	msg, err := models.UpdateMerchant(update_merchant)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, nil, msg)
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "修改商家信息成功")
+	this.ServeJSON()
+	return
+}
+
 // MerchantList @Title MerchantList
 // @Description 商家列表接口 MerchantList
 // @Success 200 status bool, data interface{}, msg string
@@ -156,7 +192,7 @@ func (this *MerchantController) MerchantDetail() {
 		return
 	}
 	m_goods_nums := models.GetMerchantGoodsNums(merchant_dtil.MerchantId)
-  WaidPayOrderNum,WaitSendOrderNum,SendOrderNum := (new(models.GoodsOrder)).Aggregation(merchant_dtil.MerchantId)
+   WaidPayOrderNum,WaitSendOrderNum,SendOrderNum := (new(models.GoodsOrder)).Aggregation(merchant_dtil.MerchantId)
   WaitReturnOrderNum := new(models.OrderProcess).WaitReturnOrderTotal()
 	order_stat := &merchant.OrderDataStat{
 		WaidPayOrderNum: WaidPayOrderNum,
@@ -191,6 +227,9 @@ func (this *MerchantController) MerchantDetail() {
 		MctName: mcrt_detail.MerchantName,
 		MctIntroduce: mcrt_detail.MerchantIntro,
 		MerchantDetail: mcrt_detail.MerchantDetail,
+		ContractUser: mcrt_detail.ContactUser,
+		ContractPhone: mcrt_detail.Phone,
+		MerchantServie: mcrt_detail.MerchantServie,
 		Address: mcrt_detail.Address,
 		GoodsNum: m_goods_nums,
 		MctWay: mcrt_detail.MerchantWay,
@@ -375,7 +414,7 @@ func (this *MerchantController) AddOrderShipNumber() {
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加退货快递单号成功")
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加快递单号成功")
 	this.ServeJSON()
 	return
 }

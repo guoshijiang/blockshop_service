@@ -17,6 +17,7 @@ type Merchant struct {
 	MerchantName    string    `orm:"column(merchant_name);size(512);index" description:"商家名称" json:"merchant_name"`
 	MerchantIntro   string    `orm:"column(merchant_intro);size(512);index" description:"商家简介" json:"merchant_intro"`
 	MerchantDetail  string    `orm:"column(merchant_detail);type(text)" description:"商家详情" json:"merchant_detail"`
+	MerchantServie  string    `orm:"column(merchant_servie);type(text)" description:"商家服务说明" json:"merchant_servie"`
 	ContactUser     string    `orm:"column(contact_user);size(128);index" description:"商家联系人" json:"contact_user"`
 	Phone           string    `orm:"column(phone);size(64);index" description:"商家联系电话" json:"phone"`
 	WeChat          string    `orm:"column(we_chat);size(64);index" description:"商家联系微信" json:"we_chat"`
@@ -141,8 +142,10 @@ func OpenMerchant(open_mct type_merchant.OpenMerchantReq) (msg string, err error
 		MerchantName: open_mct.MctName,
 		MerchantIntro: open_mct.MctAbstruct,
 		MerchantDetail: open_mct.MctDetail,
+		MerchantServie: open_mct.MctService,
 		ContactUser: open_mct.MctCrtName,
 		Phone:open_mct.MctCrtPhone,
+		Address: open_mct.MctCrtAddress,
 	}
 	err, id = mct.Insert()
 	if err != nil {
@@ -171,4 +174,37 @@ func GetMerchantByUserId(user_id int64) (*Merchant, int, error) {
 		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
 	return &merchant, types.ReturnSuccess, nil
+}
+
+
+func UpdateMerchant(update_mct type_merchant.UpdateMerchantReq) (msg string, err error) {
+	var merchant Merchant
+	if err := orm.NewOrm().QueryTable(Merchant{}).Filter("id", update_mct.MerchantId).One(&merchant); err != nil {
+		return "数据库查询失败，请联系客服处理", err
+	}
+	if update_mct.MctName != "" {
+		merchant.MerchantName = update_mct.MctName
+	}
+	if update_mct.MctAbstruct != "" {
+		merchant.MerchantIntro = update_mct.MctAbstruct
+	}
+	if update_mct.MctDetail != "" {
+		merchant.MerchantDetail = update_mct.MctDetail
+	}
+	if update_mct.MctLogo != "" {
+		merchant.Logo = update_mct.MctLogo
+	}
+	if update_mct.MctService != "" {
+		merchant.MerchantServie = update_mct.MctService
+	}
+	if update_mct.MctCrtName != "" {
+		merchant.ContactUser = update_mct.MctCrtName
+	}
+	if update_mct.MctCrtPhone != "" {
+		merchant.Phone = update_mct.MctCrtPhone
+	}
+	if update_mct.MctCrtAddress != "" {
+		merchant.Address = update_mct.MctCrtAddress
+	}
+	return  "", nil
 }
