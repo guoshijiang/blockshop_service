@@ -330,6 +330,7 @@ func (this *OrderController) OrderDetail() {
 		GoodsId: ord_dtl.GoodsId,
 		Logistics: ord_dtl.Logistics,
 		ShipNumber: ord_dtl.ShipNumber,
+		RetShipNumber: ord_dtl.RetShipNumber,
 		RecUser: addrs.UserName,
 		RecPhone: addrs.Phone,
 		RecAddress:addrs.Address,

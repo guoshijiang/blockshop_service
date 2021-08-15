@@ -58,6 +58,7 @@ type OrderDetailRet struct {
 	ShipFee     float64 `json:"ship_fee"`
 	Logistics	string  `json:"logistics"`
 	ShipNumber  string  `json:"ship_number"`
+	RetShipNumber  string `json:"ret_ship_number"`
 	Coupons     float64 `json:"coupons"`
 	PayWay      int8    `json:"pay_way"`
 	OrderNumber string  `json:"order_number"`
