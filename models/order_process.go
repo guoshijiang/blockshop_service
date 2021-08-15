@@ -132,6 +132,15 @@ func OrderAcceptOrReject(order_id int64, reson string, is_accept int8) (error, s
 	//0:接受；1:拒绝
 	if is_accept == 0 {
 		order_ps.Process = 1
+		var goods_order GoodsOrder
+		if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).One(&goods_order); err != nil {
+			return err, "订单不存在"
+		}
+		goods_order.OrderStatus = 6
+		err := goods_order.Update()
+		if err != nil {
+			return err, "更新订单状态失败"
+		}
 	}
 	if is_accept == 1 {
 		if order_ps.Process == 2 {

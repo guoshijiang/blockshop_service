@@ -421,7 +421,7 @@ func (this *MerchantController) AddOrderShipNumber() {
 
 
 // AcceptOrRejectReturn @Title AcceptOrRejectReturn
-// @Description 商家统计 AcceptOrRejectReturn
+// @Description 商家接受或者拒绝退货 AcceptOrRejectReturn
 // @Success 200 status bool, data interface{}, msg string
 // @router /accept_reject_return [post]
 func (this *MerchantController) AcceptOrRejectReturn() {
