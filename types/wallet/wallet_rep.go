@@ -29,6 +29,7 @@ type RetWithdrawAmount struct {
 type UserWalletFundAsset struct {
 	AssetId     int64   `json:"asset_id"`
 	AssetName   string  `json:"asset_name"`
+	ChainName   string  `json:"chain_name"`
 	TotalAmount float64 `json:"total_amount"`
 	UsdPrice    float64 `json:"usd_price"`
 	CnyPrice    float64 `json:"cny_price"`

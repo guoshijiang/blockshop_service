@@ -389,6 +389,7 @@ func (uw *UserWalletController) WalletFundAsset() {
 		uwfa := wallet.UserWalletFundAsset{
 			AssetId:     value.Id,
 			AssetName:   price_md.Name,
+			ChainName:   price_md.ChainName,
 			TotalAmount: value.Balance,
 			UsdPrice:    coin_to_usd,
 			CnyPrice:    coin_to_cyn,
