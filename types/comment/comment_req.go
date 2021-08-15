@@ -62,9 +62,6 @@ func (this CommentListReq) ParamCheck() (int, error) {
 	if err != nil {
 		return code, err
 	}
-	if this.GoodsId <= 0 {
-		return types.ParamLessZero, errors.New("评论ID和用户ID不能小于0")
-	}
 	return types.ReturnSuccess, nil
 }
 

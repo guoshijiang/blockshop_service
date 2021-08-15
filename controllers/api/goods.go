@@ -137,6 +137,18 @@ func (this *GoodsController) GoodsList() {
 			type_id = 0
 			type_name = "未知"
 		}
+		btc_price_b := 1.0
+		usdt_price_u := 1.0
+		btc_price := models.GetAssetByName("BTC")
+		if btc_price != nil {
+			btc_price_b_, _ := strconv.ParseFloat(btc_price.CnyPrice, 64)
+			btc_price_b = btc_price_b_
+		}
+		usdt_price := models.GetAssetByName("USDT")
+		if usdt_price != nil {
+			usdt_price_u_, _ := strconv.ParseFloat(usdt_price.CnyPrice, 64)
+			usdt_price_u = usdt_price_u_
+		}
 		gds_ret := goods.GoodsListRep{
 			GoodsId:   value.Id,
 			Title: value.Title,
@@ -147,8 +159,14 @@ func (this *GoodsController) GoodsList() {
 			Logo: image_path + value.Logo,
 			GoodsPrice: value.GoodsPrice,
 			GoodsDisPrice: value.GoodsDisPrice,
+			Views:value.Views,
+			LeftAmount: value.LeftAmount,
+			SellNum: value.SellNums,
+			BtcPrice: value.GoodsPrice / btc_price_b,
+			UsdtPrice: value.GoodsPrice / usdt_price_u,
 			IsDiscount: value.IsDiscount,
 			IsAdmin: value.IsAdmin,
+			IsSale: value.IsSale,
 		}
 		goods_ret_list = append(goods_ret_list, gds_ret)
 	}
@@ -292,6 +310,7 @@ func (this *GoodsController) GoodsDetail() {
 		"user_address": user_address,
 		"merchant_info": merchant_info,
 		"is_discount": goods_dtl.IsDiscount,
+		"is_sale": goods_dtl.IsSale,
 		"goods_attr": attr_list,
 		"goods_type": goods_type_name,
 		"is_admin": goods_dtl.IsAdmin,

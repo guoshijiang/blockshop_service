@@ -49,7 +49,7 @@ type MerchantAddUpdGoodsReq struct {
 	GoodsParams    string 	`json:"goods_params"`           // 产品参数
 	GoodsDetail    string   `json:"goods_detail"`           // 产品详细介绍
 	Discount       float64  `json:"discount"`               // 折扣 取值 0.1-9.9；0代表不打折
-	Sale           int8     `json:"sale"`                   // 上架下架: 0:上架 1:下架
+	IsSale         int8     `json:"is_sale"`                // 上架下架: 0:上架 1:下架
 	IsDiscount     int8     `json:"is_discount"`      		// 打折活动: 0:不打折，1:打折活动产品
 	IsAdmin        int8     `json:"is_admin"`
 }

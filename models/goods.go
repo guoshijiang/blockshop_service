@@ -33,6 +33,7 @@ type Goods struct {
 	Discount      float64 `orm:"column(discount);default(0);index" description:"折扣" json:"discount"`        // 取值 0.1-9.9；0代表不打折
 	IsSale        int8    `orm:"column(is_sale);default(0);index" description:"上架下架" json:"is_sale"`      // 0:上架 1:下架
 	SellNums      int64   `orm:"column(sell_nums);default(0);index" description:"售出数量" json:"sell_nums"`
+	Views         int64   `orm:"column(views);default(0)" description:"商品浏览次数" json:"views"`
 	IsDiscount    int8    `orm:"column(is_discount);default(0);index" description:"打折活动" json:"is_discount"` // 0:不打折，1:打折活动产品
 	IsAdmin       int8    `orm:"column(is_admin);default(0)" description:"是否代管" json:"is_admin"`             // 0:不代管，1:代管
 }
@@ -229,7 +230,7 @@ func CreateMerchantGoods(gds_param merchant.MerchantAddUpdGoodsReq) (int, error)
 		GoodsParams: gds_param.GoodsParams,
 		GoodsDetail: gds_param.GoodsDetail,
 		Discount: gds_param.Discount,
-		IsSale: gds_param.Sale,
+		IsSale: gds_param.IsSale,
 		IsDiscount: gds_param.IsDiscount,
 		IsAdmin: gds_param.IsAdmin,
 	}
@@ -354,8 +355,8 @@ func UpdateMerchantGoods(gds_param merchant.UpdateGoodsReq) (int, error) {
 	if gds_param.Discount > 0 {
 		gds.Discount = gds_param.Discount
 	}
-	if gds_param.Sale > 0 {
-		gds.IsSale = gds_param.Sale
+	if gds_param.IsSale > 0 {
+		gds.IsSale = gds_param.IsSale
 	}
 	if gds.IsDiscount  > 0 {
 		gds.IsDiscount = gds_param.IsDiscount

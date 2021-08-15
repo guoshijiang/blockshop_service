@@ -31,7 +31,13 @@ type GoodsListRep struct {
 	GoodsPrice     float64 `json:"goods_price"`
 	GoodsDisPrice  float64 `json:"goods_discount_price"`
 	IsDiscount     int8    `json:"is_discount"`
-	IsAdmin 	   int8 `json:"is_admin"`
+	Views          int64   `json:"views"`
+	LeftAmount     int64   `json:"left_amount"`
+	SellNum        int64   `json:"sell_num"`
+	BtcPrice       float64 `json:"btc_price"`
+	UsdtPrice      float64 `json:"usdt_price"`
+	IsSale         int8    `json:"is_sale"`
+	IsAdmin 	   int8    `json:"is_admin"`
 }
 
 type GoodsImagesRet struct {
