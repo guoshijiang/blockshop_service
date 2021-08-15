@@ -21,6 +21,8 @@ type UserWallet struct {
 	ChainName   string    `orm:"column(chain_name);default(Bitcoin)" description:"链的名称" json:"chain_name"`
 	Address     string    `orm:"column(address);size(256)" description:"地址" json:"address"`
 	Balance     float64   `orm:"column(balance);default(150);digits(22);decimals(8)" description:"钱包余额" json:"balance"`
+	InAmount    float64   `orm:"column(in_amount);default(150);digits(22);decimals(8)" description:"收入统计" json:"in_amount"`
+	OutAmount   float64   `orm:"column(out_amount);default(150);digits(22);decimals(8)" description:"支出统计" json:"out_amount"`
 }
 
 func (this *UserWallet) TableName() string {

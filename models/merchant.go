@@ -45,6 +45,13 @@ func (this *Merchant) SearchField() []string {
   return []string{"merchant_name"}
 }
 
+func (this *Merchant) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(this, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (this *Merchant) Insert() (err error, id int64) {
 	if id, err = orm.NewOrm().Insert(this); err != nil {
 		return err, 0
@@ -205,6 +212,10 @@ func UpdateMerchant(update_mct type_merchant.UpdateMerchantReq) (msg string, err
 	}
 	if update_mct.MctCrtAddress != "" {
 		merchant.Address = update_mct.MctCrtAddress
+	}
+	err = merchant.Update()
+	if err != nil {
+		return "更新数据失败", err
 	}
 	return  "", nil
 }

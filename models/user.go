@@ -25,11 +25,13 @@ type User struct {
 	UserPublicKey  string        `orm:"column(user_public_key);size(512)" description:"用户的公钥" json:"user_public_key"`
 	Factor         string        `orm:"column(factor);size(512)" description:"用户因子" json:"factor"`
 	IsOpen         int8          `orm:"column(is_open);default(0);index" description:"是否开因子认证" json:"is_open"` // ：0 不是，1: 是
+	AdjustVictor   int64         `orm:"column(adjust_victor);default(0)" description:"调解胜利" json:"adjust_victor"`
+	AdjustFail     int64         `orm:"column(adjust_fail);default(0)" description:"调解失败" json:"adjust_fail"`
 	ActiveTime     int64         `orm:"column(active_time);default(0);index" description:"用户活跃时间" json:"active_time"`
 }
 
 type OptionList struct {
-  Id							int						`json:"id"`
+  Id							int					`json:"id"`
   Name						string					`json:"name"`
 }
 

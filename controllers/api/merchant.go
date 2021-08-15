@@ -88,7 +88,7 @@ func (this *MerchantController) OpenMerchant() {
 
 
 // UpdateMerchant @Title UpdateMerchant
-// @Description 商家开通支付费用 UpdateMerchant
+// @Description 修改商家信息 UpdateMerchant
 // @Success 200 status bool, data interface{}, msg string
 // @router /update_marchant [post]
 func (this *MerchantController) UpdateMerchant() {

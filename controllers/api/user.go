@@ -255,28 +255,64 @@ func (this *UserController) GetUserInfo() {
 		this.ServeJSON()
 		return
 	}
+	var btc_c_price user.CoinPrice
+	btc_price := models.GetAssetByName("BTC")
+	if btc_price != nil {
+		btc_c_price = user.CoinPrice {
+			Asset: "BTC",
+			ChainName: "Bitcoin",
+			UsdPrice: btc_price.UsdPrice,
+			CnyPrice: btc_price.CnyPrice,
+		}
+	} else {
+		btc_c_price = user.CoinPrice {
+			Asset: "BTC",
+			ChainName: "Bitcoin",
+			UsdPrice: "0",
+			CnyPrice: "0",
+		}
+	}
+	var usdt_price user.CoinPrice
+	usdt_price_md := models.GetAssetByName("USDT")
+	if usdt_price_md != nil {
+		usdt_price = user.CoinPrice {
+			Asset: "USDT",
+			ChainName: "Trc20",
+			UsdPrice: usdt_price_md.UsdPrice,
+			CnyPrice: usdt_price_md.CnyPrice,
+		}
+	} else {
+		usdt_price = user.CoinPrice {
+			Asset: "USDT",
+			ChainName: "Trc20",
+			UsdPrice: "0",
+			CnyPrice: "0",
+		}
+	}
 	usy := user.UserSecrity {
 		AccountPct: "65%",
 		IsSetKey: false,
 		IsOpen2Fa: false,
 	}
-	uws := user.UserWalletStat {
-		OutAmount: 11000,
-		InAmount: 11000,
-		Balance: 11000,
-		Address: "T000000000eesasQeeee",
+	u_w_btc, _ := models.GetUserWalletByUserId(user_if.Id, btc_price.Id)
+	var btc_uws user.UserWalletStat
+	if u_w_btc != nil {
+		btc_uws = user.UserWalletStat {
+			OutAmount: u_w_btc.OutAmount,
+			InAmount: u_w_btc.InAmount,
+			Balance: u_w_btc.Balance,
+			Address: u_w_btc.Address,
+		}
 	}
-	btc_c_price := user.CoinPrice {
-		Asset: "BTC",
-		ChainName: "Bitcoin",
-		UsdPrice: "40000",
-		CnyPrice: "280000",
-	}
-	usdt_price := user.CoinPrice {
-		Asset: "USDT",
-		ChainName: "Trc20",
-		UsdPrice: "6.5",
-		CnyPrice: "55",
+	u_w_usdt, _ := models.GetUserWalletByUserId(user_if.Id, usdt_price_md.Id)
+	var usdt_uws user.UserWalletStat
+	if u_w_usdt != nil {
+		usdt_uws = user.UserWalletStat {
+			OutAmount: u_w_usdt.OutAmount,
+			InAmount: u_w_usdt.InAmount,
+			Balance: u_w_usdt.Balance,
+			Address: u_w_usdt.Address,
+		}
 	}
 	// 判断用户是否开通商家
 	var merchant_id int64
@@ -298,11 +334,11 @@ func (this *UserController) GetUserInfo() {
 		BtcOrderAmount: "100",
 		UsdtOrderAmount: "10000",
 		TotalBuy: 1000,
-		AdjustVictor: 10,
-		AdjustFail: 5,
+		AdjustVictor: user_if.AdjustVictor,
+		AdjustFail: user_if.AdjustFail,
 		UserSecrity: usy,
-		BtcWtStat: uws,
-		UsdtWtStat: uws,
+		BtcWtStat: btc_uws,
+		UsdtWtStat: usdt_uws,
 		BtcPrice: btc_c_price,
 		UsdtPrice: usdt_price,
 	}
