@@ -209,7 +209,7 @@ func (this *OrderController) OrderList() {
 		this.ServeJSON()
 		return
 	}
-	ols, total, err := models.GetGoodsOrderList(order_lst.Page, order_lst.PageSize, u_tk.Id, order_lst.OrderStatus)
+	ols, total, err := models.GetGoodsOrderList(order_lst.Page, order_lst.PageSize, u_tk.Id, order_lst.MerchantId, order_lst.OrderStatus)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, err, err.Error())
 		this.ServeJSON()

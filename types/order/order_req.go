@@ -38,7 +38,8 @@ func (this CreateOrderReq) ParamCheck() (int, error) {
 
 type OrderListReq struct {
 	types.PageSizeData
-	UserId int64 `json:"user_id"`
+	UserId      int64 `json:"user_id"`
+	MerchantId  int64 `json:"merchant_id"`
 	OrderStatus int8 `json:"order_status"`  // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已经收货; 6: 全部
 }
 

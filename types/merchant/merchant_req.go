@@ -115,3 +115,19 @@ type OpenMerchantReq struct {
 	MctCrtName  string `json:"mct_crt_name"`
 	MctCrtPhone string `json:"mct_crt_phone"`
 }
+
+
+type OrderShipNumberReq struct {
+	OrderId      int64   `json:"order_id"`
+	ShipNumber   string  `json:"ship_number"`
+}
+
+func (this OrderShipNumberReq) ParamCheck() (int, error) {
+	if this.OrderId <= 0 {
+		return types.ParamLessZero, errors.New("订单的 ID 不能小于等于 0")
+	}
+	if this.ShipNumber == "" {
+		return types.InvalidFormatError, errors.New("快递号不能为空")
+	}
+	return types.ReturnSuccess, nil
+}

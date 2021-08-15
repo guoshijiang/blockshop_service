@@ -1,12 +1,12 @@
 package api
 
 import (
-  "blockshop/models"
-  "blockshop/types"
-  "blockshop/types/merchant"
-  "encoding/json"
-  "github.com/astaxie/beego"
-  "strings"
+	"blockshop/models"
+	"blockshop/types"
+	"blockshop/types/merchant"
+	"encoding/json"
+	"github.com/astaxie/beego"
+	"strings"
 )
 
 type MerchantController struct {
@@ -340,9 +340,50 @@ func (this *MerchantController) MerchantDelGoods() {
 }
 
 
-// MerchantStaticDetail @Title MerchantStaticDetail
-// @Description 商家统计 MerchantStaticDetail
+// AddOrderShipNumber @Title AddOrderShipNumber
+// @Description 商家添加快递单号 AddOrderShipNumber
 // @Success 200 status bool, data interface{}, msg string
-// @router /mct_static_detail [post]
-func (this *MerchantController) MerchantStaticDetail() {
+// @router /add_order_ship_number [post]
+func (this *MerchantController) AddOrderShipNumber() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	var order_ship merchant.OrderShipNumberReq
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &order_ship); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := order_ship.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err = models.UpdShipNumber(order_ship.OrderId, order_ship.ShipNumber)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "添加退货快递单号失败")
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加退货快递单号成功")
+	this.ServeJSON()
+	return
+}
+
+
+// AcceptOrRejectReturn @Title AcceptOrRejectReturn
+// @Description 商家统计 AcceptOrRejectReturn
+// @Success 200 status bool, data interface{}, msg string
+// @router /accept_reject_return [post]
+func (this *MerchantController) AcceptOrRejectReturn() {
 }

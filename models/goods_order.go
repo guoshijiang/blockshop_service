@@ -229,10 +229,16 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 }
 
 
-func GetGoodsOrderList(page, pageSize int, user_id int64, status int8) ([]*GoodsOrder, int64, error) {
+func GetGoodsOrderList(page, pageSize int, user_id, merchant_id int64, status int8) ([]*GoodsOrder, int64, error) {
 	offset := (page - 1) * pageSize
 	gds_order_list := make([]*GoodsOrder, 0)
-	query := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("UserId", user_id).OrderBy("-id")
+	query := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("is_removed", 0).OrderBy("-id")
+	if user_id >= 1 {
+		query = query.Filter("user_id", user_id)
+	}
+	if merchant_id >= 1 {
+		query = query.Filter("merchant_id", merchant_id)
+	}
 	if status >= 0  && status <= 5 {
 		query = query.Filter("OrderStatus", status)
 	}
@@ -305,3 +311,16 @@ func UpdReturnShipNumber(order_id int64, ship_number string) error {
 	return nil
 }
 
+func UpdShipNumber(order_id int64, ship_number string) error {
+	var order_dtl GoodsOrder
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).RelatedSel().One(&order_dtl); err != nil {
+		return errors.New("数据库查询失败，请联系客服处理")
+	}
+	order_dtl.ShipNumber = ship_number
+	order_dtl.OrderStatus = 4
+	err := order_dtl.Update()
+	if err != nil {
+		return errors.New("数据库查询失败，请联系客服处理")
+	}
+	return nil
+}
