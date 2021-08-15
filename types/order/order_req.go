@@ -126,3 +126,19 @@ func (this ReturnShipNumber) ParamCheck() (int, error) {
 	}
 	return types.ReturnSuccess, nil
 }
+
+type ReturnGoodsApprovalReq struct {
+	OrderId         int64   `json:"order_id"`
+	AdjustContent   string  `json:"adjust_content"`
+}
+
+
+func (this ReturnGoodsApprovalReq) ParamCheck() (int, error) {
+	if this.OrderId <= 0 {
+		return types.ParamLessZero, errors.New("订单的 ID 不能小于等于 0")
+	}
+	if this.AdjustContent == "" {
+		return types.InvalidFormatError, errors.New("申诉描述不能为空")
+	}
+	return types.ReturnSuccess, nil
+}

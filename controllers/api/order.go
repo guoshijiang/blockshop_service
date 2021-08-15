@@ -467,7 +467,24 @@ func (this *OrderController) ReturnGoodsApproval() {
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "撤销退换货成功")
+	var order_approval order.ReturnGoodsApprovalReq
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &order_approval); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := order_approval.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err, msg := models.OrderApproval(order_approval.OrderId, order_approval.AdjustContent)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "申诉成功")
 	this.ServeJSON()
 	return
 }
