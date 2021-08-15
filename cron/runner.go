@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	RealTimeExecution  = time.Second * 1
+	RealTimeExecution  = time.Second * 10
 	WithdrawPeriod     = time.Second * 60
 )
 
 func Run() {
 	if beego.BConfig.RunMode == "dev" {
-		RealTimeExecution = time.Second * 1
+		RealTimeExecution = time.Second * 10
 		WithdrawPeriod = time.Second * 10
 	}
 	go func() {
