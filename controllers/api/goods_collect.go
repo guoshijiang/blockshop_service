@@ -82,6 +82,7 @@ func (this *GoodsCollectController) GetAddGoodsCollectList() {
 			gds_c := &collect.GoodsListRep{
 				GdsCollectId: value.CtGdsId,
 				GoodsTitle: goods_dtl.Title,
+				GoodsLogo: goods_dtl.Logo,
 				GoodsName: goods_dtl.GoodsName,
 				Views: 1,
 				SellNum: goods_dtl.SellNums,

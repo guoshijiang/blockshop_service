@@ -111,3 +111,18 @@ func (this PayOrderReq) ParamCheck() (int, error) {
 	}
 	return types.ReturnSuccess, nil
 }
+
+type ReturnShipNumber struct {
+	OrderId         int64   `json:"order_id"`
+	RetShipNumber   string  `json:"ret_ship_number"`
+}
+
+func (this ReturnShipNumber) ParamCheck() (int, error) {
+	if this.OrderId <= 0 {
+		return types.ParamLessZero, errors.New("订单的 ID 不能小于等于 0")
+	}
+	if this.RetShipNumber == "" {
+		return types.InvalidFormatError, errors.New("快递号不能为空")
+	}
+	return types.ReturnSuccess, nil
+}

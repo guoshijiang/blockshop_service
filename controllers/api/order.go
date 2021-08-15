@@ -408,6 +408,70 @@ func (this *OrderController) ReturnGoodsOrder() {
 	return
 }
 
+// ReturnGoodsShipNumber @Title ReturnGoodsShipNumber finished
+// @Description 输入退货的运单号 ReturnGoodsShipNumber
+// @Success 200 status bool, data interface{}, msg string
+// @router /return_ship_number [post]
+func (this *OrderController) ReturnGoodsShipNumber() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	var order_ship order.ReturnShipNumber
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &order_ship); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := order_ship.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err = models.UpdReturnShipNumber(order_ship.OrderId, order_ship.RetShipNumber)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "添加退货快递单号失败")
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "添加退货快递单号成功")
+	this.ServeJSON()
+	return
+}
+
+
+// ReturnGoodsApproval @Title ReturnGoodsApproval finished
+// @Description 退货申述 ReturnGoodsApproval
+// @Success 200 status bool, data interface{}, msg string
+// @router /return_goods_approval [post]
+func (this *OrderController) ReturnGoodsApproval() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "撤销退换货成功")
+	this.ServeJSON()
+	return
+}
+
 
 // CancleReturnGoodsOrder @Title CancleReturnGoodsOrder finished
 // @Description 撤销换退货 CancleReturnGoodsOrder

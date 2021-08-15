@@ -44,6 +44,7 @@ type GoodsOrder struct {
 	OrderNumber   string     `orm:"column(order_number);size(64);index" description:"订单号" json:"order_number"`
 	Logistics	  string     `orm:"column(logistics);size(64);index;default('')" description:"物流公司" json:"logistics"`
 	ShipNumber    string     `orm:"column(ship_number);size(64);index;default('')" description:"运单号" json:"ship_number"`
+	RetShipNumber string     `orm:"column(ret_ship_number);size(64);index;default('')" description:"退货运单号" json:"ret_ship_number"`
 	OrderStatus   int8       `orm:"column(order_status);index" description:"支付状态" json:"order_status"` // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已完成
 	FailureReason string     `orm:"column(failure_reason)" description:"失败原因" json:"failure_reason"`
 	PayAt         *time.Time `orm:"column(pay_at);type(datetime);null" description:"支付时间" json:"pay_at"`
@@ -289,5 +290,18 @@ func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) 
 		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
 	return &order_dtl, types.ReturnSuccess, nil
+}
+
+func UpdReturnShipNumber(order_id int64, ship_number string) error {
+	var order_dtl GoodsOrder
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).RelatedSel().One(&order_dtl); err != nil {
+		return errors.New("数据库查询失败，请联系客服处理")
+	}
+	order_dtl.RetShipNumber = ship_number
+	err := order_dtl.Update()
+	if err != nil {
+		return errors.New("数据库查询失败，请联系客服处理")
+	}
+	return nil
 }
 

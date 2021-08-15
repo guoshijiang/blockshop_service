@@ -11,6 +11,7 @@ type BlackListRep struct {
 type GoodsListRep struct {
 	GdsCollectId    int64  `json:"gds_collect_id"`
 	GoodsId         int64  `json:"goods_id"`
+	GoodsLogo       string `json:"goods_logo"`
 	GoodsTitle      string `json:"goods_title"`
 	GoodsName       string `json:"goods_name"`
 	Views           int64  `json:"views"`

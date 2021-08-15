@@ -35,3 +35,4 @@ func (this GoodsDetailReq) ParamCheck() (int, error) {
 	return types.ReturnSuccess, nil
 }
 
+
