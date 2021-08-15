@@ -226,14 +226,21 @@ func (this *OrderController) OrderList() {
 		}  else {
 			goods_last_price = gds.GoodsDisPrice
 		}
+		var addr models.UserAddress
+		addr.Id = value.AddressId
+		addrs, _, _ := addr.GetAddressById()
 		ordr := order.OrderListRet {
 			MerchantId: m.Id,
 			MerchantName: m.MerchantName,
 			MerchantPhone: m.Phone,
 			OrderId:value.Id,
 			GoodsName: value.GoodsName,
+			GoodsTitel: value.GoodsTitle,
 			GoodsLogo: img_path + value.Logo,
 			GoodsPrice: goods_last_price,
+			RecUser: addrs.UserName,
+			RecPhone: addrs.Phone,
+			RecAddress: addrs.Address,
 			OrderStatus: value.OrderStatus,
 			BuyNums: value.BuyNums,
 			PayCnyPrice: value.PayCnyPrice,

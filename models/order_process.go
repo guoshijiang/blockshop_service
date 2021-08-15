@@ -23,6 +23,7 @@ type OrderProcess struct {
 	QsDescribe    string     `orm:"column(qs_describe);size(512)" description:"问题描述" json:"qs_describe"`
 	VectoryId     int64      `orm:"column(vectory_id);default(0);size(64);index" description:"申诉胜出方" json:"vectory_id"`  // 商家是商家ID，用户是用户ID
 	FailId        int64      `orm:"column(fail_id);default(0);size(64);index" description:"申诉失败方" json:"fail_id"`  // 商家是商家ID，用户是用户ID
+	AcceptRejectRs  string   `orm:"column(reject_rs);size(512)" description:"商家拒绝原因" json:"accept_reject_rs"`
 	AdjustContent string     `orm:"column(adjust_content);size(512)" description:"申述描述" json:"adjust_content"`
 	QsImgOne      string     `orm:"column(qs_img_one);size(150)" description:"图片1" json:"qs_img_one"`
 	QsImgTwo      string     `orm:"column(qs_img_two);size(150)" description:"图片2" json:"qs_img_two"`
@@ -80,8 +81,6 @@ func (this *OrderProcess) WaitReturnOrderTotal() int64 {
   return  total
 }
 
-
-
 func GetOrderProcessDetail(id int64) (*OrderProcess, int, error) {
 	order_ps := OrderProcess{}
 	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("OrderId", id).RelatedSel().Limit(1).One(&order_ps); err != nil {
@@ -106,7 +105,6 @@ func RemoveOrderProcess(order_id int64, user_id int64) error {
 	return nil
 }
 
-
 func OrderApproval(order_id int64, adjust_content string) (error, string) {
 	order_ps := OrderProcess{}
 	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).One(&order_ps); err != nil {
@@ -120,6 +118,29 @@ func OrderApproval(order_id int64, adjust_content string) (error, string) {
 	}
 	order_ps.AdjustContent = adjust_content
 	order_ps.Process = 3
+	err := order_ps.Update()
+	if err != nil {
+		return err, "更新申诉描述失败"
+	}
+	return nil, ""
+}
+
+func OrderAcceptOrReject(order_id int64, reson string, is_accept int8) (error, string) {
+	order_ps := OrderProcess{}
+	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).One(&order_ps); err != nil {
+		return err, "该订单没有发起过申诉"
+	}
+	//0:接受；1:拒绝
+	if is_accept == 0 {
+		order_ps.Process = 1
+	}
+	if is_accept == 1 {
+		if order_ps.Process == 2 {
+			return errors.New("该订单已经发起拒绝"), "该订单已经发起拒绝"
+		}
+		order_ps.Process = 2
+	}
+	order_ps.AcceptRejectRs = reson
 	err := order_ps.Update()
 	if err != nil {
 		return err, "更新申诉描述失败"

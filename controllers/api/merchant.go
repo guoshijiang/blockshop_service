@@ -386,4 +386,37 @@ func (this *MerchantController) AddOrderShipNumber() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /accept_reject_return [post]
 func (this *MerchantController) AcceptOrRejectReturn() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	var order_acp_rjt merchant.AcceptRejectOrderReq
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &order_acp_rjt); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := order_acp_rjt.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err, msg := models.OrderAcceptOrReject(order_acp_rjt.OrderId, order_acp_rjt.AcceptRejectReason, order_acp_rjt.IsAccept)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "拒绝退换货成功")
+	this.ServeJSON()
+	return
 }

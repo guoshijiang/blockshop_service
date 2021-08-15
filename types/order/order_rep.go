@@ -8,19 +8,20 @@ type OrderListRet struct {
 	MerchantPhone string `json:"merchant_phone"`
 	OrderId      int64      `json:"order_id"`
 	GoodsName    string    `json:"goods_name"`
+	GoodsTitel   string    `json:"goods_titel"`
 	GoodsLogo    string    `json:"goods_logo"`
-	GoodsPrice  float64  `json:"goods_price"`
-	PayIntegral float64 `json:"pay_integral"`
-	SendIntegral float64 `json:"send_integral"`
-	OrderStatus int8    `json:"order_status"`
-	BuyNums     int64   `json:"buy_nums"`
-	PayCnyPrice float64 `json:"pay_cny_price"`
+	GoodsPrice   float64  `json:"goods_price"`
+	RecUser      string   `json:"rec_user"`
+	RecPhone     string `json:"rec_phone"`
+	RecAddress   string `json:"rec_address"`
+	OrderStatus  int8    `json:"order_status"`
+	BuyNums      int64   `json:"buy_nums"`
+	PayCnyPrice   float64 `json:"pay_cny_price"`
 	PayCoinAmount float64 `json:"pay_coin_amount"`
 	PayWay      int8      `json:"pay_way"`
 	IsCancle    int8      `json:"is_cancle"`
 	IsComment   int8     `json:"is_comment"`
 	IsDiscount  int8    `json:"is_discount"`   // 0:不打折，1:打折活动产品
-	IsIntegral  int8    `json:"is_integral"`
 	IsAdmin     int8    `json:"is_admin"`
 }
 
