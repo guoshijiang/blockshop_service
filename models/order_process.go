@@ -10,6 +10,19 @@ import (
 	"time"
 )
 
+const (
+	ProcessWaitSellerConfirm       = 0  // 等待卖家确认
+	ProcesSellerAgree              = 1  // 卖家已同意
+	ProcesSellerReject             = 2  // 卖家拒绝
+	ProcesBuyerApproval            = 3  // 买家发起申诉
+	ProcesPlatformHandle           = 4  // 平台处理申诉; 如果打回申诉，直接到完成，如果商家有问题，等待买家邮寄
+	ProcesBuyerPost                = 5  // 买家已发货，等待卖家收货
+	ProcesSellerPost               = 6  // 卖家已经收货，换货情况卖家发出新货,等待买家收货
+	ProcesBuyerRecvGoods           = 7  // 买家收到货
+	ProcesSellerReturnMny          = 8  // 卖家已退款
+	ProcesFinish  				   = 9  // 完成
+)
+
 type OrderProcess struct {
 	BaseModel
 	Id            int64      `json:"id"`
@@ -27,7 +40,7 @@ type OrderProcess struct {
 	QsImgOne      string     `orm:"column(qs_img_one);size(150)" description:"图片1" json:"qs_img_one"`
 	QsImgTwo      string     `orm:"column(qs_img_two);size(150)" description:"图片2" json:"qs_img_two"`
 	QsImgThree    string  	 `orm:"column(qs_img_three);size(150)" description:"图片3" json:"qs_img_three"`
-	// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:买家发起申诉，4:平台处理申诉; 5:等待买家邮寄; 6:等待卖家收货; 7:卖家已经发货; 8:等待买家收货; 9:已完成
+	// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:买家发起申诉，4:平台处理申诉; 5:等待买家邮寄; 6:等待卖家收货; 7:卖家已经发货; 8:等待买家收货; 9:卖家已退款；10:完成
 	Process       int8       `orm:"column(process);default(0)" description:"订单退换货情况" json:"process"`
 	IsRecvGoods   int8       `orm:"column(is_recv_goods);default(0)" description:"是否收到货物" json:"is_recv_goods"` // 0:未收到货物，1:已经收到货物
 	FundRet       int8       `orm:"column(fund_ret);default(0)" description:"退换货" json:"fund_ret"` // 1.退货 2:换货
@@ -112,14 +125,23 @@ func OrderApproval(order_id int64, adjust_content string) (error, string) {
 	if order_ps.Process != 2 {
 		return errors.New("卖家没有拒绝该订单换货，不能发起申诉"), "卖家没有拒绝该订单换货，不能发起申诉"
 	}
-	if order_ps.Process == 3 {
+	if order_ps.Process == ProcesBuyerApproval {
 		return errors.New("该订单已经发起过申诉"), "该订单已经发起过申诉"
 	}
 	order_ps.AdjustContent = adjust_content
-	order_ps.Process = 3
+	order_ps.Process = ProcesBuyerApproval
 	err := order_ps.Update()
 	if err != nil {
 		return err, "更新申诉描述失败"
+	}
+	goods_order := GoodsOrder{}
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).One(&goods_order); err != nil {
+		return err, "没有这个订单"
+	}
+	goods_order.OrderStatus = OrederBuyerAppoval
+	err = goods_order.Update()
+	if err != nil {
+		return err, "更新订单状态失败"
 	}
 	return nil, ""
 }
@@ -129,29 +151,70 @@ func OrderAcceptOrReject(order_id int64, reson string, is_accept int8) (error, s
 	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).One(&order_ps); err != nil {
 		return err, "该订单没有发起过申诉"
 	}
-	//0:接受；1:拒绝
+	// 0: 接受
 	if is_accept == 0 {
-		order_ps.Process = 1
+		order_ps.Process = ProcesSellerAgree
 		var goods_order GoodsOrder
 		if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).One(&goods_order); err != nil {
 			return err, "订单不存在"
 		}
-		goods_order.OrderStatus = 6
+		goods_order.OrderStatus = OrederReturnSellerAcpt
 		err := goods_order.Update()
 		if err != nil {
 			return err, "更新订单状态失败"
 		}
 	}
+	// 1: 拒绝
 	if is_accept == 1 {
-		if order_ps.Process == 2 {
+		if order_ps.Process == ProcesSellerReject {
 			return errors.New("该订单已经发起拒绝"), "该订单已经发起拒绝"
 		}
-		order_ps.Process = 2
+		order_ps.Process = ProcesSellerReject
+		var goods_order GoodsOrder
+		if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).One(&goods_order); err != nil {
+			return err, "订单不存在"
+		}
+		goods_order.OrderStatus = OrederReturnSellerRjt
+		err := goods_order.Update()
+		if err != nil {
+			return err, "更新订单状态失败"
+		}
 	}
 	order_ps.RetPayRs = reson
 	err := order_ps.Update()
 	if err != nil {
 		return err, "更新申诉描述失败"
+	}
+	return nil, ""
+}
+
+func ReturnMoney(order_id int64) (error, string) {
+	var goods_order GoodsOrder
+	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("id", order_id).One(&goods_order); err != nil {
+		return err, "订单不存在"
+	}
+	goods_order.OrderStatus = OrederSellerReturnMny
+	err := goods_order.Update()
+	if err != nil {
+		return err, "更新订单状态失败"
+	}
+	order_ps := OrderProcess{}
+	if err := orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).One(&order_ps); err != nil {
+		return err, "该订单没有发起过申诉"
+	}
+	order_ps.Process = ProcesSellerReturnMny
+	err = order_ps.Update()
+	if err != nil {
+		return err, "更新订单流程状态失败"
+	}
+	merchant_flow := MerchantOrderFlow{}
+	if err := orm.NewOrm().QueryTable(MerchantOrderFlow{}).Filter("order_id", order_id).One(&merchant_flow); err != nil {
+		return err, "该订单没有发起过申诉"
+	}
+	merchant_flow.IsValid = 1
+	err = merchant_flow.Update()
+	if err != nil {
+		return err, "更新商家流水状态失败"
 	}
 	return nil, ""
 }

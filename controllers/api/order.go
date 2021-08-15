@@ -95,7 +95,7 @@ func (this *OrderController) CreateOrder() {
 		PayCnyPrice: create_order.PayCnyPrice,
 		PayCoinAmount: pay_coin_amount,
 		OrderNumber: order_nmb.String(),
-		OrderStatus: 0,
+		OrderStatus: models.OrderStatusNoPay,
 		FailureReason: "未支付",
 	}
 	err, id := cmt.Insert()
@@ -161,7 +161,7 @@ func (this *OrderController) PayOrder () {
 		this.ServeJSON()
 		return
 	}
-	ok, err, code := models.PayOrder(pay_order.OrderId)
+	ok, err, code, msg := models.PayOrder(pay_order.OrderId)
 	fmt.Println(err)
 	if err == nil && ok == true {
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "支付成功")
@@ -169,11 +169,11 @@ func (this *OrderController) PayOrder () {
 		return
 	} else {
 		if err != nil {
-			this.Data["json"] = RetResource(false, code, nil, err.Error())
+			this.Data["json"] = RetResource(false, code, nil, msg)
 			this.ServeJSON()
 			return
 		}
-		this.Data["json"] = RetResource(false, types.PayOrderError, nil, "支付发生错误")
+		this.Data["json"] = RetResource(false, code, nil, msg)
 		this.ServeJSON()
 		return
 	}
@@ -604,7 +604,7 @@ func (this *OrderController) ConfirmRecvGoods() {
 		this.ServeJSON()
 		return
 	}
-	order_dtl.OrderStatus = 5
+	order_dtl.OrderStatus = models.OrderStatusRecvGoods
 	err = order_dtl.Update()
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.SystemDbErr, err, err.Error())

@@ -6,6 +6,7 @@ import (
 	type_comment "blockshop/types/comment"
 	"encoding/json"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"strings"
 )
 
@@ -47,7 +48,6 @@ func (this *CommentController) AddCommet() {
 		this.ServeJSON()
 		return
 	}
-
 	cmt := models.GoodsComment{
 		GoodsId: add_comment.GoodsId,
 		UserId: add_comment.UserId,
@@ -66,26 +66,32 @@ func (this *CommentController) AddCommet() {
 		this.ServeJSON()
 		return
 	} else {
-	  //统计评论
-	  _,err := new(models.MerchantStat).UpdateByMerchant(models.MerchantStateCountRaw{
-	    MerchantId: add_comment.MerchantId,
-	    QualityStar: add_comment.QualityStar,
-	    ServiceStar: add_comment.ServiceStar,
-	    TradeStar: add_comment.TradeStar,
-    })
-	  if err != nil {
-      this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "评论状态统计失败")
-      this.ServeJSON()
-      return
-    }
-
+		  //统计评论
+		  _, err := new(models.MerchantStat).UpdateByMerchant(models.MerchantStateCountRaw{
+			MerchantId: add_comment.MerchantId,
+			QualityStar: add_comment.QualityStar,
+			ServiceStar: add_comment.ServiceStar,
+			TradeStar: add_comment.TradeStar,
+		})
+		if err != nil {
+		  this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "评论状态统计失败")
+		  this.ServeJSON()
+		  return
+		}
 		order_detail, _, _ := models.GetGoodsOrderDetail(add_comment.OrderId)
 		order_detail.IsComment  = 1
+		order_detail.OrderStatus = models.OrederFinish
 		err = order_detail.Update()
 		if err != nil {
 			this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "更新评论状态失败")
 			this.ServeJSON()
 			return
+		}
+		var order_process models.OrderProcess
+		err = orm.NewOrm().QueryTable(models.OrderProcess{}).Filter("order_id", add_comment.OrderId).RelatedSel().One(&order_process)
+		if err == nil {
+			order_process.Process = models.ProcesFinish
+			_ = order_detail.Update()
 		}
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, map[string]interface{}{"id": id}, "添加评论成功")
 		this.ServeJSON()

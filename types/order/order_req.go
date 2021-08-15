@@ -100,7 +100,7 @@ func (this CancleReturnGoodsOrderReq) ParamCheck() (int, error) {
 type PayOrderReq struct {
 	OrderId         int64   `json:"order_id"`
 	PayCoinAmount   float64 `json:"pay_coin_amount"`    // 付款金额或者付款积分
-	PayWay          int8    `json:"pay_way"`       // 0:BTC支付，1:USDT支付
+	PayWay          int8    `json:"pay_way"`            // 0:BTC支付，1:USDT支付
 }
 
 func (this PayOrderReq) ParamCheck() (int, error) {

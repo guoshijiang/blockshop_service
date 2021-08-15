@@ -283,12 +283,6 @@ func init() {
       ),
     ),
 
-    beego.NSNamespace("/cwallet",
-      beego.NSInclude(
-        &api.ChainWalletController{},
-      ),
-    ),
-
     beego.NSNamespace("/marchant",
       beego.NSInclude(
         &api.MerchantController{},

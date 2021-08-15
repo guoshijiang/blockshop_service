@@ -12,18 +12,20 @@ import (
 
 
 const (
-	OrderStatusNoPay       = 0
-	OrderStatusPaying      = 1
-	OrderStatusPaySuccess  = 2
-	OrderStatusPayFailure  = 3
-	OrderStatusPayCancel   = 4
+	OrderStatusNoPay       = 0  // 未支付
+	OrderStatusPaySuccess  = 1  // 支付成功
+	OrderStatusPayFailure  = 2  // 支付失败
+	OrderStatusSendGoods   = 3  // 已发货
+	OrderStatusRecvGoods   = 4  // 已经收货
+	OrederReturnGoods      = 5  // 退货换货
+	OrederReturnSellerRjt  = 6  // 卖家拒绝
+	OrederReturnSellerAcpt = 7  // 卖家同意
+	OrederBuyerAppoval     = 8  // 买家申诉
+	OrederAppovalSuccess   = 9  // 订单申诉成功
+	OrederSellerReturnMny  = 10 // 卖家已退款
+	OrederFinish           = 11 // 已完成
 	PayWayUSDT             = 1
 	PayWayBTC              = 2
-	OrderRewardStageUSDT   = 1
-	OrderRewardStageBTC    = 2
-	OrderRewardStageFinish = 3
-	StatusOK               = 0
-	StatusDelete           = 1
 )
 
 type GoodsOrder struct {
@@ -45,7 +47,7 @@ type GoodsOrder struct {
 	Logistics	  string     `orm:"column(logistics);size(64);index;default('')" description:"物流公司" json:"logistics"`
 	ShipNumber    string     `orm:"column(ship_number);size(64);index;default('')" description:"运单号" json:"ship_number"`
 	RetShipNumber string     `orm:"column(ret_ship_number);size(64);index;default('')" description:"退货运单号" json:"ret_ship_number"`
-	OrderStatus   int8       `orm:"column(order_status);index" description:"支付状态" json:"order_status"` // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已经收货; 6:待退款，7：全部
+	OrderStatus   int8       `orm:"column(order_status);index" description:"订单状态" json:"order_status"`
 	FailureReason string     `orm:"column(failure_reason)" description:"失败原因" json:"failure_reason"`
 	PayAt         *time.Time `orm:"column(pay_at);type(datetime);null" description:"支付时间" json:"pay_at"`
 	DealMerchant  string     `orm:"column(deal_user);default('')" description:"处理商家" json:"deal_user"`
@@ -94,8 +96,6 @@ func (this *GoodsOrder) SearchField() []string {
 	return []string{"order_num"}
 }
 
-
-
 // 0: 未支付，1: 支付中，2：支付成功；3：支付失败 4：已发货；5：已完成
 func (this *GoodsOrder) Aggregation(merchant int64) (int64,int64,int64) {
   _,err := orm.NewOrm().Raw("SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'").Exec()
@@ -126,11 +126,11 @@ func (this *GoodsOrder) Aggregation(merchant int64) (int64,int64,int64) {
   return WaidPayOrderNum,WaitSendOrderNum,SendOrderNum
 }
 
-func PayOrder(order_id int64) (success bool, err error, code int) {
+func PayOrder(order_id int64) (success bool, err error, code int, msg string) {
 	db := orm.NewOrm()
 	if err := db.Begin(); err != nil {
 		err := errors.Wrap(err, "开启支付事物失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "开启支付事物失败"
 	}
 	defer func() {
 		if err != nil {
@@ -142,11 +142,11 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 	goods_order := GoodsOrder{}
 	if err = db.QueryTable(goods_order.TableName()).Filter("id", order_id).One(&goods_order); err != nil {
 		err := errors.New("查询订单失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "查询订单失败"
 	}
 	if goods_order.OrderStatus == OrderStatusPaySuccess {
 		err := errors.New("订单已经支付")
-		return false, err, types.OrderAlreadyPay
+		return false, err, types.OrderAlreadyPay, "订单已经支付"
 	}
 	if goods_order.OrderStatus != 0 {
 		goods_order.OrderStatus = 0
@@ -155,19 +155,19 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 	goods := Goods{}
 	if err = db.QueryTable(goods.TableName()).Filter("id", goods_order.GoodsId).One(&goods); err != nil {
 		err = errors.New("查询商品信息失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "查询商品信息失败"
 	}
 	user := User{}
-	if err = db.QueryTable(user).RelatedSel().Filter("id", goods_order.UserId).One(&user); err != nil {
+	if err = db.QueryTable(user.TableName()).RelatedSel().Filter("id", goods_order.UserId).One(&user); err != nil {
 		err = errors.New("查询购买商品的用户失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "查询购买商品的用户失败"
 	}
 	var pay_asset *Asset
 	if goods_order.PayWay == PayWayUSDT {
 		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
 		if supportedPayPrice != float64(goods_order.PayCnyPrice) {
 			err = errors.New("支付方式错误")
-			return false, err, types.VerifyPayAmount
+			return false, err, types.VerifyPayAmount, "支付方式错误"
 		}
 		var ast Asset
 		ast.Name = "USDT"
@@ -175,17 +175,17 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 		pay_asset = asst
 		total, code, err := GetUserWalletBalance(asst.Id, goods_order.UserId)
 		if err != nil {
-			return false, err, code
+			return false, err, code, "获取用户钱包失败"
 		}
 		if total < supportedPayPrice {
 			err = errors.New("账户没有足够的资金，请去充值")
-			return false, err, types.AccountAmountNotEnough
+			return false, err, types.AccountAmountNotEnough, "账户没有足够的资金，请去充值"
 		}
 	} else {
 		supportedPayPrice := float64(goods_order.BuyNums) * goods.GoodsPrice
 		if supportedPayPrice != float64(goods_order.PayCnyPrice) {
 			err = errors.New("支付方式错误")
-			return false, err, types.VerifyPayAmount
+			return false, err, types.VerifyPayAmount, "支付方式错误"
 		}
 		var ast Asset
 		ast.Name = "BTC"
@@ -193,29 +193,28 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 		pay_asset = asst
 		total, code, err := GetUserWalletBalance(asst.Id, goods_order.UserId)
 		if err != nil {
-			return false, err, code
+			return false, err, code, "获取用户钱包失败"
 		}
 		if total < goods_order.PayCoinAmount {
 			err = errors.New("账户没有足够的资金，请去充值")
-			return false, err, types.AccountAmountNotEnough
+			return false, err, types.AccountAmountNotEnough, "账户没有足够的资金，请去充值"
 		}
 	}
 	if len(goods_order.FailureReason) > 0 {
 		goods_order.OrderStatus = OrderStatusPayFailure
 		if _, err = db.Update(&goods_order, "OrderStatus", "FailureReason"); err != nil {
 			err = errors.New("更新订单的状态失败")
-			return false, err, types.OrderPayException
+			return false, err, types.OrderPayException, "更新订单的状态失败"
 		}
-		return false, nil, types.PayOrderError
 	}
 	success, code, err = UpdateWalletBalance(db, pay_asset.Id, goods_order.UserId, float64(goods_order.PayCoinAmount))
 	if err != nil {
-		return success, err, code
+		return success, err, code, "更新用户钱包余额失败"
 	}
 	goods.LeftAmount -= goods_order.BuyNums
 	if _, err := db.Update(&Goods{}, "LeftAmount"); err != nil {
 		err = errors.New("更新剩余商品个数失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "更新剩余商品个数失败"
 	}
 	now := time.Now()
 	goods_order.OrderStatus = OrderStatusPaySuccess
@@ -223,9 +222,20 @@ func PayOrder(order_id int64) (success bool, err error, code int) {
 	goods_order.PayAt = &now
 	if _, err = db.Update(&goods_order, "OrderStatus", "FailureReason", "PayAt"); err != nil {
 		err = errors.New("更新订单状态失败")
-		return false, err, types.OrderPayException
+		return false, err, types.OrderPayException, "更新订单状态失败"
 	}
-	return true, nil, types.ReturnSuccess
+	mct_order_flow := MerchantOrderFlow{
+		MerchantId: goods_order.MerchantId,
+		OrderId: goods_order.Id,
+		AssetId: pay_asset.Id,
+		CoinAmount: float64(goods_order.PayCoinAmount),
+	}
+	err, _ = mct_order_flow.Insert()
+	if err != nil {
+		err = errors.New("更新流水失败")
+		return false, err, types.OrderPayException, "更新流水失败"
+	}
+	return true, nil, types.ReturnSuccess, "支付成功"
 }
 
 
@@ -239,7 +249,7 @@ func GetGoodsOrderList(page, pageSize int, user_id, merchant_id int64, status in
 	if merchant_id >= 1 {
 		query = query.Filter("merchant_id", merchant_id)
 	}
-	if status >= 0  && status <= 6 {
+	if status >= 0  && status <= 11 {
 		query = query.Filter("OrderStatus", status)
 	}
 	total, _ := query.Count()
@@ -265,6 +275,7 @@ func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) 
 	if err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("Id", oret.OrderId).RelatedSel().One(&order_dtl); err != nil {
 		return nil, types.SystemDbErr, errors.New("数据库查询失败，请联系客服处理")
 	}
+	order_dtl.OrderStatus = OrederReturnGoods
 	if oret.FundRet == 1 {
 		order_dtl.IsCancle = 1
 	}
@@ -286,7 +297,7 @@ func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) 
 		QsImgOne: oret.QsImgOne,
 		QsImgTwo: oret.QsImgTwo,
 		QsImgThree: oret.QsImgThree,
-		Process: 0,
+		Process: ProcessWaitSellerConfirm,
 		LeftTime: 604800,
 		IsRecvGoods: oret.IsRecvGoods,    // 0:未收到货物，1:已经收到货物
 		FundRet: oret.FundRet,
@@ -308,6 +319,15 @@ func UpdReturnShipNumber(order_id int64, ship_number string) error {
 	if err != nil {
 		return errors.New("数据库查询失败，请联系客服处理")
 	}
+	var order_pcs OrderProcess
+	err = orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).RelatedSel().One(&order_pcs)
+	if err == nil {
+		order_pcs.Process = ProcesBuyerPost
+		err := order_pcs.Update()
+		if err != nil {
+			return errors.New("数据库查询失败，请联系客服处理")
+		}
+	}
 	return nil
 }
 
@@ -317,10 +337,19 @@ func UpdShipNumber(order_id int64, ship_number string) error {
 		return errors.New("数据库查询失败，请联系客服处理")
 	}
 	order_dtl.ShipNumber = ship_number
-	order_dtl.OrderStatus = 4
+	order_dtl.OrderStatus = OrderStatusSendGoods
 	err := order_dtl.Update()
 	if err != nil {
 		return errors.New("数据库查询失败，请联系客服处理")
+	}
+	var order_pcs OrderProcess
+	err = orm.NewOrm().QueryTable(OrderProcess{}).Filter("order_id", order_id).RelatedSel().One(&order_pcs)
+	if err == nil {
+		order_pcs.Process = ProcesSellerPost
+		err := order_pcs.Update()
+		if err != nil {
+			return errors.New("数据库查询失败，请联系客服处理")
+		}
 	}
 	return nil
 }

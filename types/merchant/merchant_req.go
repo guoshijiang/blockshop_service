@@ -147,12 +147,22 @@ func (this OrderShipNumberReq) ParamCheck() (int, error) {
 
 type AcceptRejectOrderReq struct {
 	OrderId      int64   `json:"order_id"`
-	IsAccept     int8    `json:"is_accept"`  //0:接受；1:拒绝
+	IsAccept     int8    `json:"is_accept"`  // 0:接受；1:拒绝
 	AcceptRejectReason string `json:"accept_reject_reason"`
 }
 
-
 func (this AcceptRejectOrderReq) ParamCheck() (int, error) {
+	if this.OrderId <= 0 {
+		return types.ParamLessZero, errors.New("订单的 ID 不能小于等于 0")
+	}
+	return types.ReturnSuccess, nil
+}
+
+type MerchantReturnMoney struct {
+	OrderId      int64   `json:"order_id"`
+}
+
+func (this MerchantReturnMoney) ParamCheck() (int, error) {
 	if this.OrderId <= 0 {
 		return types.ParamLessZero, errors.New("订单的 ID 不能小于等于 0")
 	}

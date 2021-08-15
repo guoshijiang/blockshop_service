@@ -455,7 +455,49 @@ func (this *MerchantController) AcceptOrRejectReturn() {
 		this.ServeJSON()
 		return
 	}
-	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "拒绝退换货成功")
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "同意或拒绝退换货成功")
+	this.ServeJSON()
+	return
+}
+
+
+// MctReturnMoney @Title MctReturnMoney
+// @Description 商家退款 MctReturnMoney
+// @Success 200 status bool, data interface{}, msg string
+// @router /return_money [post]
+func (this *MerchantController) MctReturnMoney() {
+	bearerToken := this.Ctx.Input.Header(HttpAuthKey)
+	if len(bearerToken) == 0 {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+	token := strings.TrimPrefix(bearerToken, "Bearer ")
+	_, err := models.GetUserByToken(token)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
+		this.ServeJSON()
+		return
+	}
+
+	var return_money merchant.MerchantReturnMoney
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &return_money); err != nil {
+		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
+		this.ServeJSON()
+		return
+	}
+	if code, err := return_money.ParamCheck(); err != nil {
+		this.Data["json"] = RetResource(false, code, err, err.Error())
+		this.ServeJSON()
+		return
+	}
+	err, msg := models.ReturnMoney(return_money.OrderId)
+	if err != nil {
+		this.Data["json"] = RetResource(false, types.SystemDbErr, nil, msg)
+		this.ServeJSON()
+		return
+	}
+	this.Data["json"] = RetResource(true, types.ReturnSuccess, nil, "退款成功")
 	this.ServeJSON()
 	return
 }
