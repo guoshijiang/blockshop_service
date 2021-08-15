@@ -13,23 +13,25 @@ import (
 type OrderProcess struct {
 	BaseModel
 	Id            int64      `json:"id"`
-	OrderId       int64      `orm:"size(64);index" json:"order_id"`                       // 商品 ID
-	UserId	      int64		 `orm:"size(64);index" json:"user_id"`						  // 用户ID
-	MerchantId    int64      `orm:"size(64);index" json:"merchant_id"`                    // 商户 ID
-	AddressId     int64      `orm:"size(64);index" json:"address_id"`                     // 地址 ID
-	GoodsId       int64      `orm:"size(64);index" json:"goods_id"`                       // 商品 ID
-	RetGoodsRs    string     `orm:"size(512);index" json:"ret_goods_rs"`                  // 退货原因
-	RetPayRs	  string	 `orm:"size(512);default('')" json:"ret_pay_rs"`			  // 拒绝原因
-	QsDescribe    string      `orm:"size(512);index" json:"qs_describe"`                  // 问题描述
-	QsImgOne      string     `orm:"size(150);default(/static/upload/default/user-default-60x60.png)" json:"qs_img_one"`
-	QsImgTwo      string     `orm:"size(150);default(/static/upload/default/user-default-60x60.png)" json:"qs_img_two"`
-	QsImgThree    string  	 `orm:"size(150);default(/static/upload/default/user-default-60x60.png)" json:"qs_img_three"`
-	// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:等待买家邮寄; 4:等待卖家收货; 5:卖家已经发货; 6:等待买家收货; 7:已完成
-	Process       int8       `orm:"default(0);index" json:"process"`                      // 订单退换货情况
-	IsRecvGoods   int8       `orm:"default(0);index" json:"is_recv_goods"`                // 0:未收到货物，1:已经收到货物
-	FundRet       int8  	 `orm:"default(0);index" json:"fund_ret"`                     // 0:返回到平台钱包，1:原路返回
-	LeftTime      int64      `orm:"default(604800);index" json:"left_time"`               // 处理时长
-	DealTime      time.Time  `orm:"auto_now_add;type(datetime);index" json:"deal_time"`   // 处理时间
+	OrderId       int64      `orm:"column(order_id);size(64);index" description:"订单ID"  json:"order_id"`
+	UserId	      int64		 `orm:"column(user_id);size(64);index" description:"用户ID" json:"user_id"`
+	MerchantId    int64      `orm:"column(merchant_id);size(64);index" description:"商户ID" json:"merchant_id"`
+	AddressId     int64      `orm:"column(address_id);size(64);index" description:"地址ID" json:"address_id"`
+	GoodsId       int64      `orm:"column(goods_id);size(64);index" description:"商品ID" json:"goods_id"`
+	RetGoodsRs    string     `orm:"column(ret_goods_rs);size(512)" description:"退货原因" json:"ret_goods_rs"`
+	RetPayRs	  string	 `orm:"column(ret_pay_rs);size(512);default('')" description:"拒绝原因" json:"ret_pay_rs"`
+	QsDescribe    string     `orm:"column(qs_describe);size(512)" description:"问题描述" json:"qs_describe"`
+	VectoryId     int64      `orm:"column(vectory_id);default(0);size(64);index" description:"申诉胜出方" json:"vectory_id"`  // 商家是商家ID，用户是用户ID
+	FailId        int64      `orm:"column(fail_id);default(0);size(64);index" description:"申诉失败方" json:"fail_id"`  // 商家是商家ID，用户是用户ID
+	AdjustContent string     `orm:"column(adjust_content);size(512)" description:"问题描述" json:"adjust_content"`
+	QsImgOne      string     `orm:"column(qs_img_one);size(150)" description:"图片1" json:"qs_img_one"`
+	QsImgTwo      string     `orm:"column(qs_img_two);size(150)" description:"图片2" json:"qs_img_two"`
+	QsImgThree    string  	 `orm:"column(qs_img_three);size(150)" description:"图片3" json:"qs_img_three"`
+	// 0:等待卖家确认; 1:卖家已同意; 2:卖家拒绝; 3:买家发起申诉，4:等待平台处理申诉; 5:等待买家邮寄; 6:等待卖家收货; 7:卖家已经发货; 8:等待买家收货; 9:已完成
+	Process       int8       `orm:"column(process);default(0)" description:"订单退换货情况" json:"process"`
+	IsRecvGoods   int8       `orm:"column(is_recv_goods);default(0)" description:"是否收到货物" json:"is_recv_goods"` // 0:未收到货物，1:已经收到货物
+	LeftTime      int64      `orm:"column(left_time);default(604800)" description:"处理时长" json:"left_time"`
+	DealTime      time.Time  `orm:"column(deal_time);auto_now_add;type(datetime)" description:"处理时间" json:"deal_time"`
 }
 
 func (this *OrderProcess) TableName() string {

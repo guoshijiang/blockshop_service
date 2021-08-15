@@ -230,7 +230,7 @@ func CreateMerchantGoods(gds_param merchant.MerchantAddUpdGoodsReq) (int, error)
 		GoodsParams: gds_param.GoodsParams,
 		GoodsDetail: gds_param.GoodsDetail,
 		Discount: gds_param.Discount,
-		IsSale: gds_param.Sale,
+		IsSale: gds_param.IsSale,
 		IsDiscount: gds_param.IsDiscount,
 		IsAdmin: gds_param.IsAdmin,
 	}
@@ -355,8 +355,8 @@ func UpdateMerchantGoods(gds_param merchant.UpdateGoodsReq) (int, error) {
 	if gds_param.Discount > 0 {
 		gds.Discount = gds_param.Discount
 	}
-	if gds_param.Sale > 0 {
-		gds.IsSale = gds_param.Sale
+	if gds_param.IsSale > 0 {
+		gds.IsSale = gds_param.IsSale
 	}
 	if gds.IsDiscount  > 0 {
 		gds.IsDiscount = gds_param.IsDiscount

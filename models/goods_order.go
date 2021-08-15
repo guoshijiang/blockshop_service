@@ -264,7 +264,6 @@ func ReturnGoodsOrder(oret order.ReturnGoodsOrderReq) (*GoodsOrder, int, error) 
 		Process: 0,
 		LeftTime: 604800,
 		IsRecvGoods: oret.IsRecvGoods,    // 0:未收到货物，1:已经收到货物
-		FundRet: oret.FundRet,
 	}
 	err, _ = order_p.Insert()
 	if err != nil {

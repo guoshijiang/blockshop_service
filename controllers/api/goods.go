@@ -166,6 +166,7 @@ func (this *GoodsController) GoodsList() {
 			UsdtPrice: value.GoodsPrice / usdt_price_u,
 			IsDiscount: value.IsDiscount,
 			IsAdmin: value.IsAdmin,
+			IsSale: value.IsSale,
 		}
 		goods_ret_list = append(goods_ret_list, gds_ret)
 	}
@@ -309,6 +310,7 @@ func (this *GoodsController) GoodsDetail() {
 		"user_address": user_address,
 		"merchant_info": merchant_info,
 		"is_discount": goods_dtl.IsDiscount,
+		"is_sale": goods_dtl.IsSale,
 		"goods_attr": attr_list,
 		"goods_type": goods_type_name,
 		"is_admin": goods_dtl.IsAdmin,

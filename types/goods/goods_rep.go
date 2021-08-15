@@ -36,6 +36,7 @@ type GoodsListRep struct {
 	SellNum        int64   `json:"sell_num"`
 	BtcPrice       float64 `json:"btc_price"`
 	UsdtPrice      float64 `json:"usdt_price"`
+	IsSale         int8    `json:"is_sale"`
 	IsAdmin 	   int8    `json:"is_admin"`
 }
 
