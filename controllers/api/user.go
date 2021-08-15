@@ -273,8 +273,8 @@ func (this *UserController) GetUserInfo() {
 		CnyPrice: "280000",
 	}
 	usdt_price := user.CoinPrice {
-		Asset: "BTC",
-		ChainName: "Bitcoin",
+		Asset: "USDT",
+		ChainName: "Trc20",
 		UsdPrice: "6.5",
 		CnyPrice: "55",
 	}
