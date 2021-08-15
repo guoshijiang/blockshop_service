@@ -47,6 +47,7 @@ func (this *CommentController) AddCommet() {
 		this.ServeJSON()
 		return
 	}
+
 	cmt := models.GoodsComment{
 		GoodsId: add_comment.GoodsId,
 		UserId: add_comment.UserId,
@@ -65,6 +66,19 @@ func (this *CommentController) AddCommet() {
 		this.ServeJSON()
 		return
 	} else {
+	  //统计评论
+	  _,err := new(models.MerchantStat).UpdateByMerchant(models.MerchantStateCountRaw{
+	    MerchantId: add_comment.MerchantId,
+	    QualityStar: add_comment.QualityStar,
+	    ServiceStar: add_comment.ServiceStar,
+	    TradeStar: add_comment.TradeStar,
+    })
+	  if err != nil {
+      this.Data["json"] = RetResource(false, types.SystemDbErr, nil, "评论状态统计失败")
+      this.ServeJSON()
+      return
+    }
+
 		order_detail, _, _ := models.GetGoodsOrderDetail(add_comment.OrderId)
 		order_detail.IsComment  = 1
 		err = order_detail.Update()

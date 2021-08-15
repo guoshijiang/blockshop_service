@@ -119,6 +119,11 @@ func (this *GoodsComment)GetGoodsCommentAll(merchant_id int64) int64 {
   return total
 }
 
+func(this *GoodsComment) QueryByMerchantCount(merchantId int64) (total int64,err error) {
+  total,err = orm.NewOrm().QueryTable(this).Filter("merchant_id",merchantId).Count()
+  return
+}
+
 type StarTotal struct {
   Total           int64           `json:"total"`
 }
@@ -145,32 +150,4 @@ func (this *GoodsComment)GetGoodsCommentStars(merchant_id int64,ty int8) int64 {
   }
   return data.Total
 }
-
-//根据情况查询列表
-//ty  好评=>1 中评 =>2 差评=>3
-//func (this *GoodsComment) GetListByStar(merchant_id int64,page, pageSize int,ty int8)([]*comment.CommentListJoinRep,int,error) {
-//  var data []*comment.CommentListJoinRep
-//  var total int64
-//  switch ty {
-//  case 1:
-//    total,err := orm.NewOrm().Raw("select * from goods_comment as t0 inner join merchant as t1 on t1.id = t0.merchant_id inner join user as t2 on t2.id = t0.user_id inner join goods as t3 on t3.id = t0.goods_id where merchant_id = ? and quality_star > 3 or service_star > 3 or trade_star > 3 order by created_at desc limit ?,?",merchant_id,page,pageSize).QueryRows(&data)
-//    if err != nil {
-//      return nil, types.SystemDbErr, errors.New("查询数据库失败")
-//    }
-//    return data, int(total), nil
-//  case 2:
-//    total,err := orm.NewOrm().Raw("select * from goods_comment as t0 inner join merchant as t1 on t1.id = t0.merchant_id inner join user as t2 on t2.id = t0.user_id inner join goods as t3 on t3.id = t0.goods_id where merchant_id = ? and quality_star = 3 or service_star = 3 or trade_star = 3 order by created_at desc limit ?,?",merchant_id,page,pageSize).QueryRows(&data)
-//    if err != nil {
-//      return nil, types.SystemDbErr, errors.New("查询数据库失败")
-//    }
-//    return data, int(total), nil
-//  case 3:
-//    total,err := orm.NewOrm().Raw("select * from goods_comment as t0 inner join merchant as t1 on t1.id = t0.merchant_id inner join user as t2 on t2.id = t0.user_id inner join goods as t3 on t3.id = t0.goods_id where merchant_id = ? and quality_star < 3 or service_star < 3 or trade_star < 3 order by created_at desc limit ?,?",merchant_id,page,pageSize).QueryRows(&data)
-//    if err != nil {
-//      return nil, types.SystemDbErr, errors.New("查询数据库失败")
-//    }
-//    return data, int(total), nil
-//  }
-//  return data, int(total), nil
-//}
 
