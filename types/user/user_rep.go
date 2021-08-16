@@ -41,8 +41,8 @@ type UserInfoRep struct {
 	JoinTime        string  `json:"join_time"`
 	TrustLevel      int8    `json:"trust_level"`
 	PublicKey       string  `json:"public_key"`
-	BtcOrderAmount  string  `json:"btc_order_amount"`
-	UsdtOrderAmount string  `json:"usdt_order_amount"`
+	BtcOrderAmount  float64  `json:"btc_order_amount"`
+	UsdtOrderAmount float64  `json:"usdt_order_amount"`
 	TotalBuy        int64   `json:"total_buy"`
 	AdjustVictor    int64   `json:"adjust_victor"`
 	AdjustFail      int64   `json:"adjust_fail"`

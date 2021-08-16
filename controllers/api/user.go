@@ -295,11 +295,6 @@ func (this *UserController) GetUserInfo() {
 			CnyPrice: "0",
 		}
 	}
-	usy := user.UserSecrity {
-		AccountPct: "65%",
-		IsSetKey: false,
-		IsOpen2Fa: false,
-	}
 	u_w_btc, _ := models.GetUserWalletByUserId(user_if.Id, btc_price.Id)
 	var btc_uws user.UserWalletStat
 	if u_w_btc != nil {
@@ -328,18 +323,35 @@ func (this *UserController) GetUserInfo() {
 	} else {
 		merchant_id = 0
 	}
+	var IsOpen2Fa, IsSetKey bool
+	act_pct := "65%"
+	if user_if.IsOpen == 0 {
+		IsOpen2Fa =  false
+		IsSetKey = false
+		act_pct = "99%"
+	} else {
+		IsOpen2Fa = true
+		IsSetKey = true
+		act_pct = "99%"
+	}
+	usy := user.UserSecrity {
+		AccountPct: act_pct,
+		IsSetKey: IsSetKey,
+		IsOpen2Fa: IsOpen2Fa,
+	}
+	t_btc, t_usdt, t_buy :=models.UserOderStat(user_if.Id)
 	data := user.UserInfoRep{
 		UserId: user_if.Id,
 		MctId: merchant_id,
 		Photo: user_if.Avator,
 		UserName: user_if.UserName,
-		IsMerchant: 1,
+		IsMerchant: user_if.IsMerchant,
 		JoinTime: user_if.CreatedAt.Format("2006-01-02 15:04:05"),
 		TrustLevel: user_if.MemberLevel,
 		PublicKey: user_if.UserPublicKey,
-		BtcOrderAmount: "100",
-		UsdtOrderAmount: "10000",
-		TotalBuy: 1000,
+		BtcOrderAmount: t_btc,
+		UsdtOrderAmount: t_usdt,
+		TotalBuy: t_buy,
 		AdjustVictor: user_if.AdjustVictor,
 		AdjustFail: user_if.AdjustFail,
 		UserSecrity: usy,

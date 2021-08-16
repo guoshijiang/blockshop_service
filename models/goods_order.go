@@ -353,3 +353,21 @@ func UpdShipNumber(order_id int64, ship_number string) error {
 	}
 	return nil
 }
+
+func UserOderStat(user_id int64) (float64, float64 ,int64){
+	var order_list []GoodsOrder
+	_, err := orm.NewOrm().QueryTable(GoodsOrder{}).Filter("user_id", user_id).All(&order_list)
+	if err != nil {
+		return 0, 0, 0
+	}
+	var total_btc, total_usdt float64
+	for _, order_item := range order_list {
+		if order_item.PayWay == PayWayBTC {
+			total_btc += order_item.PayCoinAmount
+		}
+		if order_item.PayWay == PayWayUSDT {
+			total_usdt += order_item.PayCoinAmount
+		}
+	}
+	return total_btc, total_usdt, int64(len(order_list))
+}
