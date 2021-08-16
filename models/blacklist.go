@@ -59,10 +59,10 @@ func AddBlackList(req_c collect.BlackListReq) (msg string, code int) {
 	return "", types.ReturnSuccess
 }
 
-func BlackListList(page, pageSize int) ([]*BlackList, int64) {
+func BlackListList(page, pageSize int, user_id int64) ([]*BlackList, int64) {
 	offset := (page - 1) * pageSize
 	list := make([]*BlackList, 0)
-	query := orm.NewOrm().QueryTable(BlackList{}).Filter("is_removed", 0)
+	query := orm.NewOrm().QueryTable(BlackList{}).Filter("is_removed", 0).Filter("user_id", user_id)
 	total, _ := query.Count()
 	_, err := query.OrderBy("-id").Limit(pageSize,offset).All(&list)
 	if err != nil {

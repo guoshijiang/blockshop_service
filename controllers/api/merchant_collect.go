@@ -62,7 +62,7 @@ func (this *MerchantCollectController) GetMctCollectList() {
 		return
 	}
 	token := strings.TrimPrefix(bearerToken, "Bearer ")
-	_, err := models.GetUserByToken(token)
+	t_user, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
 		this.ServeJSON()
@@ -74,7 +74,7 @@ func (this *MerchantCollectController) GetMctCollectList() {
 		this.ServeJSON()
 		return
 	}
-	mct_c_list, total := models.MerchantCollectList(page_s.Page, page_s.PageSize)
+	mct_c_list, total := models.MerchantCollectList(page_s.Page, page_s.PageSize, t_user.Id)
 	var mctc_list []*collect.MerchantListRep
 	for _, value := range mct_c_list {
 		var mct_name string

@@ -60,10 +60,10 @@ func AddMerchantCollect(req_c collect.MerchantCollectReq) (msg string, code int)
 	return "", types.ReturnSuccess
 }
 
-func MerchantCollectList(page, pageSize int) ([]*MerchantCollect, int64) {
+func MerchantCollectList(page, pageSize int, user_id int64) ([]*MerchantCollect, int64) {
 	offset := (page - 1) * pageSize
 	list := make([]*MerchantCollect, 0)
-	query := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("is_removed", 0)
+	query := orm.NewOrm().QueryTable(MerchantCollect{}).Filter("is_removed", 0).Filter("user_id", user_id)
 	total, _ := query.Count()
 	_, err := query.OrderBy("-id").Limit(pageSize,offset).All(&list)
 	if err != nil {

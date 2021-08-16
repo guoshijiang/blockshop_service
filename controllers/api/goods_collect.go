@@ -62,7 +62,7 @@ func (this *GoodsCollectController) GetAddGoodsCollectList() {
 		return
 	}
 	token := strings.TrimPrefix(bearerToken, "Bearer ")
-	_, err := models.GetUserByToken(token)
+	t_user, err := models.GetUserByToken(token)
 	if err != nil {
 		this.Data["json"] = RetResource(false, types.UserToKenCheckError, nil, "您还没有登陆，请登陆")
 		this.ServeJSON()
@@ -74,7 +74,7 @@ func (this *GoodsCollectController) GetAddGoodsCollectList() {
 		this.ServeJSON()
 		return
 	}
-	bl_lst, total := models.GoodsCollectList(page_s.Page, page_s.PageSize)
+	bl_lst, total := models.GoodsCollectList(page_s.Page, page_s.PageSize, t_user.Id)
 	var gdsc_list []*collect.GoodsListRep
 	for _, value := range bl_lst {
 		goods_dtl, _, _ := models.GetGoodsDetail(value.CtGdsId)

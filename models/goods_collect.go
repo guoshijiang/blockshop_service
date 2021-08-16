@@ -60,10 +60,10 @@ func AddGoodsCollect(req_c collect.GoodsCollectReq) (msg string, code int) {
 	return "", types.ReturnSuccess
 }
 
-func GoodsCollectList(page, pageSize int) ([]*GoodsCollect, int64) {
+func GoodsCollectList(page, pageSize int, user_id int64) ([]*GoodsCollect, int64) {
 	offset := (page - 1) * pageSize
 	list := make([]*GoodsCollect, 0)
-	query := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("is_removed", 0)
+	query := orm.NewOrm().QueryTable(GoodsCollect{}).Filter("is_removed", 0).Filter("user_id", user_id)
 	total, _ := query.Count()
 	_, err := query.OrderBy("-id").Limit(pageSize,offset).All(&list)
 	if err != nil {
