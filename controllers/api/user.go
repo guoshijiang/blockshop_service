@@ -81,6 +81,11 @@ func (this *UserController) Get2Fa() {
 	}
 	verify_code := common.GenValidateCode(6)
 	user_info := models.GetUserInfo(fa2.UserName)
+	if user_info == nil {
+		this.Data["json"] = RetResource(false, types.UserIsNotExist, nil, "用户不存在")
+		this.ServeJSON()
+		return
+	}
 	if user_info.IsOpen == 0 {
 		this.Data["json"] = RetResource(false, types.NoOpenTwoFactor, nil, "没有开启双因子认证")
 		this.ServeJSON()
