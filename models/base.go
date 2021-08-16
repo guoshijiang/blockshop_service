@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
@@ -24,15 +25,15 @@ func init() {
 		new(WalletRecord),new(Goods),new(News),new(Message),new(MerchantOpenRecord),
 		new(UserDataStat),new(GoodsComment),new(ForumCat), new(UserAddress), new(ImageFile),
 		new(GoodsOriginState),new(OrderProcess), new(MerchantConfig), new(BlackList), new(GoodsCollect),
-		new(MerchantCollect), new(MerchantStat), new(MerchantOrderFlow),
+		new(MerchantCollect), new(MerchantStat), new(MerchantOrderFlow), new(Questions), new(HelpDesk),
 	)
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
-	//err := orm.RunSyncdb(mysqlConfig["db_alias"], false, true)
-	//if err != nil {
-	//	logs.Error(err.Error())
-	//}
+	err := orm.RunSyncdb(mysqlConfig["db_alias"], false, true)
+	if err != nil {
+		logs.Error(err.Error())
+	}
 	//insertRole()
 	//insertAdmin()
 	//loadMenu()

@@ -3,11 +3,11 @@ package cron
 import (
 	"blockshop/models"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 )
 
@@ -47,7 +47,7 @@ func RealAssetPrice() (err error) {
 		return err
 	}
 	for _, value := range ret_data.Data {
-		if value.Name == "USDT" {
+		if value.Name == "USDT" || value.Name == "BTC"{
 			var asset models.Asset
 			err := db.QueryTable(models.Asset{}).Filter("name", value.Name).One(&asset)
 			if err != nil {

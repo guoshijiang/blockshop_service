@@ -348,6 +348,18 @@ func init() {
         &api.MerchantCollectController{},
       ),
     ),
+
+    beego.NSNamespace("/help_desk",
+      beego.NSInclude(
+        &api.HelpDeskController{},
+      ),
+    ),
+
+    beego.NSNamespace("/question",
+      beego.NSInclude(
+        &api.QuestionController{},
+      ),
+    ),
   )
   beego.AddNamespace(api_path)
 }
