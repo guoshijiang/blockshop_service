@@ -144,7 +144,7 @@ func (this *MerchantController) MerchantList() {
 		this.ServeJSON()
 		return
 	}
-	image_path := beego.AppConfig.String("img_root_path")
+	//image_path := beego.AppConfig.String("img_root_path")
 	var mct_list_ret []merchant.MerchantListRep
 	for _, mct := range merchant_list {
 		mct_ret := merchant.MerchantListRep {
@@ -152,7 +152,7 @@ func (this *MerchantController) MerchantList() {
 			MctName: mct.MerchantName,
 			MctIntroduce: mct.MerchantIntro,
 			MerchantDetail: mct.MerchantDetail,
-			MctLogo: image_path + mct.Logo,
+			MctLogo: mct.Logo,
 			MctWay: mct.MerchantWay,
 			ShopLevel: mct.ShopLevel,
 			ShopServer: mct.ShopServer,

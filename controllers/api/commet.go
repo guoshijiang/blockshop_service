@@ -170,7 +170,7 @@ func (this *CommentController) GetCommentList() {
 	}
 	var cmt_list []type_comment.CommentListRep
 	for _, v := range clst {
-		image_path := beego.AppConfig.String("img_root_path")
+		//image_path := beego.AppConfig.String("img_root_path")
 		user_s, _ := models.GetUserById(v.UserId)
 		cl := type_comment.CommentListRep{
 			CommentId: v.Id,
@@ -182,9 +182,9 @@ func (this *CommentController) GetCommentList() {
 			ServiceStar: v.ServiceStar,
 			TradeStar: v.TradeStar,
 			Content: v.Content,
-			ImgOne: image_path + v.ImgOneUrl,
-			ImgTwo: image_path + v.ImgTwoUrl,
-			ImgThree: image_path + v.ImgThreeUrl,
+			ImgOne: v.ImgOneUrl,
+			ImgTwo: v.ImgTwoUrl,
+			ImgThree: v.ImgThreeUrl,
 			CreateTime: v.CreatedAt,
 		}
 		cmt_list = append(cmt_list, cl)

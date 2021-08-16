@@ -155,7 +155,7 @@ func (this *GoodsController) GoodsList() {
 		this.ServeJSON()
 		return
 	}
-	image_path := beego.AppConfig.String("img_root_path")
+	//image_path := beego.AppConfig.String("img_root_path")
 	var goods_ret_list []goods.GoodsListRep
 	for _, value := range good_list {
 		merchant, code, err := models.GetMerchantDetail(value.MerchantId)
@@ -193,7 +193,7 @@ func (this *GoodsController) GoodsList() {
 			MerchantName: merchant.MerchantName,
 			TypeId:type_id,
 			TypeName: type_name,
-			Logo: image_path + value.Logo,
+			Logo: value.Logo,
 			GoodsPrice: value.GoodsPrice,
 			GoodsDisPrice: value.GoodsDisPrice,
 			Views:value.Views,
@@ -238,7 +238,7 @@ func (this *GoodsController) GoodsDetail() {
 		this.ServeJSON()
 		return
 	}
-	img_path := beego.AppConfig.String("img_root_path")
+	//img_path := beego.AppConfig.String("img_root_path")
 	merchant, code, err := models.GetMerchantDetail(goods_dtl.MerchantId)
 	if err != nil {
 		this.Data["json"] = RetResource(false, code, err.Error(), "获取商家信息失败")
@@ -247,7 +247,7 @@ func (this *GoodsController) GoodsDetail() {
 	}
 	merchant_info :=  map[string]interface{}{
 		"merchant_id": merchant.Id,
-		"merchant_logo": img_path + merchant.Logo,
+		"merchant_logo": merchant.Logo,
 		"merchant_name": merchant.MerchantName,
 		"merchant_level": merchant.ShopLevel,
 	}
@@ -261,7 +261,7 @@ func (this *GoodsController) GoodsDetail() {
 	for _, v := range goods_img_lst {
 		gds_img := goods.GoodsImagesRet{
 			GoodsImgId:v.Id,
-			ImageUrl: img_path + v.Image,
+			ImageUrl: v.Image,
 		}
 		gds_img_lst = append(gds_img_lst, gds_img)
 	}
@@ -330,7 +330,7 @@ func (this *GoodsController) GoodsDetail() {
 		"trust_level": member_level,
 		"title": goods_dtl.Title,
 		"mark": goods_dtl.GoodsMark,
-		"logo": img_path + goods_dtl.Logo,
+		"logo": goods_dtl.Logo,
 		"serveice": goods_dtl.Serveice,
 		"origin_state": os_sta,
 		"calc_way": goods_dtl.CalcWay,
