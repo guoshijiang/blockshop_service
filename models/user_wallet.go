@@ -146,8 +146,11 @@ func CreateWalletAddress(user_id, wallet_id int64) error {
 			return err
 		}
 		var chain_name string
-		if value.ChainName == "Ethereum" && value.AssetName == "USDT" {
-			chain_name = "Erc20"
+		if value.ChainName == "Ethereum" {
+			continue
+		}
+		if value.ChainName == "TRX" && value.AssetName == "TRX" {
+			continue
 		}
 		if value.ChainName == "TRX" && value.AssetName == "USDT" {
 			chain_name = "Trc20"
