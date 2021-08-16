@@ -100,13 +100,13 @@ func (this *HelpDeskController) HdList() {
 // @Success 200 status bool, data interface{}, msg string
 // @router /hd_detail [post]
 func (this *HelpDeskController) HdDetail() {
-	hd_dtl_p := question.QsDetailCheck{}
+	hd_dtl_p := help_desk.HdDetailCheck{}
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &hd_dtl_p); err != nil {
 		this.Data["json"] = RetResource(false, types.InvalidFormatError, err, "无效的参数格式,请联系客服处理")
 		this.ServeJSON()
 		return
 	}
-	hd, code, err := models.GetHelpDeskDetail(hd_dtl_p.QsId)
+	hd, code, err := models.GetHelpDeskDetail(hd_dtl_p.HdId)
 	if err != nil {
 		this.Data["json"] = RetResource(false, code, nil, "数据库错误")
 		this.ServeJSON()

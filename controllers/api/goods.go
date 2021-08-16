@@ -4,6 +4,7 @@ import (
 	"blockshop/models"
 	"blockshop/types"
 	"blockshop/types/goods"
+	"blockshop/types/user"
 	"encoding/json"
 	"github.com/astaxie/beego"
 	"strconv"
@@ -83,12 +84,48 @@ func (this *GoodsController) GoodsQueryCondition() {
 	} else {
 		origin_state_list = nil
 	}
+	var btc_c_price user.CoinPrice
+	btc_price := models.GetAssetByName("BTC")
+	if btc_price != nil {
+		btc_c_price = user.CoinPrice {
+			Asset: "BTC",
+			ChainName: "Bitcoin",
+			UsdPrice: btc_price.UsdPrice,
+			CnyPrice: btc_price.CnyPrice,
+		}
+	} else {
+		btc_c_price = user.CoinPrice {
+			Asset: "BTC",
+			ChainName: "Bitcoin",
+			UsdPrice: "0",
+			CnyPrice: "0",
+		}
+	}
+	var usdt_price user.CoinPrice
+	usdt_price_md := models.GetAssetByName("USDT")
+	if usdt_price_md != nil {
+		usdt_price = user.CoinPrice {
+			Asset: "USDT",
+			ChainName: "Trc20",
+			UsdPrice: usdt_price_md.UsdPrice,
+			CnyPrice: usdt_price_md.CnyPrice,
+		}
+	} else {
+		usdt_price = user.CoinPrice {
+			Asset: "USDT",
+			ChainName: "Trc20",
+			UsdPrice: "0",
+			CnyPrice: "0",
+		}
+	}
 	data := map[string]interface{}{
 		"goods_type": gds_types,
 		"goods_cat": gds_cat_list,
 		"origin_state": origin_state_list,
 		"order_by": orderByCdt(),
 		"pay_way": [2]string{"BTC", "USDT"},
+		"btc_price": btc_c_price,
+		"usdt_price": usdt_price,
 	}
 	this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取查询条件成功")
 	this.ServeJSON()
