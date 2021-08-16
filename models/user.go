@@ -82,7 +82,7 @@ func (this *User) ExistByName (user_name string) bool {
 
 func UpdateFactor(user_id int64, factor string)(code int, msg string){
 	var fa2_user User
-	err := fa2_user.Query().Filter("id", user_id).One(fa2_user)
+	err := orm.NewOrm().QueryTable(User{}).Filter("id", user_id).One(&fa2_user)
 	if err != nil {
 		return types.UserNoExist, "没有这个用户"
 	}

@@ -5,6 +5,7 @@ import (
 	"blockshop/models"
 	"blockshop/types"
 	"blockshop/types/user"
+	"encoding/hex"
 	"encoding/json"
 	"github.com/astaxie/beego"
 	"strings"
@@ -86,13 +87,13 @@ func (this *UserController) Get2Fa() {
 		return
 	}
 	public_key := user_info.UserPublicKey
-	cipher_text := string(common.RsaEncrypt([]byte(verify_code), []byte(public_key)))
+	cipher_text := common.RsaEncrypt([]byte(verify_code), []byte(public_key))
 	code, msg := models.UpdateFactor(user_info.Id, verify_code)
 	if code == types.ReturnSuccess {
 		data := user.TwoFactorRep{
 			Id: user_info.Id,
 			UserName: user_info.UserName,
-			CipherText: cipher_text,
+			CipherText: hex.EncodeToString(cipher_text),
 		}
 		this.Data["json"] = RetResource(true, types.ReturnSuccess, data, "获取登录因子成功")
 		this.ServeJSON()

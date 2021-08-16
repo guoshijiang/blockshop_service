@@ -5,45 +5,63 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"github.com/pkg/errors"
 )
 
-func GenerateRSAKey(bits int) ([]byte, []byte){
-	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
+func GenRsaKey() (prvkey, pubkey []byte) {
+	privateKey, err := rsa.GenerateKey(rand.Reader, 1024)
 	if err != nil {
 		panic(err)
 	}
-	X509PrivateKey := x509.MarshalPKCS1PrivateKey(privateKey)
-	privateBlock := pem.Block{Type: "RSA Private Key", Bytes: X509PrivateKey}
-	publicKey := privateKey.PublicKey
-	X509PublicKey, err := x509.MarshalPKIXPublicKey(&publicKey)
+	derStream := x509.MarshalPKCS1PrivateKey(privateKey)
+	block := &pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: derStream,
+	}
+	prvkey = pem.EncodeToMemory(block)
+	publicKey := &privateKey.PublicKey
+	derPkix, err := x509.MarshalPKIXPublicKey(publicKey)
 	if err != nil {
 		panic(err)
 	}
-	publicBlock := pem.Block{Type: "RSA Public Key", Bytes: X509PublicKey}
-	return pem.EncodeToMemory(&privateBlock), pem.EncodeToMemory(&publicBlock)
+	block = &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: derPkix,
+	}
+	pubkey = pem.EncodeToMemory(block)
+	return
 }
 
-func RsaEncrypt(plainText []byte, pk []byte) []byte {
-	block, _ := pem.Decode(pk)
-	publicKeyInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
+
+func RsaEncrypt(data, keyBytes []byte) []byte {
+	block, _ := pem.Decode(keyBytes)
+	if block == nil {
+		panic(errors.New("public key error"))
+	}
+	pubInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		panic(err)
 	}
-	publicKey := publicKeyInterface.(*rsa.PublicKey)
-	cipherText, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, plainText)
+	pub := pubInterface.(*rsa.PublicKey)
+	ciphertext, err := rsa.EncryptPKCS1v15(rand.Reader, pub, data)
 	if err != nil {
 		panic(err)
 	}
-	return cipherText
+	return ciphertext
 }
 
-func RsaDecrypt(cipherText []byte, sk []byte) []byte{
-	block, _ := pem.Decode(sk)
-	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	if err != nil{
+func RsaDecrypt(ciphertext, keyBytes []byte) []byte {
+	block, _ := pem.Decode(keyBytes)
+	if block == nil {
+		panic(errors.New("private key error!"))
+	}
+	priv, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
 		panic(err)
 	}
-	plainText,_:=rsa.DecryptPKCS1v15(rand.Reader,privateKey,cipherText)
-	return plainText
+	data, err := rsa.DecryptPKCS1v15(rand.Reader, priv, ciphertext)
+	if err != nil {
+		panic(err)
+	}
+	return data
 }
-
