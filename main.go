@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "blockshop/common/template"
+	"blockshop/cron"
 	_ "blockshop/routers"
 	_ "blockshop/session"
 	"github.com/astaxie/beego"
@@ -24,7 +25,7 @@ func main() {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
-	//go cron.Run()
+	go cron.Run()
 	beego.Run()
 }
 

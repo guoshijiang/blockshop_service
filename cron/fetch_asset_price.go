@@ -50,12 +50,12 @@ func RealAssetPrice() (err error) {
 		if value.Name == "USDT" || value.Name == "BTC"{
 			var asset models.Asset
 			err := db.QueryTable(models.Asset{}).Filter("name", value.Name).One(&asset)
-			if err != nil {
-				usd_price_str := strconv.FormatFloat(value.CurrentPriceUsd, 'g', 1, 64)
-				cny_price_str := strconv.FormatFloat(value.CurrentPrice,'g', 1, 64)
+			if err == nil {
+				usd_price_str := strconv.FormatFloat(value.CurrentPriceUsd, 'f', -1, 64)
+				cny_price_str := strconv.FormatFloat(value.CurrentPrice,'f', -1, 64)
 				asset.UsdPrice = usd_price_str
 				asset.CnyPrice = cny_price_str
-				_, err := db.Update(asset)
+				err := asset.Update()
 				if err != nil {
 					return err
 				}
@@ -66,7 +66,6 @@ func RealAssetPrice() (err error) {
 			continue
 		}
 	}
-	err = db.Commit()
 	if err != nil {
 		return err
 	}
