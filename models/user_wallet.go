@@ -149,24 +149,17 @@ func CreateWalletAddress(user_id, wallet_id int64) error {
 		if value.ChainName == "Ethereum" {
 			continue
 		}
-		if value.ChainName == "TRX" && value.AssetName == "TRX" {
-			continue
-		}
 		if value.ChainName == "TRX" && value.AssetName == "USDT" {
 			chain_name = "Trc20"
 		}
 		if value.ChainName == "Bitcoin" && value.AssetName == "BTC" {
 			chain_name = "Bitcoin"
 		}
-		wallet_address := UserWallet{
-			UserId:  user_id,
-			ChainName: chain_name,
-			AssetId: assts.Id,
-			Address: value.Address,
-		}
-		err1 := wallet_address.Insert()
+		user_w.Address = value.Address
+		user_w.ChainName = chain_name
+		err1 := user_w.Update()
 		if err1 != nil {
-			logs.Error("insert wallet fail")
+			logs.Error("update wallet address fail")
 			return err
 		}
 	}
@@ -180,6 +173,7 @@ func GeneratedUserWallet(user_id int64) int {
 		uw := new(UserWallet)
 		uw.AssetId = v.Id
 		uw.UserId = user_id
+		uw.ChainName = v.ChainName
 		err := uw.Insert()
 		if err != nil {
 			return types.CreateWalletFail
