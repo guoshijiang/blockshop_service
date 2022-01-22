@@ -1,6 +1,6 @@
 ### 1.项目描述
 
-本项目是一个基于 beego 开发的商城系统后台，包含管理台和 api 接口，前端的 Vue 代码也已经开源呆本账号下，如果需要，请自取。
+本项目是一个基于 beego 开发的商城系统后台，包含管理台和 api 接口，前端的 Vue 代码也已经开源呆本账号下，如果需要，请自取。对应 VUE 代码：https://github.com/guoshijiang/blockshop-vue
 
 项目后端登陆用户可以是 admin, 密码 asd..123 ：
 
